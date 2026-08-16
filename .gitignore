@@ -1,0 +1,21 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Database (optional local state)
+# matchpoint.db
+
+# IDE & OS
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+*.log

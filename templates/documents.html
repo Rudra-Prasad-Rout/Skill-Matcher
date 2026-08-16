@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Verify your documents — S30{% endblock %}
+
+{% block content %}
+<!-- S30 Stepper (Step 3 Active) -->
+<div class="s30-stepper">
+  <div class="s30-step-segment active"></div>
+  <div class="s30-step-segment active"></div>
+  <div class="s30-step-segment active"></div>
+  <div class="s30-step-segment"></div>
+</div>
+
+<div class="s30-form-header">
+  <h1 class="s30-form-title">Upload Required Documents</h1>
+  <p class="s30-form-subtitle">Make sure documents are clear, valid, and show your student identity.</p>
+</div>
+
+{% if error %}
+<div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-bottom: 18px;">
+  {{ error }}
+</div>
+{% endif %}
+
+<form action="{{ url_for('signup_documents') }}" method="POST" enctype="multipart/form-data" id="document-form">
+  
+  <!-- Upload Box 1: College ID Card Front -->
+  <div class="s30-form-group">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+      <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Front Side)</label>
+      <span style="font-size: 11px; color: var(--s30-accent-cyan); font-weight: 700;">REQUIRED</span>
+    </div>
+    
+    <div class="s30-upload-box" onclick="document.getElementById('file-front').click()">
+      <div class="s30-upload-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+          <rect width="18" height="12" x="3" y="6" rx="2"></rect>
+          <circle cx="8" cy="12" r="2"></circle>
+          <path d="M14 10h4"></path>
+          <path d="M14 14h2"></path>
+        </svg>
+      </div>
+      <div class="s30-upload-title" id="title-front">Click to upload ID Card (Front)</div>
+      <div class="s30-upload-subtitle">JPG, PNG, PDF up to 10MB</div>
+      <input type="file" name="doc_id_front" id="file-front" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="updateUploadLabel(this, 'title-front')">
+    </div>
+  </div>
+
+  <!-- Upload Box 2: College ID Card Back -->
+  <div class="s30-form-group">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+      <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Back Side)</label>
+      <span style="font-size: 11px; color: var(--s30-accent-cyan); font-weight: 700;">REQUIRED</span>
+    </div>
+    
+    <div class="s30-upload-box" onclick="document.getElementById('file-back').click()">
+      <div class="s30-upload-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+          <rect width="18" height="12" x="3" y="6" rx="2"></rect>
+          <line x1="7" y1="10" x2="17" y2="10"></line>
+          <line x1="7" y1="14" x2="13" y2="14"></line>
+        </svg>
+      </div>
+      <div class="s30-upload-title" id="title-back">Click to upload ID Card (Back)</div>
+      <div class="s30-upload-subtitle">JPG, PNG, PDF up to 10MB</div>
+      <input type="file" name="doc_id_back" id="file-back" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="updateUploadLabel(this, 'title-back')">
+    </div>
+  </div>
+
+  <!-- Upload Box 3: Academic Certificate / Transcript -->
+  <div class="s30-form-group" style="margin-bottom: 22px;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+      <label class="s30-form-label" style="margin-bottom: 0;">Academic Transcript / Certificate Proof</label>
+      <span style="font-size: 11px; color: var(--s30-text-muted); font-weight: 600;">OPTIONAL / RECOMMENDED</span>
+    </div>
+    
+    <div class="s30-upload-box" onclick="document.getElementById('file-cert').click()">
+      <div class="s30-upload-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+      </div>
+      <div class="s30-upload-title" id="title-cert">Click to upload academic transcript or certificate</div>
+      <div class="s30-upload-subtitle">Official university document (PDF / JPG)</div>
+      <input type="file" name="doc_certificate" id="file-cert" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="updateUploadLabel(this, 'title-cert')">
+    </div>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="s30-btn-primary" style="width: 100%; height: 48px; font-size: 15px;">
+    <span>Submit for S30 Verification</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; margin-left: 6px;">
+      <path d="M5 12h14"></path>
+      <path d="m12 5 7 7-7 7"></path>
+    </svg>
+  </button>
+</form>
+
+<script>
+  function updateUploadLabel(input, labelId) {
+    if (input.files && input.files[0]) {
+      const file = input.files[0];
+      const el = document.getElementById(labelId);
+      el.innerHTML = `<span style="color: #34d399;">✓ ${file.name}</span> <span style="font-size: 11px; color: #94a3b8;">(${(file.size/1024/1024).toFixed(2)} MB)</span>`;
+    }
+  }
+</script>
+{% endblock %}

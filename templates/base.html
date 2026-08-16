@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}S30 — Verified Students. Limitless Opportunities.{% endblock %}</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+  <!-- S30 Public Navbar Header (No Admin links) -->
+  <header class="s30-navbar">
+    <div class="s30-nav-container">
+      <a href="{{ url_for('landing_page') }}" class="s30-brand">
+        <span class="s30-logo-badge">S30</span>
+        <span class="s30-brand-sub">VERIFIED</span>
+      </a>
+
+      <ul class="s30-nav-links">
+        <li><a href="{{ url_for('landing_page') }}" class="s30-nav-link">Home</a></li>
+        <li><a href="{{ url_for('landing_page') }}#how-it-works" class="s30-nav-link">How It Works</a></li>
+        <li><a href="{{ url_for('landing_page') }}#opportunities" class="s30-nav-link">Opportunities</a></li>
+        <li><a href="{{ url_for('landing_page') }}#about" class="s30-nav-link">About</a></li>
+      </ul>
+
+      <div class="s30-nav-actions">
+        <a href="{{ url_for('login_page') }}" class="s30-btn-outline">Login</a>
+        <a href="{{ url_for('signup_new') }}" class="s30-btn-primary">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Body -->
+  {% block content_wrapper %}
+  <main class="s30-auth-wrapper">
+    <div class="s30-auth-grid">
+      
+      <!-- Left Hero Panel (Panel 3 Aesthetic) -->
+      <div class="s30-auth-hero">
+        <div class="s30-hero-content">
+          <h2>Your future<br><span>starts here.</span></h2>
+          <p>S30 is more than a platform, it's your launchpad to verified career opportunities.</p>
+        </div>
+
+        <div class="s30-hero-graphic">
+          <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="80" stroke="url(#cosmic_grad)" stroke-width="2" stroke-dasharray="4 8" />
+            <circle cx="100" cy="100" r="50" fill="rgba(99, 102, 241, 0.15)" stroke="#6366f1" stroke-width="1.5" />
+            <path d="M100 65 L115 95 L145 100 L120 120 L125 150 L100 135 L75 150 L80 120 L55 100 L85 95 Z" fill="url(#star_grad)" />
+            <circle cx="150" cy="50" r="6" fill="#38bdf8" />
+            <circle cx="45" cy="140" r="4" fill="#8b5cf6" />
+            <defs>
+              <linearGradient id="cosmic_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#6366f1" />
+                <stop offset="100%" stop-color="#06b6d4" />
+              </linearGradient>
+              <linearGradient id="star_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="100%" stop-color="#38bdf8" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="s30-hero-features">
+          <div class="s30-feature-item">
+            <span class="s30-feature-icon">✓</span>
+            <span>100% Verified student credentials</span>
+          </div>
+          <div class="s30-feature-item">
+            <span class="s30-feature-icon">⚡</span>
+            <span>Direct access to Tier-1 hiring partners</span>
+          </div>
+          <div class="s30-feature-item">
+            <span class="s30-feature-icon">🛡️</span>
+            <span>Unique 5-character verified candidate ID</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Form Card -->
+      <div class="s30-auth-card">
+        {% block content %}{% endblock %}
+      </div>
+
+    </div>
+  </main>
+  {% endblock %}
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

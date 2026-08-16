@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Verification Document — Priya Sharma</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #f8fafc;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .certificate-container {
+            background: #ffffff;
+            width: 800px;
+            padding: 50px;
+            border: 2px solid #0f172a;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .institution {
+            font-size: 24px;
+            font-weight: 800;
+            color: #0f172a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .sub-inst {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .content {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #334155;
+            text-align: center;
+        }
+        .student-name {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0e1828;
+            border-bottom: 2px solid #0e1828;
+            display: inline-block;
+            padding: 0 20px 4px 20px;
+            margin: 10px 0;
+        }
+        .details-grid {
+            margin-top: 30px;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        .badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #dcfce7;
+            color: #15803d;
+            font-weight: 700;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="certificate-container">
+        <div class="header">
+            <div class="institution">Indian Institute of Technology Delhi</div>
+            <div class="sub-inst">OFFICIAL ACADEMIC TRANSCRIPT & COURSEWORK VERIFICATION</div>
+        </div>
+        <div class="title">Certificate of Academic Records</div>
+        <div class="content">
+            This document certifies the official enrollment and coursework completion of:
+            <br>
+            <div class="student-name">Priya Sharma</div>
+            <br>
+            in the program of
+            <br>
+            <strong style="font-size: 18px; color: #0f172a;">B.Tech Computer Science & Engineering</strong>
+        </div>
+        <div class="details-grid">
+            <div><strong>Academic Standing:</strong> Rank 1 Departmental Honors</div>
+            <div style="margin-top: 8px;"><strong>Verification Status:</strong> PDF Verification: PASSED</div>
+            <div style="margin-top: 8px;"><strong>Digital Signature Hash:</strong> <code>0x7f8a91b2c3d4e5f6...VERIFIED</code></div>
+        </div>
+        <div class="footer">
+            <div>
+                <div class="badge">OFFICIALLY ATTESTED</div>
+            </div>
+            <div style="text-align: right; font-size: 13px; color: #64748b;">
+                Office of the University Registrar<br>
+                Issued for Matchpoint Verification
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,533 @@
+/* ==========================================================================
+   S30 Design System & Comprehensive UI Stylesheet
+   Futuristic Glassmorphism & Dark Glow Theme
+   ========================================================================== */
+
+:root {
+  --s30-bg: #070b14;
+  --s30-bg-surface: #0e1526;
+  --s30-bg-card: rgba(15, 23, 42, 0.82);
+  --s30-bg-glass: rgba(30, 41, 59, 0.55);
+  --s30-bg-input: rgba(15, 23, 42, 0.65);
+  
+  --s30-primary: #6366f1;
+  --s30-primary-hover: #4f46e5;
+  --s30-accent-purple: #8b5cf6;
+  --s30-accent-cyan: #06b6d4;
+  --s30-accent-blue: #38bdf8;
+  
+  --s30-gradient-brand: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+  --s30-gradient-btn: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  --s30-gradient-card: linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.7) 100%);
+  --s30-gradient-glow: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.18) 0%, transparent 70%);
+
+  --s30-text-primary: #ffffff;
+  --s30-text-secondary: #94a3b8;
+  --s30-text-muted: #64748b;
+  
+  --s30-border: rgba(255, 255, 255, 0.08);
+  --s30-border-focus: rgba(99, 102, 241, 0.6);
+  --s30-border-dashed: rgba(99, 102, 241, 0.35);
+  
+  --s30-success-bg: rgba(16, 185, 129, 0.15);
+  --s30-success-text: #34d399;
+  --s30-success-border: rgba(16, 185, 129, 0.3);
+  
+  --s30-warning-bg: rgba(245, 158, 11, 0.15);
+  --s30-warning-text: #fbbf24;
+  --s30-warning-border: rgba(245, 158, 11, 0.3);
+  
+  --s30-danger-bg: rgba(239, 68, 68, 0.15);
+  --s30-danger-text: #f87171;
+  --s30-danger-border: rgba(239, 68, 68, 0.3);
+  
+  --s30-radius-sm: 8px;
+  --s30-radius-md: 12px;
+  --s30-radius-lg: 20px;
+  --s30-radius-xl: 28px;
+  
+  --s30-shadow-glow: 0 0 25px rgba(99, 102, 241, 0.25);
+  --s30-shadow-card: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--s30-bg);
+  background-image: 
+    radial-gradient(at 15% 15%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+    radial-gradient(at 85% 85%, rgba(139, 92, 246, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.06) 0px, transparent 60%);
+  background-attachment: fixed;
+  color: var(--s30-text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   Header Navigation (S30 Navbar)
+   ========================================================================== */
+.s30-navbar {
+  height: 72px;
+  background: rgba(7, 11, 20, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--s30-border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+}
+
+.s30-nav-container {
+  max-width: 1320px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.s30-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.s30-logo-badge {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  background: var(--s30-gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-flex;
+  align-items: center;
+}
+
+.s30-brand-sub {
+  font-size: 11px;
+  color: var(--s30-accent-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  background: rgba(6, 182, 212, 0.12);
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(6, 182, 212, 0.25);
+}
+
+.s30-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+}
+
+.s30-nav-link {
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--s30-text-secondary);
+  transition: all 0.2s ease;
+}
+
+.s30-nav-link:hover,
+.s30-nav-link.active {
+  color: #ffffff;
+}
+
+.s30-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.s30-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  border-radius: var(--s30-radius-md);
+  border: 1px solid var(--s30-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.s30-btn-outline:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.s30-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 22px;
+  border-radius: var(--s30-radius-md);
+  background: var(--s30-gradient-btn);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.s30-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+/* ==========================================================================
+   Split-Screen Futuristic Authentication Layout (Panel 3)
+   ========================================================================== */
+.s30-auth-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.s30-auth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  max-width: 1040px;
+  width: 100%;
+  background: var(--s30-bg-card);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--s30-border);
+  border-radius: var(--s30-radius-xl);
+  box-shadow: var(--s30-shadow-card);
+  overflow: hidden;
+}
+
+/* Left Hero Showcase */
+.s30-auth-hero {
+  position: relative;
+  background: linear-gradient(145deg, #090e1a 0%, #131238 60%, #1e1548 100%);
+  padding: 48px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid var(--s30-border);
+  overflow: hidden;
+}
+
+.s30-auth-hero::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.35) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.s30-hero-content h2 {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+
+.s30-hero-content h2 span {
+  background: var(--s30-gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.s30-hero-content p {
+  font-size: 14px;
+  color: var(--s30-text-secondary);
+  line-height: 1.6;
+}
+
+.s30-hero-graphic {
+  margin: 36px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.s30-hero-graphic svg {
+  max-width: 280px;
+  height: auto;
+  filter: drop-shadow(0 10px 20px rgba(99, 102, 241, 0.3));
+}
+
+.s30-hero-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.s30-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+.s30-feature-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(99, 102, 241, 0.2);
+  color: #818cf8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Right Form Card */
+.s30-auth-card {
+  padding: 44px 44px 44px 44px;
+  display: flex;
+  flex-direction: column;
+}
+
+.s30-form-header {
+  margin-bottom: 24px;
+}
+
+.s30-form-title {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  margin-bottom: 6px;
+}
+
+.s30-form-subtitle {
+  font-size: 13.5px;
+  color: var(--s30-text-secondary);
+}
+
+/* ==========================================================================
+   Form Inputs & Interactive Elements
+   ========================================================================== */
+.s30-form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.s30-form-group {
+  margin-bottom: 14px;
+}
+
+.s30-form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--s30-text-secondary);
+  margin-bottom: 6px;
+}
+
+.s30-input-wrap {
+  display: flex;
+  align-items: center;
+  background: var(--s30-bg-input);
+  border: 1px solid var(--s30-border);
+  border-radius: var(--s30-radius-md);
+  padding: 0 14px;
+  height: 46px;
+  transition: all 0.2s ease;
+}
+
+.s30-input-wrap:focus-within {
+  background: rgba(15, 23, 42, 0.9);
+  border-color: var(--s30-primary);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.s30-input-icon {
+  color: var(--s30-text-muted);
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.s30-input-icon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.s30-input {
+  border: none;
+  background: transparent;
+  width: 100%;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-family: inherit;
+  outline: none;
+}
+
+.s30-input::placeholder {
+  color: var(--s30-text-muted);
+}
+
+.s30-select {
+  border: none;
+  background: transparent;
+  width: 100%;
+  color: #ffffff;
+  font-size: 13.5px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+}
+
+.s30-select option {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+/* Stepper Bar for Step 1-4 */
+.s30-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+  position: relative;
+}
+
+.s30-step-segment {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  margin: 0 4px;
+  transition: all 0.3s ease;
+}
+
+.s30-step-segment.active {
+  background: var(--s30-gradient-brand);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
+}
+
+/* Upload Container */
+.s30-upload-box {
+  border: 1.5px dashed var(--s30-border-dashed);
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: var(--s30-radius-md);
+  padding: 24px 18px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.s30-upload-box:hover {
+  background: rgba(99, 102, 241, 0.06);
+  border-color: var(--s30-primary);
+}
+
+.s30-upload-icon {
+  color: var(--s30-accent-blue);
+  margin-bottom: 6px;
+}
+
+.s30-upload-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.s30-upload-subtitle {
+  font-size: 11.5px;
+  color: var(--s30-text-muted);
+  margin-top: 3px;
+}
+
+.s30-preview-card {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid var(--s30-success-border);
+  border-radius: var(--s30-radius-sm);
+  padding: 10px 14px;
+  margin-top: 8px;
+}
+
+.s30-preview-card.active {
+  display: flex;
+}
+
+/* Status Badges */
+.badge-status {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-verified,
+.badge-done {
+  background: var(--s30-success-bg);
+  color: var(--s30-success-text);
+  border: 1px solid var(--s30-success-border);
+}
+
+.badge-checking,
+.badge-progress {
+  background: var(--s30-warning-bg);
+  color: var(--s30-warning-text);
+  border: 1px solid var(--s30-warning-border);
+}
+
+.badge-rejected {
+  background: var(--s30-danger-bg);
+  color: var(--s30-danger-text);
+  border: 1px solid var(--s30-danger-border);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .s30-auth-grid {
+    grid-template-columns: 1fr;
+  }
+  .s30-auth-hero {
+    display: none;
+  }
+  .s30-auth-card {
+    padding: 32px 24px;
+  }
+  .s30-nav-links {
+    display: none;
+  }
+}

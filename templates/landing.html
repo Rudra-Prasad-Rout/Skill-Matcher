@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}S30 — Verified Students. Limitless Opportunities.{% endblock %}
+
+{% block content_wrapper %}
+<style>
+  /* Glassmorphism Home Page Enhancements */
+  .glass-hero-wrapper {
+    position: relative;
+    padding: 80px 24px 70px 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  /* Ambient Glass Glow Orbs */
+  .glass-orb-1 {
+    position: absolute;
+    top: -60px;
+    left: -80px;
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.28) 0%, rgba(99, 102, 241, 0) 70%);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glass-orb-2 {
+    position: absolute;
+    top: 40px;
+    right: -60px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.22) 0%, rgba(6, 182, 212, 0) 70%);
+    filter: blur(70px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .glass-orb-3 {
+    position: absolute;
+    bottom: -100px;
+    left: 40%;
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 70%);
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Frosted Glass Cards */
+  .s30-glass-panel {
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--s30-radius-xl);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+  }
+
+  .s30-glass-panel:hover {
+    border-color: rgba(99, 102, 241, 0.4);
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 0 0 30px rgba(99, 102, 241, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+  }
+
+  .s30-glass-subcard {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: var(--s30-radius-md);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  .s30-glass-step {
+    background: rgba(15, 23, 42, 0.45);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--s30-radius-lg);
+    padding: 30px 24px;
+    text-align: left;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .s30-glass-step:hover {
+    transform: translateY(-6px);
+    background: rgba(20, 30, 55, 0.6);
+    border-color: rgba(56, 189, 248, 0.45);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  }
+
+  /* Glass Badge */
+  .s30-glass-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(99, 102, 241, 0.18);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(99, 102, 241, 0.38);
+    border-radius: 9999px;
+    padding: 7px 16px;
+    margin-bottom: 24px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .s30-glass-btn-primary {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: #ffffff;
+    padding: 13px 32px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .s30-glass-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  .s30-glass-btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    color: #ffffff;
+    padding: 13px 26px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 12px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.2s ease;
+  }
+
+  .s30-glass-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+  }
+</style>
+
+<!-- Hero Section (Panel 1) with Glass Atmosphere -->
+<div class="glass-hero-wrapper">
+  <!-- Glowing Background Orbs -->
+  <div class="glass-orb-1"></div>
+  <div class="glass-orb-2"></div>
+  <div class="glass-orb-3"></div>
+
+  <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; position: relative; z-index: 1;">
+    
+    <!-- Left Hero Headline -->
+    <div>
+      <div class="s30-glass-pill">
+        <span style="width: 8px; height: 8px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 10px #38bdf8; display: inline-block;"></span>
+        <span style="font-size: 12.5px; font-weight: 700; color: #38bdf8; letter-spacing: 0.02em;">Next-Gen Verified Student Network</span>
+      </div>
+
+      <h1 style="font-size: 54px; font-weight: 900; line-height: 1.12; letter-spacing: -0.03em; margin-bottom: 20px;">
+        Verified Students.<br>
+        <span style="background: linear-gradient(135deg, #6366f1 0%, #a78bfa 50%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          Limitless Opportunities.
+        </span>
+      </h1>
+
+      <p style="font-size: 16.5px; color: var(--s30-text-secondary); line-height: 1.65; max-width: 520px; margin-bottom: 34px;">
+        S30 is a smart platform that verifies student identity, college credentials, and live project proofs to connect you directly with top opportunities tailored for you.
+      </p>
+
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
+        <a href="{{ url_for('signup_new') }}" class="s30-glass-btn-primary">
+          <span>Get Started</span>
+          <span>&rarr;</span>
+        </a>
+        <a href="#how-it-works" class="s30-glass-btn-secondary">
+          <span>▶</span>
+          <span>How S30 Works</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right Hero Graphic / Glass Showcase -->
+    <div style="position: relative;">
+      <div class="s30-glass-panel" style="padding: 34px;">
+        
+        <!-- Header -->
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.09);">
+          <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);">
+            S30
+          </div>
+          <div>
+            <div style="font-size: 17px; font-weight: 800; color: #ffffff;">Verified Student Profile</div>
+            <div style="font-size: 12.5px; color: #38bdf8; font-family: monospace; font-weight: 700;">Candidate ID: A7X9K</div>
+          </div>
+          <div style="margin-left: auto;">
+            <span class="badge-status badge-verified" style="box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);">✓ 100% VERIFIED</span>
+          </div>
+        </div>
+
+        <!-- Glass Detail Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;">
+          <div class="s30-glass-subcard" style="padding: 16px;">
+            <div style="font-size: 11px; color: var(--s30-text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Identity Verification</div>
+            <div style="font-size: 14px; font-weight: 800; color: #34d399; margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+              <span>✓</span> Student ID Verified
+            </div>
+          </div>
+          <div class="s30-glass-subcard" style="padding: 16px;">
+            <div style="font-size: 11px; color: var(--s30-text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Match Score</div>
+            <div style="font-size: 14px; font-weight: 800; color: #38bdf8; margin-top: 4px; display: flex; align-items: center; gap: 6px;">
+              <span>⚡</span> 92% Compatibility
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Opportunities Pill -->
+        <div class="s30-glass-subcard" style="background: rgba(99, 102, 241, 0.12); border-color: rgba(99, 102, 241, 0.3); padding: 16px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 20px;">💼</span>
+            <div>
+              <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">Active Partner Opportunities</div>
+              <div style="font-size: 12px; color: var(--s30-text-secondary);">Direct interview referrals enabled</div>
+            </div>
+          </div>
+          <a href="{{ url_for('signup_new') }}" style="color: #38bdf8; font-size: 12.5px; font-weight: 800; text-decoration: none; padding: 4px 10px; border-radius: 6px; background: rgba(56, 189, 248, 0.1);">Join &rarr;</a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- How S30 Works (Panel 2) with Glass Steps -->
+<section id="how-it-works" style="padding: 70px 24px 90px 24px; max-width: 1280px; margin: 0 auto; text-align: center; position: relative;">
+  <h2 style="font-size: 36px; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 10px;">
+    How <span style="background: linear-gradient(135deg, #6366f1, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">S30</span> Works
+  </h2>
+  <p style="font-size: 15.5px; color: var(--s30-text-secondary); max-width: 500px; margin: 0 auto 50px auto;">
+    Simple steps to unlock the best opportunities with your verified credentials.
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;">
+    
+    <div class="s30-glass-step">
+      <div style="font-size: 12px; font-weight: 900; color: #38bdf8; margin-bottom: 12px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">01</div>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">Create Profile</h3>
+      <p style="font-size: 13.5px; color: var(--s30-text-secondary); line-height: 1.55;">
+        Add your college details, degree branch, coursework, and generate your 5-digit candidate ID code.
+      </p>
+    </div>
+
+    <div class="s30-glass-step">
+      <div style="font-size: 12px; font-weight: 900; color: #818cf8; margin-bottom: 12px; background: rgba(129, 140, 248, 0.15); border: 1px solid rgba(129, 140, 248, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">02</div>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">Link Project Proofs</h3>
+      <p style="font-size: 13.5px; color: var(--s30-text-secondary); line-height: 1.55;">
+        Add technical skills with live GitHub repository links and hosted project URLs for 1-by-1 verification.
+      </p>
+    </div>
+
+    <div class="s30-glass-step">
+      <div style="font-size: 12px; font-weight: 900; color: #a78bfa; margin-bottom: 12px; background: rgba(167, 139, 250, 0.15); border: 1px solid rgba(167, 139, 250, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">03</div>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">Upload ID Cards</h3>
+      <p style="font-size: 13.5px; color: var(--s30-text-secondary); line-height: 1.55;">
+        Upload institutional College ID card (Front and Back) and degree certificates for credential proof.
+      </p>
+    </div>
+
+    <div class="s30-glass-step">
+      <div style="font-size: 12px; font-weight: 900; color: #34d399; margin-bottom: 12px; background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">04</div>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">Get Verified</h3>
+      <p style="font-size: 13.5px; color: var(--s30-text-secondary); line-height: 1.55;">
+        Receive your S30 Institutional Verification badge and unlock top tech internship referrals.
+      </p>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

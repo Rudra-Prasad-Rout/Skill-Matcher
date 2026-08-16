@@ -1,0 +1,28 @@
+<svg width="500" height="300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="grad_R4T2P_FRONT" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#0e1828;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#1e293b;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+        <rect width="500" height="300" rx="16" fill="url(#grad_R4T2P_FRONT)" />
+        <rect x="15" y="15" width="470" height="270" rx="12" fill="#ffffff" />
+        
+        <rect x="15" y="15" width="470" height="50" rx="12" fill="#0e1828" />
+        <text x="35" y="46" font-family="'Helvetica Neue', Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff">Stanford University</text>
+        <rect x="380" y="28" width="90" height="24" rx="6" fill="#38bdf8" />
+        <text x="425" y="44" font-family="sans-serif" font-size="11" font-weight="bold" fill="#0e1828" text-anchor="middle">FRONT SIDE</text>
+        
+        <rect x="35" y="85" width="100" height="120" rx="8" fill="#e2e8f0" stroke="#cbd5e1" />
+        <circle cx="85" cy="130" r="30" fill="#94a3b8" />
+        <path d="M50 195 a35 35 0 0 1 70 0" fill="#64748b" />
+        
+        <text x="155" y="110" font-family="sans-serif" font-size="18" font-weight="bold" fill="#0f172a">Jordan Lee</text>
+        <text x="155" y="132" font-family="sans-serif" font-size="13" color="#64748b" fill="#64748b">Candidate ID: <tspan font-weight="bold" fill="#0284c7">R4T2P</tspan></text>
+        <text x="155" y="152" font-family="sans-serif" font-size="12" fill="#64748b">Stanford Student ID</text>
+        <text x="155" y="172" font-family="sans-serif" font-size="12" fill="#15803d" font-weight="bold">VERIFIED STUDENT</text>
+        
+        <line x1="35" y1="230" x2="465" y2="230" stroke="#e2e8f0" stroke-width="1.5" />
+        <text x="35" y="258" font-family="monospace" font-size="12" fill="#334155">||||| ||||||| |||| |||||| ||||| Valid Thru: 2027</text>
+        <text x="465" y="258" font-family="sans-serif" font-size="11" fill="#94a3b8" text-anchor="end">MATCHPOINT ID SYSTEM</text>
+    </svg>

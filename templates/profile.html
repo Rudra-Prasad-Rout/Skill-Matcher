@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}Create your account — S30{% endblock %}
+
+{% block content %}
+<!-- S30 Stepper (Panel 6) -->
+<div class="s30-stepper">
+  <div class="s30-step-segment active"></div>
+  <div class="s30-step-segment"></div>
+  <div class="s30-step-segment"></div>
+  <div class="s30-step-segment"></div>
+</div>
+
+<div class="s30-form-header">
+  <h1 class="s30-form-title">Create your account</h1>
+  <p class="s30-form-subtitle">Join S30 and start your journey to verified career opportunities.</p>
+</div>
+
+{% if error %}
+<div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; flex-shrink: 0;">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="8" x2="12" y2="12"></line>
+    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+  </svg>
+  <span>{{ error }}</span>
+</div>
+{% endif %}
+
+<form action="{{ url_for('signup_profile') }}" method="POST" id="profile-form">
+  <!-- Row 1: Full Name & Email -->
+  <div class="s30-form-grid-2">
+    <div class="s30-form-group">
+      <label class="s30-form-label" for="full_name">Full Name</label>
+      <div class="s30-input-wrap">
+        <span class="s30-input-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </span>
+        <input 
+          type="text" 
+          id="full_name" 
+          name="full_name" 
+          class="s30-input" 
+          placeholder="Enter your full name" 
+          value="{{ user.full_name if user else (form_data.full_name if form_data else '') }}" 
+          required
+        >
+      </div>
+    </div>
+
+    <div class="s30-form-group">
+      <label class="s30-form-label" for="email">College Email / Gmail</label>
+      <div class="s30-input-wrap" id="email-container">
+        <span class="s30-input-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+        </span>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          class="s30-input" 
+          placeholder="you@college.edu or you@gmail.com" 
+          value="{{ user.email if user else (form_data.email if form_data else '') }}" 
+          required
+          oninput="validateEmailLive()"
+        >
+      </div>
+      <div id="email-error-msg" style="display: none; font-size: 11px; color: #f87171; margin-top: 4px;">
+        ⚠️ Please enter a complete email with '@' and domain (e.g. name@gmail.com).
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Gender & Age -->
+  <div class="s30-form-grid-2">
+    <div class="s30-form-group">
+      <label class="s30-form-label" for="gender">Gender</label>
+      <div class="s30-input-wrap">
+        <span class="s30-input-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+          </svg>
+        </span>
+        <select id="gender" name="gender" class="s30-select">
+          <option value="Male" {% if user and user.gender == 'Male' %}selected{% endif %}>Male</option>
+          <option value="Female" {% if user and user.gender == 'Female' %}selected{% endif %}>Female</option>
+          <option value="Other" {% if user and user.gender == 'Other' %}selected{% endif %}>Other / Prefer not to say</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="s30-form-group">
+      <label class="s30-form-label" for="age">Age</label>
+      <div class="s30-input-wrap">
+        <span class="s30-input-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+        </span>
+        <input 
+          type="number" 
+          id="age" 
+          name="age" 
+          class="s30-input" 
+          placeholder="21" 
+          min="16" 
+          max="100"
+          value="{{ user.age if user else (form_data.age if form_data else '21') }}" 
+          required
+        >
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 3: Password & Confirm Password -->
+  <div class="s30-form-grid-2">
+    <div class="s30-form-group">
+      <label class="s30-form-label" for="password">Password</label>
+      <div class="s30-input-wrap" id="password-container">
+        <span class="s30-input-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </span>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          class="s30-input" 
+          placeholder="Create a password"
+          required
+          oninput="validatePasswordsMatch()"
+        >
+      </div>
+    </div>
+
+    <div class="s30-form-group">
+      <label class="s30-form-label" for="re_password">Confirm Password</label>
+      <div class="s30-input-wrap" id="re-password-container">
+        <span class="s30-input-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </span>
+        <input 
+          type="password" 
+          id="re_password" 
+          name="re_password" 
+          class="s30-input" 
+          placeholder="Confirm your password"
+          required
+          oninput="validatePasswordsMatch()"
+        >
+      </div>
+      <div id="password-match-msg" style="display: none; font-size: 11px; margin-top: 4px;"></div>
+    </div>
+  </div>
+
+  <!-- Row 4: University / College -->
+  <div class="s30-form-group">
+    <label class="s30-form-label" for="school">School / College / University</label>
+    <div class="s30-input-wrap">
+      <span class="s30-input-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"></path>
+          <path d="M22 10v6"></path>
+          <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"></path>
+        </svg>
+      </span>
+      <input 
+        type="text" 
+        id="school" 
+        name="school" 
+        class="s30-input" 
+        placeholder="e.g. Delhi University / Stanford / IIT Delhi" 
+        value="{{ user.school if user else (form_data.school if form_data else '') }}"
+        required
+      >
+    </div>
+  </div>
+
+  <!-- Row 5: Coursework -->
+  <div class="s30-form-group">
+    <label class="s30-form-label" for="coursework">Major / Coursework</label>
+    <div class="s30-input-wrap">
+      <span class="s30-input-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
+      </span>
+      <input 
+        type="text" 
+        id="coursework" 
+        name="coursework" 
+        class="s30-input" 
+        placeholder="e.g. B.Tech Computer Science" 
+        value="{{ user.coursework if user else (form_data.coursework if form_data else '') }}"
+        required
+      >
+    </div>
+  </div>
+
+  <!-- Terms agreement checkbox (Panel 3) -->
+  <div style="display: flex; align-items: center; gap: 8px; margin: 16px 0 22px 0; font-size: 12.5px; color: var(--s30-text-secondary);">
+    <input type="checkbox" id="terms" required checked style="accent-color: var(--s30-primary);">
+    <label for="terms">I agree to the <a href="#" style="color: var(--s30-accent-blue); text-decoration: none;">Terms & Conditions</a></label>
+  </div>
+
+  <!-- Submit Button -->
+  <button type="submit" class="s30-btn-primary" style="width: 100%; height: 48px; font-size: 15px;">
+    <span>Sign Up & Continue</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; margin-left: 6px;">
+      <path d="M5 12h14"></path>
+      <path d="m12 5 7 7-7 7"></path>
+    </svg>
+  </button>
+
+  <div style="text-align: center; font-size: 13px; color: var(--s30-text-secondary); margin-top: 18px;">
+    Already have an account? <a href="{{ url_for('login_page') }}" style="color: var(--s30-accent-cyan); font-weight: 600; text-decoration: none;">Login</a>
+  </div>
+</form>
+
+<script>
+  function validateEmailLive() {
+    const emailInput = document.getElementById('email');
+    const container = document.getElementById('email-container');
+    const errorMsg = document.getElementById('email-error-msg');
+    const emailVal = emailInput.value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (emailVal.length > 0 && !emailRegex.test(emailVal)) {
+      container.style.borderColor = '#f87171';
+      errorMsg.style.display = 'block';
+      return false;
+    } else {
+      container.style.borderColor = '';
+      errorMsg.style.display = 'none';
+      return true;
+    }
+  }
+
+  function validatePasswordsMatch() {
+    const p1 = document.getElementById('password').value;
+    const p2 = document.getElementById('re_password').value;
+    const container = document.getElementById('re-password-container');
+    const msg = document.getElementById('password-match-msg');
+
+    if (p2.length === 0) {
+      container.style.borderColor = '';
+      msg.style.display = 'none';
+      return true;
+    }
+
+    if (p1 !== p2) {
+      container.style.borderColor = '#f87171';
+      msg.style.display = 'block';
+      msg.style.color = '#f87171';
+      msg.textContent = '✕ Passwords do not match';
+      return false;
+    } else {
+      container.style.borderColor = '#34d399';
+      msg.style.display = 'block';
+      msg.style.color = '#34d399';
+      msg.textContent = '✓ Passwords match';
+      return true;
+    }
+  }
+
+  document.getElementById('profile-form').addEventListener('submit', function(e) {
+    if (!validateEmailLive()) {
+      e.preventDefault();
+      alert("Please enter a valid email address containing '@' and domain (e.g. name@gmail.com).");
+      return false;
+    }
+    const p1 = document.getElementById('password').value;
+    const p2 = document.getElementById('re_password').value;
+    if (p1 !== p2) {
+      e.preventDefault();
+      alert("Passwords do not match. Please ensure both passwords match.");
+      return false;
+    }
+  });
+</script>
+{% endblock %}

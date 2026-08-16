@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Skills & Projects — S30{% endblock %}
+
+{% block content %}
+<!-- S30 Stepper (Step 2 Active) -->
+<div class="s30-stepper">
+  <div class="s30-step-segment active"></div>
+  <div class="s30-step-segment active"></div>
+  <div class="s30-step-segment"></div>
+  <div class="s30-step-segment"></div>
+</div>
+
+<div class="s30-form-header">
+  <h1 class="s30-form-title">Skills & Project Proofs</h1>
+  <p class="s30-form-subtitle">Pair your core technical skills with direct live GitHub repository or project URLs.</p>
+</div>
+
+<div id="skills-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+  {% if skills %}
+    {% for skill in skills %}
+    <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--s30-border); border-radius: var(--s30-radius-md); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="font-size: 14.5px; font-weight: 700; color: #ffffff;">
+          {{ skill.skill_name }} <span style="font-weight: 400; color: var(--s30-text-secondary);">— {{ skill.project_name }}</span>
+        </div>
+        {% if skill.project_url %}
+        <a href="{{ skill.project_url }}" target="_blank" style="font-size: 12px; color: var(--s30-accent-cyan); text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;">
+          🔗 {{ skill.project_url }}
+        </a>
+        {% endif %}
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="badge-status {% if skill.status == 'VERIFIED' %}badge-verified{% elif skill.status == 'REJECTED' %}badge-rejected{% else %}badge-checking{% endif %}">
+          {{ skill.status }}
+        </span>
+        <button type="button" onclick="deleteSkill({{ skill.id }})" style="background: transparent; border: none; color: #f87171; cursor: pointer; font-size: 16px; padding: 2px 6px;">&times;</button>
+      </div>
+    </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<!-- Add Skill Form Box -->
+<div style="background: rgba(15, 23, 42, 0.5); border: 1px dashed var(--s30-border-dashed); border-radius: var(--s30-radius-md); padding: 18px; margin-bottom: 24px;">
+  <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--s30-accent-blue); margin-bottom: 12px;">+ Add Technical Skill & Project</div>
+  
+  <div class="s30-form-grid-2">
+    <div class="s30-form-group">
+      <label class="s30-form-label">Skill Name</label>
+      <div class="s30-input-wrap">
+        <input type="text" id="new-skill-name" class="s30-input" placeholder="e.g. Python, React, AI">
+      </div>
+    </div>
+    <div class="s30-form-group">
+      <label class="s30-form-label">Project Title</label>
+      <div class="s30-input-wrap">
+        <input type="text" id="new-project-name" class="s30-input" placeholder="e.g. Campus Events Portal">
+      </div>
+    </div>
+  </div>
+
+  <div class="s30-form-group">
+    <label class="s30-form-label">Project URL (GitHub Repo or Live Website)</label>
+    <div class="s30-input-wrap">
+      <input type="url" id="new-project-url" class="s30-input" placeholder="https://github.com/yourname/project">
+    </div>
+  </div>
+
+  <button type="button" class="s30-btn-outline" onclick="addSkill()" style="width: 100%; border-color: rgba(99, 102, 241, 0.4); color: #38bdf8;">
+    + Add Skill to Profile
+  </button>
+</div>
+
+<form action="{{ url_for('signup_skills') }}" method="POST">
+  <button type="submit" class="s30-btn-primary" style="width: 100%; height: 48px; font-size: 15px;">
+    <span>Continue to Verification</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; margin-left: 6px;">
+      <path d="M5 12h14"></path>
+      <path d="m12 5 7 7-7 7"></path>
+    </svg>
+  </button>
+</form>
+
+<script>
+  async function addSkill() {
+    const sName = document.getElementById('new-skill-name').value.trim();
+    const pName = document.getElementById('new-project-name').value.trim();
+    const pUrl = document.getElementById('new-project-url').value.trim();
+
+    if (!sName || !pName || !pUrl) {
+      alert("Please provide Skill Name, Project Title, and a valid GitHub or website URL.");
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/skills', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ skill_name: sName, project_name: pName, project_url: pUrl, status: 'CHECKING' })
+      });
+
+      if (res.ok) {
+        window.location.reload();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async function deleteSkill(skillId) {
+    if (!confirm("Remove this skill from your profile?")) return;
+    try {
+      const res = await fetch('/api/skills', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: skillId })
+      });
+      if (res.ok) {
+        window.location.reload();
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+</script>
+{% endblock %}
