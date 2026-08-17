@@ -17,3 +17,7 @@ services:
         value: smtp.gmail.com
       - key: SMTP_PORT
         value: "465"
+      - key: BREVO_API_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
