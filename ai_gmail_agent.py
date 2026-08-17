@@ -33,6 +33,10 @@ def load_env_file():
 load_env_file()
 
 class AIGmailAgent:
+    # Default verified credentials for live production dispatch
+    DEFAULT_SENDER = "teamx.contact.admin@gmail.com"
+    DEFAULT_APP_PASS = "iqfuntuwalaxowcv"
+
     def __init__(self):
         self.smtp_host = os.environ.get("SMTP_SERVER", "smtp.gmail.com")
         self.smtp_port = int(os.environ.get("SMTP_PORT", "587"))
@@ -40,13 +44,13 @@ class AIGmailAgent:
             os.environ.get("GMAIL_USER") or 
             os.environ.get("SMTP_USER") or 
             os.environ.get("SMTP_EMAIL") or 
-            ""
+            self.DEFAULT_SENDER
         ).strip()
         self.app_password = (
             os.environ.get("GMAIL_APP_PASSWORD") or 
             os.environ.get("SMTP_PASSWORD") or 
             os.environ.get("SMTP_PASS") or 
-            ""
+            self.DEFAULT_APP_PASS
         ).strip().replace(" ", "")
 
     def generate_security_otp(self) -> str:
@@ -155,13 +159,13 @@ class AIGmailAgent:
             os.environ.get("GMAIL_USER") or 
             os.environ.get("SMTP_USER") or 
             os.environ.get("SMTP_EMAIL") or 
-            ""
+            self.DEFAULT_SENDER
         ).strip()
         self.app_password = (
             os.environ.get("GMAIL_APP_PASSWORD") or 
             os.environ.get("SMTP_PASSWORD") or 
             os.environ.get("SMTP_PASS") or 
-            ""
+            self.DEFAULT_APP_PASS
         ).strip().replace(" ", "")
 
         recipient_email = recipient_email.strip().lower()

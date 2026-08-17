@@ -10,10 +10,10 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: GMAIL_USER
-        sync: false
+        value: teamx.contact.admin@gmail.com
       - key: GMAIL_APP_PASSWORD
-        sync: false
+        value: iqfuntuwalaxowcv
       - key: SMTP_SERVER
         value: smtp.gmail.com
       - key: SMTP_PORT
-        value: "587"
+        value: "465"
