@@ -279,11 +279,7 @@
         
         if (msg) {
           msg.style.color = '#22c55e';
-          if (data.quick_code) {
-            msg.innerHTML = `✓ Code sent! <span style="margin-left: 6px; background: #FFE600; color: #000; padding: 2px 6px; border-radius: 4px; font-weight: 900; cursor: pointer; border: 1.5px solid #000;" onclick="document.getElementById('otp_login_code').value='${data.quick_code}'; verifyLoginOtp();">⚡ AUTO-FILL: ${data.quick_code}</span>`;
-          } else {
-            msg.textContent = '✓ 6-Digit code delivered to your Gmail inbox!';
-          }
+          msg.textContent = '✓ 6-Digit security code dispatched to your Gmail inbox! Please check your email.';
         }
         document.getElementById('otp_login_code').focus();
       } else {

@@ -96,8 +96,7 @@ def api_send_otp():
         "success": True,
         "message": f"6-Digit verification code dispatched to {email}! Please check your Gmail.",
         "mode": "LIVE_GMAIL_DISPATCH",
-        "email": email,
-        "quick_code": otp_code
+        "email": email
     })
 
 @app.route("/api/auth/verify-otp", methods=["POST"])

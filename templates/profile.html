@@ -398,16 +398,8 @@
         
         if (feedback) {
           feedback.style.display = 'block';
-          if (data.quick_code) {
-            feedback.style.color = '#22c55e';
-            feedback.innerHTML = `✓ 6-Digit code dispatched to Gmail! <span style="margin-left: 8px; background: #FFE600; color: #000; padding: 2px 8px; border-radius: 4px; font-weight: 900; cursor: pointer; border: 1.5px solid #000;" onclick="document.getElementById('otp-input').value='${data.quick_code}'; verifyEmailOtp();">⚡ AUTO-FILL: ${data.quick_code}</span>`;
-          } else if (data.mode === 'LIVE_GMAIL_DISPATCH') {
-            feedback.style.color = '#22c55e';
-            feedback.textContent = '✓ 6-Digit verification code delivered to your Google Gmail inbox! Check your email.';
-          } else {
-            feedback.style.color = '#00f0ff';
-            feedback.textContent = '✓ ' + (data.message || '6-Digit verification code dispatched to your Gmail!');
-          }
+          feedback.style.color = '#22c55e';
+          feedback.textContent = '✓ 6-Digit verification code dispatched to your Google Gmail inbox! Please check your email.';
         }
 
         document.getElementById('otp-input').focus();
