@@ -826,17 +826,23 @@ html, body {
 
   /* Form & Card adjustments */
   .s30-auth-wrapper {
-    padding: 14px 10px;
+    padding: 20px 12px;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .s30-auth-grid {
-    border-radius: 8px;
-    border-width: 2px;
+    border-radius: 12px;
+    border-width: 2.5px;
     box-shadow: 4px 4px 0px #FFE600;
-    width: 100%;
+    width: 90%;
+    max-width: 440px;
+    margin: 0 auto;
+    overflow: hidden;
   }
   .s30-auth-card {
-    padding: 20px 14px;
+    padding: 24px 18px;
     width: 100%;
   }
   .s30-form-header {
@@ -922,10 +928,15 @@ html, body {
 
 @media (max-width: 380px) {
   .s30-auth-wrapper {
-    padding: 10px 6px;
+    padding: 14px 8px;
+  }
+  .s30-auth-grid {
+    width: 92%;
+    max-width: 340px;
+    box-shadow: 3px 3px 0px #FFE600;
   }
   .s30-auth-card {
-    padding: 16px 10px;
+    padding: 18px 12px;
   }
   .s30-form-title {
     font-size: 18px;
@@ -947,4 +958,5 @@ html, body {
     font-size: 10px !important;
   }
 }
+
 
