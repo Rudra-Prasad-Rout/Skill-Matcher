@@ -761,18 +761,190 @@ select:-webkit-autofill {
   color: #ffffff;
 }
 
-/* Responsive */
+/* ==========================================================================
+   Comprehensive Mobile & Tablet Responsive Engine
+   ========================================================================== */
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+}
+
 @media (max-width: 900px) {
   .s30-auth-grid {
     grid-template-columns: 1fr;
+    max-width: 100%;
+    box-shadow: 6px 6px 0px #FFE600;
   }
   .s30-auth-hero {
     display: none;
   }
   .s30-auth-card {
-    padding: 32px 20px;
+    padding: 30px 20px;
+    width: 100%;
   }
   .s30-nav-links {
     display: none;
   }
 }
+
+@media (max-width: 600px) {
+  /* Navbar adjustments */
+  .s30-navbar {
+    height: 60px;
+    padding: 0 10px;
+  }
+  .s30-nav-container {
+    padding: 0 4px;
+    gap: 8px;
+  }
+  .s30-brand {
+    gap: 6px;
+  }
+  .s30-logo-badge {
+    font-size: 17px;
+    padding: 2px 7px;
+    box-shadow: 2px 2px 0px #FFE600;
+  }
+  .s30-brand-sub {
+    font-size: 9px;
+    padding: 2px 5px;
+  }
+  .s30-nav-actions {
+    gap: 6px;
+  }
+  .s30-btn-outline, a.s30-btn-outline {
+    padding: 5px 10px !important;
+    font-size: 11px !important;
+    box-shadow: 2px 2px 0px #ffffff !important;
+  }
+  .s30-btn-primary, a.s30-btn-primary {
+    padding: 6px 12px !important;
+    font-size: 11.5px !important;
+    box-shadow: 2px 2px 0px #FFE600 !important;
+  }
+
+  /* Form & Card adjustments */
+  .s30-auth-wrapper {
+    padding: 14px 10px;
+    width: 100%;
+  }
+  .s30-auth-grid {
+    border-radius: 8px;
+    border-width: 2px;
+    box-shadow: 4px 4px 0px #FFE600;
+    width: 100%;
+  }
+  .s30-auth-card {
+    padding: 20px 14px;
+    width: 100%;
+  }
+  .s30-form-header {
+    margin-bottom: 18px;
+  }
+  .s30-form-title {
+    font-size: 20px;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+  .s30-form-subtitle {
+    font-size: 12.5px;
+    line-height: 1.45;
+  }
+
+  /* Stepper */
+  .s30-stepper {
+    gap: 4px;
+    margin-bottom: 18px;
+  }
+  .s30-step-segment {
+    height: 6px;
+  }
+
+  /* Inputs & Grid */
+  .s30-form-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .s30-form-group {
+    margin-bottom: 16px;
+  }
+  .s30-input-wrap {
+    width: 100%;
+  }
+  .s30-input, .s30-select {
+    font-size: 13.5px;
+    padding: 10px 12px 10px 38px;
+    width: 100%;
+  }
+
+  /* Buttons & Actions */
+  .neo-btn {
+    white-space: normal !important;
+    text-align: center;
+    justify-content: center;
+    max-width: 100%;
+    padding: 10px 14px !important;
+    font-size: 12px !important;
+    line-height: 1.3 !important;
+  }
+  #btn-send-otp {
+    width: 100%;
+  }
+  .s30-nav-step-row {
+    flex-direction: column-reverse;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .s30-btn-back, .s30-btn-forward {
+    width: 100%;
+    justify-content: center;
+    height: 44px;
+  }
+
+  /* OTP Verification Box */
+  #otp-verification-box {
+    padding: 14px 12px !important;
+    box-shadow: 2.5px 2.5px 0px #00f0ff !important;
+  }
+  #otp-verification-box input#otp-input {
+    width: 100%;
+    max-width: 100% !important;
+    margin-bottom: 6px;
+  }
+  #otp-verification-box #btn-verify-otp,
+  #otp-verification-box #btn-resend-otp {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .s30-auth-wrapper {
+    padding: 10px 6px;
+  }
+  .s30-auth-card {
+    padding: 16px 10px;
+  }
+  .s30-form-title {
+    font-size: 18px;
+  }
+  .s30-brand {
+    gap: 4px;
+  }
+  .s30-logo-badge {
+    font-size: 15px;
+    padding: 1px 5px;
+  }
+  .s30-brand-sub {
+    font-size: 8px;
+    padding: 1px 4px;
+  }
+  .s30-btn-outline, a.s30-btn-outline,
+  .s30-btn-primary, a.s30-btn-primary {
+    padding: 4px 8px !important;
+    font-size: 10px !important;
+  }
+}
+

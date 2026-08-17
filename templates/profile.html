@@ -53,7 +53,7 @@
 
   <!-- Row 2: College Email / Gmail & Verification Down Below -->
   <div class="s30-form-group" style="margin-bottom: 22px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
       <label class="s30-form-label" for="email" style="margin-bottom: 0;">College Email / Gmail</label>
       <span id="email-verified-badge" class="neo-badge {% if user and user.email_verified %}neo-badge-green{% else %}neo-badge-pink{% endif %}" style="font-size: 10px; padding: 2px 8px;">
         {% if user and user.email_verified %}

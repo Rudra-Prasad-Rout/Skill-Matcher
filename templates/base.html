@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.1">
   <style>
     /* Global Neo-Brutalism Overrides */
     .neo-btn {
@@ -28,7 +28,21 @@
       cursor: pointer !important;
       text-decoration: none !important;
       transition: all 0.15s ease !important;
-      white-space: nowrap !important;
+      white-space: nowrap;
+      box-sizing: border-box !important;
+    }
+    @media (max-width: 600px) {
+      .neo-btn {
+        white-space: normal !important;
+        padding: 9px 12px !important;
+        font-size: 12px !important;
+        max-width: 100% !important;
+      }
+      .s30-btn-outline, a.s30-btn-outline,
+      .s30-btn-primary, a.s30-btn-primary {
+        padding: 5px 10px !important;
+        font-size: 11px !important;
+      }
     }
     .neo-btn:hover {
       transform: translate(2px, 2px) !important;
@@ -59,6 +73,7 @@
       border: 2px solid #000000 !important;
       box-shadow: 2.5px 2.5px 0px #000000 !important;
       line-height: 1.2 !important;
+      box-sizing: border-box !important;
     }
     .neo-badge-yellow { background: #FFE600 !important; color: #000000 !important; }
     .neo-badge-cyan { background: #00f0ff !important; color: #000000 !important; }
@@ -85,6 +100,7 @@
       box-shadow: 3px 3px 0px #ffffff !important;
       transition: all 0.15s ease !important;
       cursor: pointer !important;
+      box-sizing: border-box !important;
     }
     .s30-btn-outline:hover, a.s30-btn-outline:hover {
       background: #1e293b !important;
@@ -109,6 +125,7 @@
       box-shadow: 3px 3px 0px #FFE600 !important;
       transition: all 0.15s ease !important;
       cursor: pointer !important;
+      box-sizing: border-box !important;
     }
     .s30-btn-primary:hover, a.s30-btn-primary:hover {
       transform: translate(1px, 1px) !important;
