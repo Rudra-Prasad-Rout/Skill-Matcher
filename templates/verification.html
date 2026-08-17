@@ -3,12 +3,13 @@
 {% block title %}Verification Status — S30{% endblock %}
 
 {% block content %}
-<!-- S30 Stepper (All 4 Steps Active) -->
+<!-- S30 Stepper (Step 4 Active) -->
 <div class="s30-stepper">
-  <div class="s30-step-segment active"></div>
-  <div class="s30-step-segment active"></div>
-  <div class="s30-step-segment active"></div>
-  <div class="s30-step-segment active"></div>
+  <a href="{{ url_for('signup_profile') }}" class="s30-step-segment active" title="Step 1: Profile"></a>
+  <a href="{{ url_for('signup_skills') }}" class="s30-step-segment active" title="Step 2: Skills"></a>
+  <a href="{{ url_for('signup_documents') }}" class="s30-step-segment active" title="Step 3: Documents"></a>
+  <a href="{{ url_for('signup_verification') }}" class="s30-step-segment active" title="Step 4: Verification"></a>
+  <a href="{{ url_for('signup_analysis') }}" class="s30-step-segment" title="Step 5: AI Analysis"></a>
 </div>
 
 <div class="s30-form-header">
@@ -26,9 +27,25 @@
 </div>
 
 {% if user and user.is_banned %}
-<div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 16px; border-radius: 14px; margin-bottom: 20px; font-size: 13.5px;">
+<div style="background: #000000; border: 2.5px solid #ff2a85; color: #ff2a85; padding: 16px 20px; border-radius: 6px; margin-bottom: 20px; font-size: 13.5px; box-shadow: 4px 4px 0px #ff2a85;">
   <strong style="display: block; font-size: 15px; margin-bottom: 4px;">⚠️ Candidate ID Suspended by S30 Staff</strong>
   Reason: {{ user.ban_reason or 'Credential verification failure.' }}
+</div>
+{% elif is_approved %}
+<div id="approval-banner" style="background: #090f1d; border: 2.5px solid #22c55e; color: #22c55e; padding: 16px 20px; border-radius: 6px; margin-bottom: 20px; font-size: 13.5px; box-shadow: 4px 4px 0px #22c55e; display: flex; align-items: center; gap: 12px;">
+  <div style="width: 32px; height: 32px; border-radius: 4px; background: #22c55e; color: #000; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; border: 1.5px solid #000;">✓</div>
+  <div>
+    <strong style="display: block; font-size: 14.5px; color: #ffffff; text-transform: uppercase;">✓ Application Approved by Admin</strong>
+    <span style="color: #cbd5e1; font-weight: 600;">Your credentials and student documents have been verified. AI Profile Analysis & Internship Matchmaking is now unlocked!</span>
+  </div>
+</div>
+{% else %}
+<div id="approval-banner" style="background: #090f1d; border: 2.5px solid #FFE600; color: #FFE600; padding: 16px 20px; border-radius: 6px; margin-bottom: 20px; font-size: 13.5px; box-shadow: 4px 4px 0px #FFE600; display: flex; align-items: center; gap: 12px;">
+  <div style="width: 32px; height: 32px; border-radius: 4px; background: #FFE600; color: #000; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; border: 1.5px solid #000;">⏳</div>
+  <div>
+    <strong style="display: block; font-size: 14px; color: #FFE600; text-transform: uppercase;">Awaiting Staff & Admin Approval</strong>
+    <span style="color: #cbd5e1; font-weight: 600;">Your College ID and credentials have been submitted. <strong>AI Profile Analysis & Internship Matchmaking will unlock as soon as the Admin team reviews and approves your account.</strong></span>
+  </div>
 </div>
 {% endif %}
 
@@ -36,26 +53,26 @@
 <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 26px;">
   
   <!-- Check 1: Account Created -->
-  <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--s30-border); border-radius: var(--s30-radius-md); padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+  <div style="background: #090f1d; border: 2px solid #22c55e; border-radius: 6px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 4px 4px 0px #22c55e;">
     <div style="display: flex; align-items: center; gap: 12px;">
-      <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--s30-success-bg); color: var(--s30-success-text); display: flex; align-items: center; justify-content: center; font-weight: 700;">✓</div>
+      <div style="width: 32px; height: 32px; border-radius: 4px; background: #22c55e; border: 2px solid #000000; color: #000000; display: flex; align-items: center; justify-content: center; font-weight: 900; box-shadow: 2px 2px 0px #000000;">✓</div>
       <div>
-        <div style="font-size: 14px; font-weight: 700; color: #ffffff;">Account & Student Registration</div>
-        <div style="font-size: 11.5px; color: var(--s30-text-muted);">{{ user.email if user else '' }}</div>
+        <div style="font-size: 14.5px; font-weight: 800; color: #ffffff;">Account & Student Registration</div>
+        <div style="font-size: 12px; color: #cbd5e1; font-weight: 600;">{{ user.email if user else '' }}</div>
       </div>
     </div>
     <span class="badge-status badge-done">DONE</span>
   </div>
 
   <!-- Check 2: ID Card & PDF Verification -->
-  <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--s30-border); border-radius: var(--s30-radius-md); padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+  <div style="background: #090f1d; border: 2px solid {% if user.pdf_status == 'DONE' %}#22c55e{% elif user.pdf_status == 'REJECTED' %}#ff2a85{% else %}#FFE600{% endif %}; border-radius: 6px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 4px 4px 0px {% if user.pdf_status == 'DONE' %}#22c55e{% elif user.pdf_status == 'REJECTED' %}#ff2a85{% else %}#FFE600{% endif %};">
     <div style="display: flex; align-items: center; gap: 12px;">
-      <div style="width: 28px; height: 28px; border-radius: 50%; background: {% if user.pdf_status == 'DONE' %}var(--s30-success-bg){% elif user.pdf_status == 'REJECTED' %}var(--s30-danger-bg){% else %}var(--s30-warning-bg){% endif %}; color: {% if user.pdf_status == 'DONE' %}var(--s30-success-text){% elif user.pdf_status == 'REJECTED' %}var(--s30-danger-text){% else %}var(--s30-warning-text){% endif %}; display: flex; align-items: center; justify-content: center; font-weight: 700;" id="icon-pdf">
+      <div style="width: 32px; height: 32px; border-radius: 4px; background: {% if user.pdf_status == 'DONE' %}#22c55e{% elif user.pdf_status == 'REJECTED' %}#ff2a85{% else %}#FFE600{% endif %}; border: 2px solid #000000; color: {% if user.pdf_status == 'REJECTED' %}#ffffff{% else %}#000000{% endif %}; display: flex; align-items: center; justify-content: center; font-weight: 900; box-shadow: 2px 2px 0px #000000;" id="icon-pdf">
         {% if user.pdf_status == 'DONE' %}✓{% elif user.pdf_status == 'REJECTED' %}✕{% else %}⏳{% endif %}
       </div>
       <div>
-        <div style="font-size: 14px; font-weight: 700; color: #ffffff;">College ID Card (Front & Back) & Documents</div>
-        <div style="font-size: 11.5px; color: var(--s30-text-muted);">Automated OCR and credential structure check</div>
+        <div style="font-size: 14.5px; font-weight: 800; color: #ffffff;">College ID Card (Front & Back) & Documents</div>
+        <div style="font-size: 12px; color: #cbd5e1; font-weight: 600;">Automated OCR and credential structure check</div>
       </div>
     </div>
     <span class="badge-status {% if user.pdf_status == 'DONE' %}badge-done{% elif user.pdf_status == 'REJECTED' %}badge-rejected{% else %}badge-progress{% endif %}" id="badge-pdf">
@@ -64,14 +81,14 @@
   </div>
 
   <!-- Check 3: Staff Human Review & Project Verification -->
-  <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--s30-border); border-radius: var(--s30-radius-md); padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
+  <div style="background: #090f1d; border: 2px solid {% if user.manual_status in ['DONE', 'APPROVED'] %}#22c55e{% elif user.manual_status == 'REJECTED' %}#ff2a85{% else %}#FFE600{% endif %}; border-radius: 6px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 4px 4px 0px {% if user.manual_status in ['DONE', 'APPROVED'] %}#22c55e{% elif user.manual_status == 'REJECTED' %}#ff2a85{% else %}#FFE600{% endif %};">
     <div style="display: flex; align-items: center; gap: 12px;">
-      <div style="width: 28px; height: 28px; border-radius: 50%; background: {% if user.manual_status in ['DONE', 'APPROVED'] %}var(--s30-success-bg){% elif user.manual_status == 'REJECTED' %}var(--s30-danger-bg){% else %}var(--s30-warning-bg){% endif %}; color: {% if user.manual_status in ['DONE', 'APPROVED'] %}var(--s30-success-text){% elif user.manual_status == 'REJECTED' %}var(--s30-danger-text){% else %}var(--s30-warning-text){% endif %}; display: flex; align-items: center; justify-content: center; font-weight: 700;" id="icon-manual">
+      <div style="width: 32px; height: 32px; border-radius: 4px; background: {% if user.manual_status in ['DONE', 'APPROVED'] %}#22c55e{% elif user.manual_status == 'REJECTED' %}#ff2a85{% else %}#FFE600{% endif %}; border: 2px solid #000000; color: {% if user.manual_status == 'REJECTED' %}#ffffff{% else %}#000000{% endif %}; display: flex; align-items: center; justify-content: center; font-weight: 900; box-shadow: 2px 2px 0px #000000;" id="icon-manual">
         {% if user.manual_status in ['DONE', 'APPROVED'] %}✓{% elif user.manual_status == 'REJECTED' %}✕{% else %}⏳{% endif %}
       </div>
       <div>
-        <div style="font-size: 14px; font-weight: 700; color: #ffffff;">S30 Staff Review & Live Project Audit</div>
-        <div style="font-size: 11.5px; color: var(--s30-text-muted);">Human reviewer checks GitHub code repository and institutional status</div>
+        <div style="font-size: 14.5px; font-weight: 800; color: #ffffff;">S30 Staff Review & Live Project Audit</div>
+        <div style="font-size: 12px; color: #cbd5e1; font-weight: 600;">Human reviewer checks GitHub code repository and institutional status</div>
       </div>
     </div>
     <span class="badge-status {% if user.manual_status in ['DONE', 'APPROVED'] %}badge-done{% elif user.manual_status == 'REJECTED' %}badge-rejected{% else %}badge-progress{% endif %}" id="badge-manual">
@@ -79,10 +96,59 @@
     </span>
   </div>
 
+  <!-- Check 4: Uploaded Certificates Review by Admin -->
+  {% if certificates %}
+    {% for cert in certificates %}
+    <div style="background: #090f1d; border: 2px solid {% if cert.review_status == 'APPROVED' %}#22c55e{% elif cert.review_status == 'REJECTED' %}#ff2a85{% else %}#00f0ff{% endif %}; border-radius: 6px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 4px 4px 0px {% if cert.review_status == 'APPROVED' %}#22c55e{% elif cert.review_status == 'REJECTED' %}#ff2a85{% else %}#00f0ff{% endif %};" id="cert-status-row-{{ cert.id }}">
+      <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+        <div style="width: 32px; height: 32px; border-radius: 4px; background: {% if cert.review_status == 'APPROVED' %}#22c55e{% elif cert.review_status == 'REJECTED' %}#ff2a85{% else %}#00f0ff{% endif %}; border: 2px solid #000000; color: {% if cert.review_status == 'REJECTED' %}#ffffff{% else %}#000000{% endif %}; display: flex; align-items: center; justify-content: center; font-weight: 900; box-shadow: 2px 2px 0px #000000;" id="icon-cert-{{ cert.id }}">
+          {% if cert.review_status == 'APPROVED' %}✓{% elif cert.review_status == 'REJECTED' %}✕{% else %}⏳{% endif %}
+        </div>
+        <div style="min-width: 0;">
+          <div style="font-size: 14.5px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            Certificate: {{ cert.original_name }}
+          </div>
+          <div style="font-size: 12px; color: #cbd5e1; font-weight: 600;">
+            Admin Credential & Authenticity Verification
+          </div>
+        </div>
+      </div>
+      <span class="badge-status {% if cert.review_status == 'APPROVED' %}badge-done{% elif cert.review_status == 'REJECTED' %}badge-rejected{% else %}badge-progress{% endif %}" id="badge-cert-status-{{ cert.id }}">
+        {{ cert.review_status or 'PENDING REVIEW' }}
+      </span>
+    </div>
+    {% endfor %}
+  {% endif %}
+
+</div>
+
+  <!-- Navigation Buttons (Back & Forward) -->
+  <div class="s30-nav-step-row">
+    <a href="{{ url_for('signup_documents') }}" class="s30-btn-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+        <path d="m15 18-6-6 6-6"></path>
+      </svg>
+      <span>Back to Documents</span>
+    </a>
+
+    <div id="action-btn-container">
+      {% if is_approved %}
+        <a href="{{ url_for('signup_analysis') }}" class="neo-btn neo-btn-green" style="padding: 10px 18px; font-size: 13px; text-decoration: none;">
+          <span>🚀 UNLOCK & VIEW AI PROFILE ANALYSIS &rarr;</span>
+        </a>
+      {% else %}
+        <button type="button" class="neo-btn neo-btn-dark" style="opacity: 0.65; cursor: not-allowed; padding: 10px 18px; font-size: 12px;" onclick="alert('⏳ Awaiting Admin Approval:\n\nYour application is under review by S30 staff. AI Profile Analysis will automatically unlock once Admin approves your account.')">
+          <span>🔒 AWAITING ADMIN APPROVAL TO ANALYZE</span>
+        </button>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 <!-- Real-time Polling -->
 <script>
+  let currentlyApproved = {{ 'true' if is_approved else 'false' }};
+
   function pollVerification() {
     fetch('/api/verification-status')
       .then(res => res.json())
@@ -108,6 +174,46 @@
             b.className = 'badge-status ' + ((data.manual_status === 'DONE' || data.manual_status === 'APPROVED') ? 'badge-done' : (data.manual_status === 'REJECTED' ? 'badge-rejected' : 'badge-progress'));
           }
           if (ic) ic.textContent = (data.manual_status === 'DONE' || data.manual_status === 'APPROVED') ? '✓' : (data.manual_status === 'REJECTED' ? '✕' : '⏳');
+        }
+        if (data.certificates && data.certificates.length > 0) {
+          data.certificates.forEach(c => {
+            const b = document.getElementById(`badge-cert-status-${c.id}`);
+            const ic = document.getElementById(`icon-cert-${c.id}`);
+            if (b) {
+              const text = c.review_status === 'APPROVED' ? 'VERIFIED' : (c.review_status === 'REJECTED' ? 'REJECTED' : 'PENDING REVIEW');
+              b.textContent = text;
+              b.className = 'badge-status ' + (c.review_status === 'APPROVED' ? 'badge-done' : (c.review_status === 'REJECTED' ? 'badge-rejected' : 'badge-progress'));
+            }
+            if (ic) {
+              ic.textContent = c.review_status === 'APPROVED' ? '✓' : (c.review_status === 'REJECTED' ? '✕' : '⏳');
+            }
+          });
+        }
+
+        // Live check for Admin Approval status
+        if (data.is_approved && !currentlyApproved) {
+          currentlyApproved = true;
+          const container = document.getElementById('action-btn-container');
+          if (container) {
+            container.innerHTML = `
+              <a href="{{ url_for('signup_analysis') }}" class="neo-btn neo-btn-green" style="padding: 10px 18px; font-size: 13px; text-decoration: none;">
+                <span>🚀 UNLOCK & VIEW AI PROFILE ANALYSIS &rarr;</span>
+              </a>
+            `;
+          }
+          const banner = document.getElementById('approval-banner');
+          if (banner) {
+            banner.style.borderColor = '#22c55e';
+            banner.style.color = '#22c55e';
+            banner.style.boxShadow = '4px 4px 0px #22c55e';
+            banner.innerHTML = `
+              <div style="width: 32px; height: 32px; border-radius: 4px; background: #22c55e; color: #000; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; border: 1.5px solid #000;">✓</div>
+              <div>
+                <strong style="display: block; font-size: 14.5px; color: #ffffff; text-transform: uppercase;">✓ Application Approved by Admin</strong>
+                <span style="color: #cbd5e1; font-weight: 600;">Your credentials and student documents have been verified. AI Profile Analysis & Internship Matchmaking is now unlocked!</span>
+              </div>
+            `;
+          }
         }
       })
       .catch(e => console.error(e));

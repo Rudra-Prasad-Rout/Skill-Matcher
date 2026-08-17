@@ -5,10 +5,11 @@
 {% block content %}
 <!-- S30 Stepper (Step 2 Active) -->
 <div class="s30-stepper">
-  <div class="s30-step-segment active"></div>
-  <div class="s30-step-segment active"></div>
-  <div class="s30-step-segment"></div>
-  <div class="s30-step-segment"></div>
+  <a href="{{ url_for('signup_profile') }}" class="s30-step-segment active" title="Step 1: Profile"></a>
+  <a href="{{ url_for('signup_skills') }}" class="s30-step-segment active" title="Step 2: Skills"></a>
+  <a href="{{ url_for('signup_documents') }}" class="s30-step-segment" title="Step 3: Documents"></a>
+  <a href="{{ url_for('signup_analysis') }}" class="s30-step-segment" title="Step 4: AI Analysis"></a>
+  <a href="{{ url_for('signup_verification') }}" class="s30-step-segment" title="Step 5: Verification"></a>
 </div>
 
 <div class="s30-form-header">
@@ -19,13 +20,13 @@
 <div id="skills-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
   {% if skills %}
     {% for skill in skills %}
-    <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--s30-border); border-radius: var(--s30-radius-md); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center;">
+    <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 4px 4px 0px #00f0ff;">
       <div>
-        <div style="font-size: 14.5px; font-weight: 700; color: #ffffff;">
-          {{ skill.skill_name }} <span style="font-weight: 400; color: var(--s30-text-secondary);">— {{ skill.project_name }}</span>
+        <div style="font-size: 15px; font-weight: 800; color: #ffffff;">
+          {{ skill.skill_name }} <span style="font-weight: 600; color: #FFE600;">— {{ skill.project_name }}</span>
         </div>
         {% if skill.project_url %}
-        <a href="{{ skill.project_url }}" target="_blank" style="font-size: 12px; color: var(--s30-accent-cyan); text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;">
+        <a href="{{ skill.project_url }}" target="_blank" style="font-size: 12.5px; color: #00f0ff; font-weight: 700; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;">
           🔗 {{ skill.project_url }}
         </a>
         {% endif %}
@@ -35,28 +36,28 @@
         <span class="badge-status {% if skill.status == 'VERIFIED' %}badge-verified{% elif skill.status == 'REJECTED' %}badge-rejected{% else %}badge-checking{% endif %}">
           {{ skill.status }}
         </span>
-        <button type="button" onclick="deleteSkill({{ skill.id }})" style="background: transparent; border: none; color: #f87171; cursor: pointer; font-size: 16px; padding: 2px 6px;">&times;</button>
+        <button type="button" onclick="deleteSkill({{ skill.id }})" style="background: #000; border: 1.5px solid #ff2a85; color: #ff2a85; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 14px; padding: 2px 8px; box-shadow: 2px 2px 0px #ff2a85;">✕</button>
       </div>
     </div>
     {% endfor %}
   {% endif %}
 </div>
 
-<!-- Add Skill Form Box -->
-<div style="background: rgba(15, 23, 42, 0.5); border: 1px dashed var(--s30-border-dashed); border-radius: var(--s30-radius-md); padding: 18px; margin-bottom: 24px;">
-  <div style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--s30-accent-blue); margin-bottom: 12px;">+ Add Technical Skill & Project</div>
+<!-- Add Skill Form Box with Neo-Brutalist Finish -->
+<div style="background: #0c1322; border: 2.5px dashed #FFE600; border-radius: 6px; padding: 22px; margin-bottom: 24px; box-shadow: 4px 4px 0px #FFE600;">
+  <div style="font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #FFE600; margin-bottom: 14px;">+ ADD TECHNICAL SKILL & PROJECT PROOF</div>
   
   <div class="s30-form-grid-2">
     <div class="s30-form-group">
       <label class="s30-form-label">Skill Name</label>
       <div class="s30-input-wrap">
-        <input type="text" id="new-skill-name" class="s30-input" placeholder="e.g. Python, React, AI">
+        <input type="text" id="new-skill-name" class="s30-input" placeholder="e.g. Python, React, PyTorch">
       </div>
     </div>
     <div class="s30-form-group">
       <label class="s30-form-label">Project Title</label>
       <div class="s30-input-wrap">
-        <input type="text" id="new-project-name" class="s30-input" placeholder="e.g. Campus Events Portal">
+        <input type="text" id="new-project-name" class="s30-input" placeholder="e.g. Campus Portal / Vision App">
       </div>
     </div>
   </div>
@@ -68,19 +69,29 @@
     </div>
   </div>
 
-  <button type="button" class="s30-btn-outline" onclick="addSkill()" style="width: 100%; border-color: rgba(99, 102, 241, 0.4); color: #38bdf8;">
-    + Add Skill to Profile
+  <button type="button" class="neo-btn neo-btn-cyan" onclick="addSkill()" style="width: 100%; padding: 11px; font-size: 12.5px;">
+    + ADD SKILL TO PROFILE
   </button>
 </div>
 
+<!-- Navigation Buttons (Back & Forward) -->
 <form action="{{ url_for('signup_skills') }}" method="POST">
-  <button type="submit" class="s30-btn-primary" style="width: 100%; height: 48px; font-size: 15px;">
-    <span>Continue to Verification</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; margin-left: 6px;">
-      <path d="M5 12h14"></path>
-      <path d="m12 5 7 7-7 7"></path>
-    </svg>
-  </button>
+  <div class="s30-nav-step-row">
+    <a href="{{ url_for('signup_profile') }}" class="s30-btn-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+        <path d="m15 18-6-6 6-6"></path>
+      </svg>
+      <span>Back to Profile</span>
+    </a>
+
+    <button type="submit" class="s30-btn-forward">
+      <span>Continue to Documents (Step 3 — Compulsory)</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+    </button>
+  </div>
 </form>
 
 <script>
@@ -103,6 +114,9 @@
 
       if (res.ok) {
         window.location.reload();
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to add skill");
       }
     } catch (e) {
       console.error(e);

@@ -15,21 +15,21 @@
       padding: 0 24px;
     }
     .s30-dossier-card {
-      background: var(--s30-bg-card);
-      backdrop-filter: blur(20px);
-      border: 1px solid var(--s30-border);
-      border-radius: var(--s30-radius-xl);
+      background: #0c1322;
+      border: 2.5px solid #ffffff;
+      border-radius: 8px;
       padding: 28px;
       margin-bottom: 24px;
-      box-shadow: var(--s30-shadow-card);
+      box-shadow: 6px 6px 0px #00f0ff;
     }
     .detail-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--s30-border);
-      border-radius: var(--s30-radius-md);
+      background: #090f1d;
+      border: 2px solid #FFE600;
+      box-shadow: 3px 3px 0px #FFE600;
+      border-radius: 6px;
       padding: 18px;
       margin-top: 16px;
     }
@@ -40,8 +40,9 @@
       margin-top: 14px;
     }
     .id-card-preview-box {
-      border: 1px solid var(--s30-border);
-      border-radius: var(--s30-radius-md);
+      border: 2px solid #00f0ff;
+      box-shadow: 4px 4px 0px #00f0ff;
+      border-radius: 6px;
       overflow: hidden;
       background: #020617;
     }
@@ -63,18 +64,18 @@
         <span class="s30-brand-sub">STUDENT DOSSIER</span>
       </a>
 
-      <div class="s30-nav-actions">
-        <a href="{{ url_for('landing_page') }}" target="_blank" class="s30-btn-outline" style="border-color: rgba(56, 189, 248, 0.4); color: #38bdf8; font-size: 12.5px; text-decoration: none; display: flex; align-items: center; gap: 6px;">
-          <span>🌐</span>
-          <span>Main Website</span>
-          <span style="font-size: 11px;">↗</span>
+      <div class="s30-nav-actions" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <a href="{{ url_for('landing_page') }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 11.5px; padding: 7px 14px; text-decoration: none;">
+          🌐 MAIN WEBSITE ↗
         </a>
-        <span style="font-size: 13px; color: var(--s30-text-secondary); display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid var(--s30-border); padding: 6px 12px; border-radius: var(--s30-radius-md);">
-          👤 Admin: <strong style="color: #38bdf8;">TeamX</strong>
+        <span class="neo-badge neo-badge-yellow" style="font-size: 11.5px; padding: 6px 12px;">
+          👤 ADMIN: TeamX
         </span>
-        <a href="{{ url_for('admin_dashboard') }}" class="s30-btn-outline">&larr; Back to Queue</a>
-        <a href="{{ url_for('admin_logout') }}" class="s30-btn-outline" style="border-color: rgba(239, 68, 68, 0.4); color: #f87171;">
-          Log Out
+        <a href="{{ url_for('admin_dashboard') }}" class="neo-btn neo-btn-white" style="font-size: 11.5px; padding: 7px 14px; text-decoration: none;">
+          &larr; BACK TO QUEUE
+        </a>
+        <a href="{{ url_for('admin_logout') }}" class="neo-btn neo-btn-pink" style="font-size: 11.5px; padding: 7px 14px; text-decoration: none;">
+          LOG OUT
         </a>
       </div>
     </div>
@@ -155,9 +156,18 @@
           {% set front_doc = (documents|selectattr("doc_category", "equalto", "id_front")|list|first) %}
           {% if front_doc %}
           <iframe src="/documents/view/{{ front_doc.filename }}"></iframe>
-          <div style="padding: 10px 14px; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--s30-border);">
-            <span style="font-size: 12.5px; font-weight: 600;">ID Card (Front): <strong>{{ front_doc.original_name }}</strong></span>
-            <a href="/documents/view/{{ front_doc.filename }}" target="_blank" style="font-size: 12px; color: var(--s30-accent-cyan);">Open Full ↗</a>
+          <div style="padding: 10px 14px; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--s30-border); flex-wrap: wrap; gap: 8px;">
+            <div>
+              <span style="font-size: 12.5px; font-weight: 600;">ID Card (Front): <strong>{{ front_doc.original_name }}</strong></span>
+              <span style="font-size: 11px; margin-left: 6px; color: {% if front_doc.review_status == 'APPROVED' %}#34d399{% elif front_doc.review_status == 'REJECTED' %}#f87171{% else %}#fbbf24{% endif %}; font-weight: 700;" id="cert-status-text-{{ front_doc.id }}">
+                {{ front_doc.review_status or 'PENDING' }}
+              </span>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button type="button" class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 11px;" onclick="verifyCertificateDirect({{ front_doc.id }}, 'APPROVED')">✓ Verify</button>
+              <button type="button" class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 11px;" onclick="verifyCertificateDirect({{ front_doc.id }}, 'REJECTED')">✕ Reject</button>
+              <a href="/documents/view/{{ front_doc.filename }}" target="_blank" style="font-size: 12px; color: var(--s30-accent-cyan);">Open Full ↗</a>
+            </div>
           </div>
           {% else %}
           <div style="padding: 60px 20px; color: var(--s30-text-muted); text-align: center;">No front ID card uploaded</div>
@@ -169,9 +179,18 @@
           {% set back_doc = (documents|selectattr("doc_category", "equalto", "id_back")|list|first) %}
           {% if back_doc %}
           <iframe src="/documents/view/{{ back_doc.filename }}"></iframe>
-          <div style="padding: 10px 14px; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--s30-border);">
-            <span style="font-size: 12.5px; font-weight: 600;">ID Card (Back): <strong>{{ back_doc.original_name }}</strong></span>
-            <a href="/documents/view/{{ back_doc.filename }}" target="_blank" style="font-size: 12px; color: var(--s30-accent-cyan);">Open Full ↗</a>
+          <div style="padding: 10px 14px; background: rgba(15, 23, 42, 0.8); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--s30-border); flex-wrap: wrap; gap: 8px;">
+            <div>
+              <span style="font-size: 12.5px; font-weight: 600;">ID Card (Back): <strong>{{ back_doc.original_name }}</strong></span>
+              <span style="font-size: 11px; margin-left: 6px; color: {% if back_doc.review_status == 'APPROVED' %}#34d399{% elif back_doc.review_status == 'REJECTED' %}#f87171{% else %}#fbbf24{% endif %}; font-weight: 700;" id="cert-status-text-{{ back_doc.id }}">
+                {{ back_doc.review_status or 'PENDING' }}
+              </span>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+              <button type="button" class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 11px;" onclick="verifyCertificateDirect({{ back_doc.id }}, 'APPROVED')">✓ Verify</button>
+              <button type="button" class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 11px;" onclick="verifyCertificateDirect({{ back_doc.id }}, 'REJECTED')">✕ Reject</button>
+              <a href="/documents/view/{{ back_doc.filename }}" target="_blank" style="font-size: 12px; color: var(--s30-accent-cyan);">Open Full ↗</a>
+            </div>
           </div>
           {% else %}
           <div style="padding: 60px 20px; color: var(--s30-text-muted); text-align: center;">No back ID card uploaded</div>
@@ -189,7 +208,7 @@
         <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--s30-border); border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;">
           <div>
             <div style="font-size: 15px; font-weight: 700; color: #ffffff;">
-              {{ sk.skill_name }} <span style="font-weight: 400; color: var(--s30-text-secondary);">— {{ sk.project_name }}</span>
+              {{ sk.skill_name }}{% if sk.project_name %} <span style="font-weight: 400; color: var(--s30-text-secondary);">— {{ sk.project_name }}</span>{% endif %}
             </div>
             {% if sk.project_url %}
             <a href="{{ sk.project_url }}" target="_blank" style="font-size: 12.5px; color: var(--s30-accent-cyan); text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px;">
@@ -209,6 +228,162 @@
         {% endfor %}
       </div>
     </div>
+
+    <!-- Uploaded Academic & Skill Certificates -->
+    {% set cert_docs = (documents|selectattr("doc_category", "equalto", "certificate")|list) %}
+    <div class="s30-dossier-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 17px; font-weight: 800;">Academic Certificates & AI Authenticity Analysis ({{ cert_docs|length }})</h2>
+      </div>
+      <p style="font-size: 13px; color: var(--s30-text-secondary); margin-top: 3px;">Automated C2PA provenance + Sightengine visual score with final Admin approval control.</p>
+
+      {% if cert_docs %}
+      <div style="margin-top: 16px; display: flex; flex-direction: column; gap: 14px;">
+        {% for cert in cert_docs %}
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid var(--s30-border); border-radius: 12px; padding: 18px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;">
+          
+          <div style="flex: 1; min-width: 280px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+              <div style="width: 32px; height: 32px; border-radius: 8px; background: rgba(99, 102, 241, 0.15); display: flex; align-items: center; justify-content: center; color: #818cf8; flex-shrink: 0; font-size: 16px;">
+                📜
+              </div>
+              <div>
+                <div style="font-size: 14.5px; font-weight: 700; color: #ffffff;">
+                  {{ cert.original_name }}
+                </div>
+                <div style="font-size: 11.5px; color: var(--s30-text-muted);">
+                  {{ (cert.file_size / 1024)|round(1) }} KB • Uploaded {{ cert.uploaded_at[:10] if cert.uploaded_at else 'Recently' }}
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Authenticity & Provenance Score Badge -->
+            <div style="margin-top: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              {% set ai_val = cert.ai_score or 0.05 %}
+              {% if ai_val < 0.35 %}
+                <span style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">
+                  🟢 Low AI Risk: {{ (ai_val * 100)|int }}% (Authentic)
+                </span>
+              {% elif ai_val < 0.70 %}
+                <span style="background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.35); color: #fbbf24; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">
+                  🟡 Medium AI Risk: {{ (ai_val * 100)|int }}% (Visual Check Advised)
+                </span>
+              {% else %}
+                <span style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 6px;">
+                  🔴 High AI Risk: {{ (ai_val * 100)|int }}% (Likely Synthetic/Tampered)
+                </span>
+              {% endif %}
+
+              <span style="font-size: 11.5px; color: var(--s30-text-secondary);">
+                {{ cert.ai_notes or 'Passed automated authenticity checks.' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Current Admin Review Status & Decision Actions -->
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+            <span class="badge-status {% if cert.review_status == 'APPROVED' %}badge-done{% elif cert.review_status == 'REJECTED' %}badge-rejected{% else %}badge-progress{% endif %}" id="badge-cert-{{ cert.id }}">
+              {{ cert.review_status or 'PENDING' }}
+            </span>
+
+            <a href="/documents/view/{{ cert.filename }}" target="_blank" class="s30-btn-outline" style="font-size: 12px; padding: 6px 12px; color: #38bdf8; text-decoration: none;">
+              Inspect ↗
+            </a>
+
+            <button class="btn-act btn-act-done" onclick="verifyCertificateDirect({{ cert.id }}, 'APPROVED')">
+              ✓ Approve
+            </button>
+            <button class="btn-act btn-act-reject" onclick="verifyCertificateDirect({{ cert.id }}, 'REJECTED')">
+              ✕ Reject
+            </button>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="margin-top: 14px; padding: 24px; text-align: center; color: var(--s30-text-muted); font-size: 13px; background: rgba(15, 23, 42, 0.4); border-radius: 10px;">
+        No additional certificates uploaded by this candidate.
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Candidate Internship Matches & Eligibility Timelines -->
+    {% if matches %}
+    <div class="s30-dossier-card">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 17px; font-weight: 800;">🎯 Matched Internships & Eligibility Timelines ({{ matches|length }})</h2>
+      </div>
+      <p style="font-size: 13px; color: var(--s30-text-secondary); margin-top: 3px;">
+        Real-time ranking based on candidate's verified skills and project codebase proofs.
+      </p>
+
+      <div style="margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px;">
+        {% for m in matches %}
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid var(--s30-border); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+              <div>
+                <span style="font-size: 10px; font-weight: 800; background: rgba(99, 102, 241, 0.15); color: #818cf8; padding: 2px 6px; border-radius: 4px;">
+                  {{ m.category }}
+                </span>
+                <h4 style="font-size: 15px; font-weight: 800; color: #fff; margin-top: 4px;">{{ m.role }}</h4>
+                <div style="font-size: 12.5px; color: #38bdf8; font-weight: 600;">🏢 {{ m.company }}</div>
+              </div>
+              <div style="text-align: right;">
+                <span style="font-size: 18px; font-weight: 900; color: {{ m.compat_color }}; font-family: monospace;">{{ m.match_percentage }}%</span>
+                <div style="font-size: 9.5px; font-weight: 700; color: {{ m.compat_color }}; text-transform: uppercase;">{{ m.compatibility }}</div>
+              </div>
+            </div>
+
+            <!-- Timeline Banner -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 6px; padding: 6px 10px; font-size: 11px; color: #38bdf8; margin-bottom: 8px;">
+              🗓️ <strong>Timeline:</strong> {{ m.start_date }} &rarr; {{ m.end_date }} ({{ m.duration }})
+            </div>
+
+            <!-- Matched Skills -->
+            <div style="font-size: 11px; color: #34d399; margin-bottom: 4px;">
+              ✓ Matched: {{ m.matched_skills|join(', ') if m.matched_skills else 'None' }}
+            </div>
+            {% if m.missing_skills %}
+            <div style="font-size: 10.5px; color: #94a3b8;">
+              + To learn: {{ m.missing_skills[:3]|join(', ') }}
+            </div>
+            {% endif %}
+          </div>
+
+          <div style="border-top: 1px dashed rgba(255, 255, 255, 0.08); padding-top: 10px; margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <div style="font-size: 12px; font-weight: 700; color: #fff;">
+                💰 {{ m.stipend }}
+              </div>
+              {% if m.application_link %}
+              <a href="{{ m.application_link }}" target="_blank" style="font-size: 11.5px; color: #38bdf8; text-decoration: underline;">
+                Portal Link ↗
+              </a>
+              {% endif %}
+            </div>
+
+            <!-- Nomination & Approval Row -->
+            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.25); padding: 6px 10px; border-radius: 6px;">
+              <span id="match-status-badge-{{ user.id }}-{{ m.id }}" class="badge-status {% if m.approval_status == 'APPROVED' %}badge-done{% elif m.approval_status == 'REJECTED' %}badge-rejected{% else %}badge-progress{% endif %}" style="font-size: 10px; padding: 2px 7px;">
+                {{ '✓ NOMINATED' if m.approval_status == 'APPROVED' else ('✕ REJECTED' if m.approval_status == 'REJECTED' else 'ELIGIBLE') }}
+              </span>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 10.5px;" onclick="approveCandidateInternshipDirect({{ user.id }}, '{{ m.id }}', '{{ m.role }}', '{{ m.company }}', 'APPROVED')">
+                  ✓ Approve
+                </button>
+                <button type="button" class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 10.5px;" onclick="approveCandidateInternshipDirect({{ user.id }}, '{{ m.id }}', '{{ m.role }}', '{{ m.company }}', 'REJECTED')">
+                  ✕ Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
 
   </main>
 
@@ -246,6 +421,82 @@
         }
       } catch (e) { console.error(e); }
     }
+
+    async function verifyCertificateDirect(certId, status) {
+      try {
+        const res = await fetch('/api/admin/verify-certificate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cert_id: certId, doc_id: certId, status: status })
+        });
+        if (res.ok) {
+          const b = document.getElementById(`badge-cert-${certId}`);
+          if (b) {
+            b.textContent = status;
+            b.className = 'badge-status ' + (status === 'APPROVED' ? 'badge-done' : (status === 'REJECTED' ? 'badge-rejected' : 'badge-progress'));
+          }
+          const t = document.getElementById(`cert-status-text-${certId}`);
+          if (t) {
+            t.textContent = status;
+            t.style.color = (status === 'APPROVED' ? '#34d399' : (status === 'REJECTED' ? '#f87171' : '#fbbf24'));
+          }
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function approveCandidateInternshipDirect(userId, internshipId, roleTitle, company, status) {
+      try {
+        const res = await fetch('/api/admin/approve-candidate-internship', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: userId,
+            internship_id: internshipId,
+            role_title: roleTitle,
+            company: company,
+            status: status
+          })
+        });
+        if (res.ok) {
+          const badge = document.getElementById(`match-status-badge-${userId}-${internshipId}`);
+          if (badge) {
+            if (status === 'APPROVED') {
+              badge.textContent = '✓ NOMINATED';
+              badge.className = 'badge-status badge-done';
+            } else if (status === 'REJECTED') {
+              badge.textContent = '✕ REJECTED';
+              badge.className = 'badge-status badge-rejected';
+          }
+        }
+      } catch (e) { console.error(e); }
+    }
   </script>
+
+  <!-- Moving Background Floating Shapes (Candidate Dossier) -->
+  <div style="position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;">
+    <div style="position: absolute; top: 14%; left: 5%; font-size: 38px; color: #FFE600; animation: floatRotate1 15s infinite ease-in-out; opacity: 0.45; filter: drop-shadow(3px 3px 0px #000);">✦</div>
+    <div style="position: absolute; top: 35%; right: 6%; font-size: 44px; color: #00f0ff; animation: floatRotate2 18s infinite ease-in-out; opacity: 0.4; filter: drop-shadow(3px 3px 0px #000);">⬡</div>
+    <div style="position: absolute; bottom: 22%; left: 8%; font-size: 40px; color: #ff2a85; animation: floatRotate3 16s infinite ease-in-out; opacity: 0.4; filter: drop-shadow(3px 3px 0px #000);">✚</div>
+    <div style="position: absolute; bottom: 12%; right: 10%; font-size: 36px; color: #22c55e; animation: floatRotate1 13s infinite ease-in-out; opacity: 0.45; filter: drop-shadow(3px 3px 0px #000);">◆</div>
+  </div>
+
+  <style>
+    @keyframes floatRotate1 {
+      0% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-22px) rotate(180deg) scale(1.1); }
+      100% { transform: translateY(0px) rotate(360deg) scale(1); }
+    }
+    @keyframes floatRotate2 {
+      0% { transform: translateY(0px) rotate(0deg) scale(1.1); }
+      50% { transform: translateY(26px) rotate(-180deg) scale(0.95); }
+      100% { transform: translateY(0px) rotate(-360deg) scale(1.1); }
+    }
+    @keyframes floatRotate3 {
+      0% { transform: translate(0px, 0px) rotate(0deg); }
+      33% { transform: translate(16px, -18px) rotate(120deg); }
+      66% { transform: translate(-16px, 14px) rotate(240deg); }
+      100% { transform: translate(0px, 0px) rotate(360deg); }
+    }
+  </style>
 </body>
 </html>

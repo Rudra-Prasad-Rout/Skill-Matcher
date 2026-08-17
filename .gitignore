@@ -13,9 +13,15 @@ ENV/
 # Database (optional local state)
 # matchpoint.db
 
+# Uploads (ignore runtime user uploads, keep seed files)
+static/uploads/*
+!static/uploads/seed_*
+!static/uploads/.gitkeep
+
 # IDE & OS
 .vscode/
 .idea/
 Thumbs.db
 .DS_Store
 *.log
+

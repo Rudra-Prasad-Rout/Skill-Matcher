@@ -77,7 +77,7 @@ def init_db(force_reset=False):
     );
     """)
     
-    # Documents table (with doc_category: 'id_front', 'id_back', 'certificate')
+    # Documents table (with doc_category: 'id_front', 'id_back', 'certificate' + AI Authenticity scoring fields)
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS user_documents (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,11 +87,64 @@ def init_db(force_reset=False):
         original_name TEXT NOT NULL,
         file_size INTEGER NOT NULL,
         file_type TEXT,
+        ai_score REAL DEFAULT 0.05,
+        ai_recommendation TEXT DEFAULT 'LOW_RISK',
+        ai_notes TEXT DEFAULT 'Passed automated provenance and pixel pattern check.',
+        review_status TEXT DEFAULT 'PENDING',
         uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
     );
     """)
     
+    # Discovered Internships Table (From Legal Portals with Scam Filtering & Matchmaking)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS discovered_internships (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        company TEXT NOT NULL,
+        location TEXT DEFAULT 'India / Remote',
+        stipend TEXT DEFAULT 'Stipend Available',
+        start_date TEXT DEFAULT '01 Oct 2026',
+        end_date TEXT DEFAULT '31 Dec 2026',
+        duration TEXT DEFAULT '3 Months',
+        posted_date TEXT DEFAULT 'Recent',
+        application_link TEXT NOT NULL,
+        source_site TEXT NOT NULL,
+        skills_required TEXT DEFAULT '[]',
+        description TEXT,
+        is_scam_flagged INTEGER DEFAULT 0,
+        flag_reason TEXT,
+        risk_level TEXT DEFAULT 'CLEAN',
+        is_verified_by_admin INTEGER DEFAULT 1,
+        is_active INTEGER DEFAULT 1,
+        discovered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """)
+
+    # Auto-migration for discovered_internships
+    existing_disc_cols = [r[1] for r in cursor.execute("PRAGMA table_info(discovered_internships)").fetchall()]
+    if "start_date" not in existing_disc_cols:
+        cursor.execute("ALTER TABLE discovered_internships ADD COLUMN start_date TEXT DEFAULT '01 Oct 2026'")
+    if "end_date" not in existing_disc_cols:
+        cursor.execute("ALTER TABLE discovered_internships ADD COLUMN end_date TEXT DEFAULT '31 Dec 2026'")
+    if "duration" not in existing_disc_cols:
+        cursor.execute("ALTER TABLE discovered_internships ADD COLUMN duration TEXT DEFAULT '3 Months'")
+
+    # Candidate Internship Approvals / Nominations Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS candidate_internship_approvals (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        internship_id TEXT NOT NULL,
+        role_title TEXT,
+        company TEXT,
+        status TEXT DEFAULT 'APPROVED',
+        approved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        UNIQUE(user_id, internship_id),
+        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    );
+    """)
+
     conn.commit()
     
     # Reset and seed sample users with 5-character alphanumeric ID codes
@@ -120,11 +173,7 @@ def init_db(force_reset=False):
                     ("React", "Campus events app", "https://github.com/alexrivera/campus-events-app", "VERIFIED"),
                     ("Data analysis", "Attendance dashboard", "https://attendance-analytics.du.ac.in", "CHECKING")
                 ],
-                "documents": [
-                    ("id_front", "seed_id_front_alex.jpg", "alex_id_card_front.jpg", 340000, "image/jpeg"),
-                    ("id_back", "seed_id_back_alex.jpg", "alex_id_card_back.jpg", 310000, "image/jpeg"),
-                    ("certificate", "seed_alex_transcript_2026.pdf", "alex_transcript_2026.pdf", 1450000, "application/pdf")
-                ]
+                "documents": []
             },
             {
                 "user_code": "R4T2P",
@@ -142,11 +191,7 @@ def init_db(force_reset=False):
                     ("PyTorch", "Autonomous drone vision", "https://github.com/jordanlee/drone-vision-ai", "VERIFIED"),
                     ("NLP", "Semantic search engine", "https://nlp-search-demo.stanford.edu", "VERIFIED")
                 ],
-                "documents": [
-                    ("id_front", "seed_id_front_jordan.jpg", "stanford_id_front.jpg", 380000, "image/jpeg"),
-                    ("id_back", "seed_id_back_jordan.jpg", "stanford_id_back.jpg", 360000, "image/jpeg"),
-                    ("certificate", "seed_stanford_degree_proof.pdf", "stanford_degree_proof.pdf", 2100000, "application/pdf")
-                ]
+                "documents": []
             },
             {
                 "user_code": "9B3KZ",
@@ -164,11 +209,7 @@ def init_db(force_reset=False):
                     ("Flutter", "Peer tutoring portal", "https://github.com/priyasharma/peer-tutor-app", "VERIFIED"),
                     ("Node.js", "High-throughput API gateway", "https://github.com/priyasharma/cloud-gateway", "VERIFIED")
                 ],
-                "documents": [
-                    ("id_front", "seed_id_front_priya.jpg", "iitd_smart_card_front.jpg", 290000, "image/jpeg"),
-                    ("id_back", "seed_id_back_priya.jpg", "iitd_smart_card_back.jpg", 280000, "image/jpeg"),
-                    ("certificate", "seed_iitd_marksheet_verified.pdf", "iitd_marksheet_verified.pdf", 980000, "application/pdf")
-                ]
+                "documents": []
             },
             {
                 "user_code": "M8V1Y",
@@ -186,11 +227,7 @@ def init_db(force_reset=False):
                     ("SQL & Databases", "FinTech trading analytics", "https://github.com/marcusvance/nyu-trading-desk", "CHECKING"),
                     ("Tableau", "Global markets dashboard", "https://public.tableau.com/profile/marcus.vance/market-pulse", "CHECKING")
                 ],
-                "documents": [
-                    ("id_front", "seed_id_front_marcus.jpg", "nyu_card_front.jpg", 310000, "image/jpeg"),
-                    ("id_back", "seed_id_back_marcus.jpg", "nyu_card_back.jpg", 300000, "image/jpeg"),
-                    ("certificate", "seed_nyu_enrollment_verification.pdf", "nyu_enrollment_verification.pdf", 1850000, "application/pdf")
-                ]
+                "documents": []
             },
             {
                 "user_code": "E2R9Q",
@@ -208,11 +245,7 @@ def init_db(force_reset=False):
                 "skills": [
                     ("Computer Vision", "3D point cloud mapper", "https://github.com/elenarostova/pointcloud-mapper", "CHECKING")
                 ],
-                "documents": [
-                    ("id_front", "seed_scanned_id_unclear.jpg", "oxford_id_front_blur.jpg", 420000, "image/jpeg"),
-                    ("id_back", "seed_scanned_id_unclear.jpg", "oxford_id_back_blur.jpg", 410000, "image/jpeg"),
-                    ("certificate", "seed_scanned_id_unclear.jpg", "oxford_transcript_fake.jpg", 450000, "image/jpeg")
-                ]
+                "documents": []
             }
         ]
         

@@ -4,292 +4,352 @@
 
 {% block content_wrapper %}
 <style>
-  /* Glassmorphism Home Page Enhancements */
-  .glass-hero-wrapper {
+  /* Platform-Wide Ultra Neo-Brutalism System */
+  .neo-hero-wrapper {
     position: relative;
-    padding: 80px 24px 70px 24px;
-    max-width: 1280px;
+    padding: 60px 24px 70px 24px;
+    max-width: 1240px;
     margin: 0 auto;
-    overflow: hidden;
   }
 
-  /* Ambient Glass Glow Orbs */
-  .glass-orb-1 {
-    position: absolute;
-    top: -60px;
-    left: -80px;
-    width: 450px;
-    height: 450px;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.28) 0%, rgba(99, 102, 241, 0) 70%);
-    filter: blur(60px);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .glass-orb-2 {
-    position: absolute;
-    top: 40px;
-    right: -60px;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(6, 182, 212, 0.22) 0%, rgba(6, 182, 212, 0) 70%);
-    filter: blur(70px);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .glass-orb-3 {
-    position: absolute;
-    bottom: -100px;
-    left: 40%;
-    width: 550px;
-    height: 550px;
-    background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(139, 92, 246, 0) 70%);
-    filter: blur(80px);
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* Frosted Glass Cards */
-  .s30-glass-panel {
-    background: rgba(15, 23, 42, 0.45);
-    backdrop-filter: blur(32px);
-    -webkit-backdrop-filter: blur(32px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: var(--s30-radius-xl);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  .neo-hero-card {
+    background: #090f1d;
+    border: 3.5px solid #ffffff;
+    border-radius: 12px;
+    box-shadow: 12px 12px 0px #FFE600;
+    padding: 56px 40px;
     position: relative;
     z-index: 1;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+  }
+  .neo-hero-card:hover {
+    box-shadow: 14px 14px 0px #FFE600;
   }
 
-  .s30-glass-panel:hover {
-    border-color: rgba(99, 102, 241, 0.4);
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 0 0 30px rgba(99, 102, 241, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.35);
+  .neo-step-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 26px;
   }
 
-  .s30-glass-subcard {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: var(--s30-radius-md);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  }
-
-  .s30-glass-step {
-    background: rgba(15, 23, 42, 0.45);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: var(--s30-radius-lg);
-    padding: 30px 24px;
+  .neo-step-item {
+    background: #090f1d;
+    border-radius: 10px;
+    padding: 32px 26px;
     text-align: left;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.18);
     position: relative;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .neo-step-item:hover {
+    transform: translate(-4px, -4px);
   }
 
-  .s30-glass-step:hover {
-    transform: translateY(-6px);
-    background: rgba(20, 30, 55, 0.6);
-    border-color: rgba(56, 189, 248, 0.45);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3);
-  }
-
-  /* Glass Badge */
-  .s30-glass-pill {
+  /* Vibrant Neo-Brutalist Portal Badges with High-Visibility Shadows */
+  .neo-portal-tag {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background: rgba(99, 102, 241, 0.18);
-    backdrop-filter: blur(16px);
-    border: 1px solid rgba(99, 102, 241, 0.38);
-    border-radius: 9999px;
-    padding: 7px 16px;
-    margin-bottom: 24px;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-
-  .s30-glass-btn-primary {
-    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    color: #ffffff;
-    padding: 13px 32px;
-    font-size: 15px;
-    font-weight: 700;
-    border-radius: 12px;
+    gap: 10px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 8px;
+    border: 2.5px solid #000000;
     text-decoration: none;
+    transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: default;
+  }
+  .neo-portal-tag:hover {
+    transform: translate(-3px, -3px);
+  }
+
+  /* Distinct High-Contrast Themes for Legal Sources */
+  .portal-isro { 
+    background: #FFE600; 
+    color: #000000; 
+    box-shadow: 5px 5px 0px #00f0ff; 
+  }
+  .portal-isro:hover { box-shadow: 8px 8px 0px #00f0ff; }
+
+  .portal-aicte { 
+    background: #00f0ff; 
+    color: #000000; 
+    box-shadow: 5px 5px 0px #FFE600; 
+  }
+  .portal-aicte:hover { box-shadow: 8px 8px 0px #FFE600; }
+
+  .portal-pm { 
+    background: #22c55e; 
+    color: #000000; 
+    box-shadow: 5px 5px 0px #FFE600; 
+  }
+  .portal-pm:hover { box-shadow: 8px 8px 0px #FFE600; }
+
+  .portal-mea { 
+    background: #c084fc; 
+    color: #000000; 
+    box-shadow: 5px 5px 0px #00f0ff; 
+  }
+  .portal-mea:hover { box-shadow: 8px 8px 0px #00f0ff; }
+
+  .portal-drdo { 
+    background: #fb923c; 
+    color: #000000; 
+    box-shadow: 5px 5px 0px #FFE600; 
+  }
+  .portal-drdo:hover { box-shadow: 8px 8px 0px #FFE600; }
+
+  .portal-unstop { 
+    background: #ff2a85; 
+    color: #ffffff; 
+    box-shadow: 5px 5px 0px #FFE600; 
+  }
+  .portal-unstop:hover { box-shadow: 8px 8px 0px #FFE600; }
+
+  .portal-cdac { 
+    background: #38bdf8; 
+    color: #000000; 
+    box-shadow: 5px 5px 0px #ff2a85; 
+  }
+  .portal-cdac:hover { box-shadow: 8px 8px 0px #ff2a85; }
+
+  .portal-deepmind { 
+    background: #ffffff; 
+    color: #000000; 
+    box-shadow: 5px 5px 0px #FFE600; 
+  }
+  .portal-deepmind:hover { box-shadow: 8px 8px 0px #FFE600; }
+
+  /* Tactile Action Buttons with High-Contrast Colored Shadows */
+  .neo-action-btn-main {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.2s ease;
-  }
-
-  .s30-glass-btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-  }
-
-  .s30-glass-btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(16px);
-    color: #ffffff;
-    padding: 13px 26px;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 36px;
     font-size: 15px;
-    font-weight: 700;
-    border-radius: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-radius: 8px;
+    border: 3px solid #000000;
     text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
+    cursor: pointer;
   }
-
-  .s30-glass-btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
+  .neo-action-btn-main:hover {
+    transform: translate(-3px, -3px);
+  }
+  .neo-action-btn-main:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px transparent !important;
   }
 </style>
 
-<!-- Hero Section (Panel 1) with Glass Atmosphere -->
-<div class="glass-hero-wrapper">
-  <!-- Glowing Background Orbs -->
-  <div class="glass-orb-1"></div>
-  <div class="glass-orb-2"></div>
-  <div class="glass-orb-3"></div>
+<div class="neo-hero-wrapper">
 
-  <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px; align-items: center; position: relative; z-index: 1;">
+  <!-- ================= MAIN HERO PANEL ================= -->
+  <div class="neo-hero-card">
     
-    <!-- Left Hero Headline -->
-    <div>
-      <div class="s30-glass-pill">
-        <span style="width: 8px; height: 8px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 10px #38bdf8; display: inline-block;"></span>
-        <span style="font-size: 12.5px; font-weight: 700; color: #38bdf8; letter-spacing: 0.02em;">Next-Gen Verified Student Network</span>
+    <div style="text-align: center; max-width: 900px; margin: 0 auto;">
+      
+      <!-- Top Badges Row with Bright Visible Shadows -->
+      <div style="margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+        <span class="neo-badge" style="background: #FFE600; color: #000; font-size: 12px; padding: 6px 14px; border: 2.5px solid #000; box-shadow: 4px 4px 0px #00f0ff;">
+          ⚡ STAGE 1 & 2 VERIFICATION ACTIVE
+        </span>
+        <span class="neo-badge" style="background: #00f0ff; color: #000; font-size: 12px; padding: 6px 14px; border: 2.5px solid #000; box-shadow: 4px 4px 0px #FFE600;">
+          🛡️ 100% FREE • ZERO SCAMS
+        </span>
+        <span class="neo-badge" style="background: #22c55e; color: #000; font-size: 12px; padding: 6px 14px; border: 2.5px solid #000; box-shadow: 4px 4px 0px #FFE600;">
+          🌐 DIRECT LEGAL OPPORTUNITIES
+        </span>
       </div>
 
-      <h1 style="font-size: 54px; font-weight: 900; line-height: 1.12; letter-spacing: -0.03em; margin-bottom: 20px;">
-        Verified Students.<br>
-        <span style="background: linear-gradient(135deg, #6366f1 0%, #a78bfa 50%, #38bdf8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-          Limitless Opportunities.
+      <!-- Main Brutalist Headline -->
+      <h1 style="font-size: 50px; font-weight: 900; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 22px; text-transform: uppercase; color: #ffffff;">
+        Verify Your Skills. Claim Your <br>
+        <span style="background: #FFE600; color: #000000; padding: 4px 16px; border-radius: 6px; border: 3px solid #000000; box-shadow: 6px 6px 0px #00f0ff; display: inline-block; margin-top: 8px;">
+          OPPORTUNITY PASSPORT.
         </span>
       </h1>
 
-      <p style="font-size: 16.5px; color: var(--s30-text-secondary); line-height: 1.65; max-width: 520px; margin-bottom: 34px;">
-        S30 is a smart platform that verifies student identity, college credentials, and live project proofs to connect you directly with top opportunities tailored for you.
+      <p style="font-size: 17px; color: #cbd5e1; line-height: 1.6; margin-bottom: 38px; font-weight: 600;">
+        The premier student verification platform. Automated institutional ID card OCR, live GitHub codebase auditing, and direct candidate matchmaking with whitelisted government portals and corporate partners.
       </p>
 
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px; flex-wrap: wrap;">
-        <a href="{{ url_for('signup_new') }}" class="s30-glass-btn-primary">
-          <span>Get Started</span>
-          <span>&rarr;</span>
+      <!-- High-Voltage CTA Buttons with Visible Cyan & Yellow Shadows -->
+      <div style="display: flex; justify-content: center; gap: 24px; margin-bottom: 48px; flex-wrap: wrap;">
+        <a href="{{ url_for('signup_profile') }}" class="neo-action-btn-main" style="background: #FFE600; color: #000000; box-shadow: 6px 6px 0px #00f0ff;">
+          <span style="font-size: 18px;">🚀</span>
+          <span>CREATE STUDENT PASSPORT</span>
+          <span style="font-size: 16px;">&rarr;</span>
         </a>
-        <a href="#how-it-works" class="s30-glass-btn-secondary">
-          <span>▶</span>
-          <span>How S30 Works</span>
+
+        <a href="{{ url_for('admin_login') }}" class="neo-action-btn-main" style="background: #00f0ff; color: #000000; box-shadow: 6px 6px 0px #FFE600;">
+          <span style="font-size: 18px;">🛡️</span>
+          <span>ADMIN VERIFICATION CONSOLE</span>
+          <span style="font-size: 16px;">&rarr;</span>
         </a>
       </div>
-    </div>
 
-    <!-- Right Hero Graphic / Glass Showcase -->
-    <div style="position: relative;">
-      <div class="s30-glass-panel" style="padding: 34px;">
-        
-        <!-- Header -->
-        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.09);">
-          <div style="width: 52px; height: 52px; border-radius: 14px; background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4), inset 0 1px 1px rgba(255,255,255,0.4);">
-            S30
-          </div>
-          <div>
-            <div style="font-size: 17px; font-weight: 800; color: #ffffff;">Verified Student Profile</div>
-            <div style="font-size: 12.5px; color: #38bdf8; font-family: monospace; font-weight: 700;">Candidate ID: A7X9K</div>
-          </div>
-          <div style="margin-left: auto;">
-            <span class="badge-status badge-verified" style="box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);">✓ 100% VERIFIED</span>
-          </div>
-        </div>
-
-        <!-- Glass Detail Grid -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px;">
-          <div class="s30-glass-subcard" style="padding: 16px;">
-            <div style="font-size: 11px; color: var(--s30-text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Identity Verification</div>
-            <div style="font-size: 14px; font-weight: 800; color: #34d399; margin-top: 4px; display: flex; align-items: center; gap: 6px;">
-              <span>✓</span> Student ID Verified
-            </div>
-          </div>
-          <div class="s30-glass-subcard" style="padding: 16px;">
-            <div style="font-size: 11px; color: var(--s30-text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Match Score</div>
-            <div style="font-size: 14px; font-weight: 800; color: #38bdf8; margin-top: 4px; display: flex; align-items: center; gap: 6px;">
-              <span>⚡</span> 92% Compatibility
-            </div>
-          </div>
-        </div>
-
-        <!-- Active Opportunities Pill -->
-        <div class="s30-glass-subcard" style="background: rgba(99, 102, 241, 0.12); border-color: rgba(99, 102, 241, 0.3); padding: 16px; display: flex; align-items: center; justify-content: space-between;">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="font-size: 20px;">💼</span>
-            <div>
-              <div style="font-size: 13.5px; font-weight: 800; color: #ffffff;">Active Partner Opportunities</div>
-              <div style="font-size: 12px; color: var(--s30-text-secondary);">Direct interview referrals enabled</div>
-            </div>
-          </div>
-          <a href="{{ url_for('signup_new') }}" style="color: #38bdf8; font-size: 12.5px; font-weight: 800; text-decoration: none; padding: 4px 10px; border-radius: 6px; background: rgba(56, 189, 248, 0.1);">Join &rarr;</a>
-        </div>
-
+      <!-- Trust Badges Row with Visible Shadows -->
+      <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; border-top: 2.5px solid rgba(255,255,255,0.15); padding-top: 28px;">
+        <span class="neo-badge" style="background: #22c55e; color: #000; font-size: 12px; padding: 6px 14px; border: 2px solid #000; box-shadow: 3px 3px 0px #FFE600;">
+          ✓ AUTOMATED ID CARD OCR
+        </span>
+        <span class="neo-badge" style="background: #00f0ff; color: #000; font-size: 12px; padding: 6px 14px; border: 2px solid #000; box-shadow: 3px 3px 0px #FFE600;">
+          ✓ GITHUB PROJECT CODE AUDITING
+        </span>
+        <span class="neo-badge" style="background: #FFE600; color: #000; font-size: 12px; padding: 6px 14px; border: 2px solid #000; box-shadow: 3px 3px 0px #00f0ff;">
+          ✓ WHITELISTED SOURCES (ISRO, AICTE, MEA)
+        </span>
       </div>
+
     </div>
 
   </div>
-</div>
 
-<!-- How S30 Works (Panel 2) with Glass Steps -->
-<section id="how-it-works" style="padding: 70px 24px 90px 24px; max-width: 1280px; margin: 0 auto; text-align: center; position: relative;">
-  <h2 style="font-size: 36px; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 10px;">
-    How <span style="background: linear-gradient(135deg, #6366f1, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">S30</span> Works
-  </h2>
-  <p style="font-size: 15.5px; color: var(--s30-text-secondary); max-width: 500px; margin: 0 auto 50px auto;">
-    Simple steps to unlock the best opportunities with your verified credentials.
-  </p>
-
-  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px;">
+  <!-- ================= 3-STEP HOW IT WORKS SECTION ================= -->
+  <div style="margin-top: 65px; text-align: center;" id="how-it-works">
     
-    <div class="s30-glass-step">
-      <div style="font-size: 12px; font-weight: 900; color: #38bdf8; margin-bottom: 12px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">01</div>
-      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">Create Profile</h3>
-      <p style="font-size: 13.5px; color: var(--s30-text-secondary); line-height: 1.55;">
-        Add your college details, degree branch, coursework, and generate your 5-digit candidate ID code.
-      </p>
+    <div style="margin-bottom: 38px;">
+      <span class="neo-badge" style="background: #c084fc; color: #000; font-size: 13px; padding: 6px 16px; border: 2px solid #000; box-shadow: 4px 4px 0px #00f0ff;">
+        ⚡ 3-STEP VERIFIED PIPELINE
+      </span>
+      <h2 style="font-size: 36px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin-top: 12px; letter-spacing: -0.02em;">
+        How The Platform Operates
+      </h2>
     </div>
 
-    <div class="s30-glass-step">
-      <div style="font-size: 12px; font-weight: 900; color: #818cf8; margin-bottom: 12px; background: rgba(129, 140, 248, 0.15); border: 1px solid rgba(129, 140, 248, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">02</div>
-      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">Link Project Proofs</h3>
-      <p style="font-size: 13.5px; color: var(--s30-text-secondary); line-height: 1.55;">
-        Add technical skills with live GitHub repository links and hosted project URLs for 1-by-1 verification.
-      </p>
-    </div>
+    <div class="neo-step-grid">
+      
+      <!-- Step 1: Yellow with 8px Yellow Shadow -->
+      <div class="neo-step-item" style="border: 3px solid #FFE600; box-shadow: 8px 8px 0px #FFE600;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+          <div style="width: 48px; height: 48px; border-radius: 8px; background: #FFE600; border: 2.5px solid #000; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: #000; box-shadow: 4px 4px 0px #00f0ff;">
+            1
+          </div>
+          <span class="neo-badge" style="background: #FFE600; color: #000; font-size: 11px; border: 2px solid #000; box-shadow: 2px 2px 0px #00f0ff;">STAGE 01</span>
+        </div>
+        <h3 style="font-size: 22px; font-weight: 900; color: #ffffff; margin-bottom: 10px; text-transform: uppercase;">
+          Student ID & OCR Verification
+        </h3>
+        <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6; font-weight: 500;">
+          Upload your college identification card (front & back) and certificates. Automated optical parsing validates your active student enrollment and institution.
+        </p>
+      </div>
 
-    <div class="s30-glass-step">
-      <div style="font-size: 12px; font-weight: 900; color: #a78bfa; margin-bottom: 12px; background: rgba(167, 139, 250, 0.15); border: 1px solid rgba(167, 139, 250, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">03</div>
-      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">Upload ID Cards</h3>
-      <p style="font-size: 13.5px; color: var(--s30-text-secondary); line-height: 1.55;">
-        Upload institutional College ID card (Front and Back) and degree certificates for credential proof.
-      </p>
-    </div>
+      <!-- Step 2: Cyan with 8px Cyan Shadow -->
+      <div class="neo-step-item" style="border: 3px solid #00f0ff; box-shadow: 8px 8px 0px #00f0ff;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+          <div style="width: 48px; height: 48px; border-radius: 8px; background: #00f0ff; border: 2.5px solid #000; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: #000; box-shadow: 4px 4px 0px #FFE600;">
+            2
+          </div>
+          <span class="neo-badge" style="background: #00f0ff; color: #000; font-size: 11px; border: 2px solid #000; box-shadow: 2px 2px 0px #FFE600;">STAGE 02</span>
+        </div>
+        <h3 style="font-size: 22px; font-weight: 900; color: #ffffff; margin-bottom: 10px; text-transform: uppercase;">
+          Technical Proofs & Code Audit
+        </h3>
+        <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6; font-weight: 500;">
+          Submit your GitHub repositories, live demo URLs, and competition awards. Staff reviewers and automated linters inspect code quality and authenticity.
+        </p>
+      </div>
 
-    <div class="s30-glass-step">
-      <div style="font-size: 12px; font-weight: 900; color: #34d399; margin-bottom: 12px; background: rgba(52, 211, 153, 0.15); border: 1px solid rgba(52, 211, 153, 0.3); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center;">04</div>
-      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px; color: #ffffff;">Get Verified</h3>
-      <p style="font-size: 13.5px; color: var(--s30-text-secondary); line-height: 1.55;">
-        Receive your S30 Institutional Verification badge and unlock top tech internship referrals.
-      </p>
+      <!-- Step 3: Green with 8px Green Shadow -->
+      <div class="neo-step-item" style="border: 3px solid #22c55e; box-shadow: 8px 8px 0px #22c55e;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px;">
+          <div style="width: 48px; height: 48px; border-radius: 8px; background: #22c55e; border: 2.5px solid #000; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 900; color: #000; box-shadow: 4px 4px 0px #FFE600;">
+            3
+          </div>
+          <span class="neo-badge" style="background: #22c55e; color: #000; font-size: 11px; border: 2px solid #000; box-shadow: 2px 2px 0px #FFE600;">STAGE 03</span>
+        </div>
+        <h3 style="font-size: 22px; font-weight: 900; color: #ffffff; margin-bottom: 10px; text-transform: uppercase;">
+          Direct Match & Opportunity Desk
+        </h3>
+        <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6; font-weight: 500;">
+          Unlock your verified candidate passport with 1-click verified application links to genuine government listings and Tier-1 corporate partners.
+        </p>
+      </div>
+
     </div>
 
   </div>
-</section>
+
+  <!-- ================= MONITORED LEGAL PORTALS & PARTNER PLATFORMS ================= -->
+  <div style="margin-top: 65px; background: #090f1d; border: 3.5px solid #00f0ff; border-radius: 12px; padding: 44px 36px; box-shadow: 12px 12px 0px #00f0ff;" id="opportunities">
+    
+    <div style="text-align: center; margin-bottom: 32px;">
+      <span class="neo-badge" style="background: #00f0ff; color: #000; font-size: 12px; padding: 6px 16px; border: 2px solid #000; box-shadow: 4px 4px 0px #FFE600;">
+        ⚡ PUBLIC & CORPORATE REQUISITIONS
+      </span>
+      <h3 style="font-size: 28px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin-top: 10px; letter-spacing: -0.01em;">
+        Monitored Legal Portals & Partner Platforms
+      </h3>
+      <p style="font-size: 14px; color: #cbd5e1; margin-top: 6px; font-weight: 500;">
+        All opportunities are continuously audited against live web endpoints for validity, zero fees, and official scam-free clearance.
+      </p>
+    </div>
+
+    <!-- High-Contrast Neo-Brutalist Portal Grid with Vivid Offset Shadows -->
+    <div style="display: flex; justify-content: center; gap: 18px; flex-wrap: wrap;">
+      <div class="neo-portal-tag portal-isro">
+        <span style="font-size: 18px;">🛰️</span>
+        <span>ISRO ICRB</span>
+      </div>
+      <div class="neo-portal-tag portal-aicte">
+        <span style="font-size: 18px;">🏛️</span>
+        <span>AICTE PORTAL</span>
+      </div>
+      <div class="neo-portal-tag portal-pm">
+        <span style="font-size: 18px;">🇮🇳</span>
+        <span>PM INTERNSHIP SCHEME</span>
+      </div>
+      <div class="neo-portal-tag portal-mea">
+        <span style="font-size: 18px;">🌐</span>
+        <span>MEA INDIA</span>
+      </div>
+      <div class="neo-portal-tag portal-drdo">
+        <span style="font-size: 18px;">🔬</span>
+        <span>DRDO RAC</span>
+      </div>
+      <div class="neo-portal-tag portal-unstop">
+        <span style="font-size: 18px;">🏆</span>
+        <span>UNSTOP</span>
+      </div>
+      <div class="neo-portal-tag portal-cdac">
+        <span style="font-size: 18px;">💻</span>
+        <span>C-DAC TECH</span>
+      </div>
+      <div class="neo-portal-tag portal-deepmind">
+        <span style="font-size: 18px;">🏢</span>
+        <span>GOOGLE DEEPMIND PARTNER</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================= ABOUT & FOOTER (TeamX) ================= -->
+  <div style="margin-top: 65px; background: #0c1322; border: 3.5px solid #FFE600; border-radius: 12px; padding: 40px 36px; box-shadow: 10px 10px 0px #FFE600; text-align: center;" id="about">
+    <div style="display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+      <span class="neo-badge neo-badge-yellow" style="font-size: 14px; padding: 6px 14px;">S30 VERIFICATION</span>
+      <span class="neo-badge neo-badge-cyan" style="font-size: 13px; padding: 6px 14px;">ENGINEERED BY TeamX</span>
+    </div>
+    <h3 style="font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.01em; margin-bottom: 12px;">
+      Autonomous Student Verification & Opportunity Matchmaker
+    </h3>
+    <p style="font-size: 14.5px; color: #cbd5e1; max-width: 720px; margin: 0 auto 24px; line-height: 1.6; font-weight: 500;">
+      Built by <strong style="color: #FFE600;">TeamX</strong> to eliminate counterfeit applications, automate OCR credential validation, audit technical repositories, and connect verified talent directly with government initiatives and corporate partners.
+    </p>
+    <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; border-top: 2px dashed rgba(255,255,255,0.15); padding-top: 20px;">
+      <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">© 2026 S30 Platform</span>
+      <span style="color: #FFE600; font-weight: 900;">•</span>
+      <span style="font-size: 13px; font-weight: 900; color: #00f0ff;">Crafted with ⚡ by TeamX</span>
+      <span style="color: #FFE600; font-weight: 900;">•</span>
+      <a href="{{ url_for('admin_login') }}" style="color: #ff2a85; font-size: 13px; font-weight: 900; text-decoration: none;">ADMIN CONSOLE &rarr;</a>
+    </div>
+  </div>
+
+</div>
 {% endblock %}

@@ -1,110 +1,483 @@
 {% extends "base.html" %}
 
-{% block title %}Verify your documents — S30{% endblock %}
+{% block title %}Verify your documents & certificates — S30{% endblock %}
 
 {% block content %}
 <!-- S30 Stepper (Step 3 Active) -->
 <div class="s30-stepper">
-  <div class="s30-step-segment active"></div>
-  <div class="s30-step-segment active"></div>
-  <div class="s30-step-segment active"></div>
-  <div class="s30-step-segment"></div>
+  <a href="{{ url_for('signup_profile') }}" class="s30-step-segment active" title="Step 1: Profile"></a>
+  <a href="{{ url_for('signup_skills') }}" class="s30-step-segment active" title="Step 2: Skills"></a>
+  <a href="{{ url_for('signup_documents') }}" class="s30-step-segment active" title="Step 3: Documents"></a>
+  <a href="{{ url_for('signup_analysis') }}" class="s30-step-segment" title="Step 4: AI Analysis"></a>
+  <a href="{{ url_for('signup_verification') }}" class="s30-step-segment" title="Step 5: Verification"></a>
 </div>
 
 <div class="s30-form-header">
-  <h1 class="s30-form-title">Upload Required Documents</h1>
-  <p class="s30-form-subtitle">Make sure documents are clear, valid, and show your student identity.</p>
+  <h1 class="s30-form-title">Upload Documents & Certificates</h1>
+  <p class="s30-form-subtitle">Upload your official College ID card and add as many course/degree certificates as you have.</p>
 </div>
 
 {% if error %}
-<div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-bottom: 18px;">
-  {{ error }}
+<div style="background: #000000; border: 2.5px solid #ff2a85; color: #ff2a85; padding: 14px 18px; border-radius: 6px; font-size: 13.5px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-weight: 800; box-shadow: 4px 4px 0px #ff2a85;">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 20px; height: 20px; flex-shrink: 0;">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="8" x2="12" y2="12"></line>
+    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+  </svg>
+  <span>{{ error }}</span>
 </div>
 {% endif %}
 
-<form action="{{ url_for('signup_documents') }}" method="POST" enctype="multipart/form-data" id="document-form">
+<!-- Mandatory Document Notice -->
+<div style="background: #090f1d; border: 2px solid #FFE600; box-shadow: 3.5px 3.5px 0px #FFE600; border-radius: 6px; padding: 12px 16px; margin-bottom: 22px; display: flex; align-items: center; gap: 12px;">
+  <div style="width: 28px; height: 28px; border-radius: 4px; background: #FFE600; color: #000000; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; border: 1.5px solid #000000;">!</div>
+  <div style="font-size: 12.5px; color: #ffffff; font-weight: 700; line-height: 1.4;">
+    <strong style="color: #FFE600; text-transform: uppercase;">Compulsory Verification:</strong> College ID Card (Front & Back) is mandatory for all registered students.
+  </div>
+</div>
+
+<form action="{{ url_for('signup_documents') }}" method="POST" enctype="multipart/form-data" id="document-form" onsubmit="sessionStorage.removeItem('s30_ai_analyzed_done')">
   
-  <!-- Upload Box 1: College ID Card Front -->
-  <div class="s30-form-group">
-    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-      <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Front Side)</label>
-      <span style="font-size: 11px; color: var(--s30-accent-cyan); font-weight: 700;">REQUIRED</span>
+  <!-- ================= PART 1: COLLEGE ID CARDS ================= -->
+  <div style="margin-bottom: 24px;">
+    <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--s30-accent-cyan); letter-spacing: 0.08em; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+      <span>🪪</span> Official College ID Verification (Compulsory)
     </div>
-    
-    <div class="s30-upload-box" onclick="document.getElementById('file-front').click()">
-      <div class="s30-upload-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
-          <rect width="18" height="12" x="3" y="6" rx="2"></rect>
-          <circle cx="8" cy="12" r="2"></circle>
-          <path d="M14 10h4"></path>
-          <path d="M14 14h2"></path>
-        </svg>
+
+    <!-- Upload Box 1: College ID Card Front -->
+    <div class="s30-form-group">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Front Side)</label>
+        {% if front_doc %}
+        <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
+        {% else %}
+        <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
+        {% endif %}
       </div>
-      <div class="s30-upload-title" id="title-front">Click to upload ID Card (Front)</div>
-      <div class="s30-upload-subtitle">JPG, PNG, PDF up to 10MB</div>
-      <input type="file" name="doc_id_front" id="file-front" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="updateUploadLabel(this, 'title-front')">
+      
+      <div class="s30-upload-box" id="box-front" onclick="document.getElementById('file-front').click()">
+        <div class="s30-upload-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+            <rect width="18" height="12" x="3" y="6" rx="2"></rect>
+            <circle cx="8" cy="12" r="2"></circle>
+            <path d="M14 10h4"></path>
+            <path d="M14 14h2"></path>
+          </svg>
+        </div>
+        <div class="s30-upload-title" id="title-front">
+          {% if front_doc %}
+            <span style="color: #34d399;">✓ {{ front_doc.original_name }}</span> <span style="font-size: 11px; color: var(--s30-text-muted);">(Click to replace)</span>
+          {% else %}
+            Click to upload ID Card (Front)
+          {% endif %}
+        </div>
+        <div class="s30-upload-subtitle">JPG, PNG, PDF up to 15MB</div>
+        <input type="file" name="doc_id_front" id="file-front" accept=".jpg,.jpeg,.png,.pdf,.webp" style="display: none;" onchange="updateUploadLabel(this, 'title-front', 'box-front')">
+      </div>
+    </div>
+
+    <!-- Upload Box 2: College ID Card Back -->
+    <div class="s30-form-group">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Back Side)</label>
+        {% if back_doc %}
+        <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
+        {% else %}
+        <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
+        {% endif %}
+      </div>
+      
+      <div class="s30-upload-box" id="box-back" onclick="document.getElementById('file-back').click()">
+        <div class="s30-upload-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+            <rect width="18" height="12" x="3" y="6" rx="2"></rect>
+            <line x1="7" y1="10" x2="17" y2="10"></line>
+            <line x1="7" y1="14" x2="13" y2="14"></line>
+          </svg>
+        </div>
+        <div class="s30-upload-title" id="title-back">
+          {% if back_doc %}
+            <span style="color: #34d399;">✓ {{ back_doc.original_name }}</span> <span style="font-size: 11px; color: var(--s30-text-muted);">(Click to replace)</span>
+          {% else %}
+            Click to upload ID Card (Back)
+          {% endif %}
+        </div>
+        <div class="s30-upload-subtitle">JPG, PNG, PDF up to 15MB</div>
+        <input type="file" name="doc_id_back" id="file-back" accept=".jpg,.jpeg,.png,.pdf,.webp" style="display: none;" onchange="updateUploadLabel(this, 'title-back', 'box-back')">
+      </div>
     </div>
   </div>
 
-  <!-- Upload Box 2: College ID Card Back -->
-  <div class="s30-form-group">
-    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-      <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Back Side)</label>
-      <span style="font-size: 11px; color: var(--s30-accent-cyan); font-weight: 700;">REQUIRED</span>
-    </div>
+  <!-- ================= PART 2: MULTI-CERTIFICATE SECTION (NEO-BRUTALISM) ================= -->
+  <div style="background: #0c1322; border: 2.5px solid #00f0ff; border-radius: 8px; padding: 24px; margin-bottom: 26px; box-shadow: 6px 6px 0px #00f0ff;">
     
-    <div class="s30-upload-box" onclick="document.getElementById('file-back').click()">
-      <div class="s30-upload-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
-          <rect width="18" height="12" x="3" y="6" rx="2"></rect>
-          <line x1="7" y1="10" x2="17" y2="10"></line>
-          <line x1="7" y1="14" x2="13" y2="14"></line>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 8px;">
+      <div>
+        <div style="font-size: 15px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.04em;">
+          <span>📜</span>
+          <span>Academic & Skill Certificates</span>
+        </div>
+        <div style="font-size: 12.5px; color: #cbd5e1; margin-top: 3px; font-weight: 600;">
+          Add multiple certificates (Degrees, Coursera/edX, Hackathons, Internships, etc.)
+        </div>
+      </div>
+      <span id="cert-counter-badge" class="neo-badge neo-badge-yellow">
+        {{ certificates|length }} ADDED
+      </span>
+    </div>
+
+    <!-- Add Certificate Upload Box (Direct Photo / File Upload) -->
+    <div style="background: #090f1d; border: 2.5px dashed #FFE600; border-radius: 6px; padding: 24px; text-align: center; margin-bottom: 18px; cursor: pointer; transition: all 0.2s ease; box-shadow: 4px 4px 0px #FFE600;" onclick="document.getElementById('new-cert-file').click()" ondragover="event.preventDefault();" ondrop="handleCertDrop(event)">
+      <div style="width: 44px; height: 44px; margin: 0 auto 10px auto; border-radius: 6px; background: #FFE600; border: 2px solid #000000; display: flex; align-items: center; justify-content: center; color: #000000; box-shadow: 2px 2px 0px #000000;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 22px; height: 22px;">
+          <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+          <circle cx="9" cy="9" r="2"></circle>
+          <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
         </svg>
       </div>
-      <div class="s30-upload-title" id="title-back">Click to upload ID Card (Back)</div>
-      <div class="s30-upload-subtitle">JPG, PNG, PDF up to 10MB</div>
-      <input type="file" name="doc_id_back" id="file-back" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="updateUploadLabel(this, 'title-back')">
-    </div>
-  </div>
-
-  <!-- Upload Box 3: Academic Certificate / Transcript -->
-  <div class="s30-form-group" style="margin-bottom: 22px;">
-    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-      <label class="s30-form-label" style="margin-bottom: 0;">Academic Transcript / Certificate Proof</label>
-      <span style="font-size: 11px; color: var(--s30-text-muted); font-weight: 600;">OPTIONAL / RECOMMENDED</span>
-    </div>
-    
-    <div class="s30-upload-box" onclick="document.getElementById('file-cert').click()">
-      <div class="s30-upload-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="17 8 12 3 7 8"></polyline>
-          <line x1="12" y1="3" x2="12" y2="15"></line>
-        </svg>
+      <div style="font-size: 14.5px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.04em;" id="cert-upload-main-text">
+        + CLICK TO UPLOAD CERTIFICATE PHOTO / DOCUMENT
       </div>
-      <div class="s30-upload-title" id="title-cert">Click to upload academic transcript or certificate</div>
-      <div class="s30-upload-subtitle">Official university document (PDF / JPG)</div>
-      <input type="file" name="doc_certificate" id="file-cert" accept=".jpg,.jpeg,.png,.pdf" style="display: none;" onchange="updateUploadLabel(this, 'title-cert')">
+      <div style="font-size: 12px; color: #cbd5e1; margin-top: 4px; font-weight: 600;">
+        Supports JPG, PNG, WEBP, PDF (Select one or multiple files)
+      </div>
+
+      <input 
+        type="file" 
+        id="new-cert-file" 
+        accept=".jpg,.jpeg,.png,.webp,.pdf" 
+        multiple
+        style="display: none;" 
+        onchange="autoUploadCertFiles(this)"
+      >
+
+      <div id="cert-upload-status" style="display: none; font-size: 12px; margin-top: 12px; font-weight: 800;"></div>
     </div>
+
+    <!-- Uploaded Certificates List Container -->
+    <div id="certificates-container" style="display: flex; flex-direction: column; gap: 12px;">
+      {% if certificates %}
+        {% for cert in certificates %}
+        <div class="cert-item-card" id="cert-card-{{ cert.id }}" style="background: #090f1d; border: 2px solid #ffffff; border-radius: 6px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: all 0.15s ease; box-shadow: 3px 3px 0px #ffffff;">
+          <div style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+            <div style="width: 36px; height: 36px; border-radius: 4px; background: #00f0ff; border: 1.5px solid #000000; display: flex; align-items: center; justify-content: center; color: #000000; flex-shrink: 0; box-shadow: 2px 2px 0px #000000;">
+              {% if cert.filename.endswith('.pdf') %}
+                <span style="font-size: 16px;">📄</span>
+              {% else %}
+                <span style="font-size: 16px;">🖼️</span>
+              {% endif %}
+            </div>
+            <div style="min-width: 0;">
+              <div style="font-size: 14px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{ cert.original_name }}
+              </div>
+              <div style="font-size: 11.5px; color: #cbd5e1; margin-top: 2px; font-weight: 600;">
+                Uploaded {{ cert.uploaded_at[:10] if cert.uploaded_at else 'Just now' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Admin Verification Status Badge -->
+          <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+            {% if cert.review_status == 'APPROVED' %}
+              <span class="badge-status badge-done" style="font-size: 11px; padding: 4px 10px;">
+                ✓ Verified by Admin
+              </span>
+            {% elif cert.review_status == 'REJECTED' %}
+              <span class="badge-status badge-rejected" style="font-size: 11px; padding: 4px 10px;">
+                ✕ Rejected by Admin
+              </span>
+            {% else %}
+              <span class="badge-status badge-progress" style="font-size: 11px; padding: 4px 10px;">
+                ⏳ Pending Admin Review
+              </span>
+            {% endif %}
+
+            <button 
+              type="button" 
+              onclick="deleteCertificateDirect({{ cert.id }})" 
+              title="Delete this certificate" 
+              style="background: #000; border: 1.5px solid #ff2a85; color: #ff2a85; border-radius: 4px; font-weight: 900; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; font-size: 14px; box-shadow: 2px 2px 0px #ff2a85;"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div id="no-certs-notice" style="text-align: center; padding: 20px 10px; color: var(--s30-text-muted); font-size: 12.5px; border: 1px dashed rgba(255,255,255,0.06); border-radius: 10px;">
+          No additional certificates uploaded yet. Use the form above to add your certificates.
+        </div>
+      {% endif %}
+    </div>
+
   </div>
 
-  <!-- Submit Button -->
-  <button type="submit" class="s30-btn-primary" style="width: 100%; height: 48px; font-size: 15px;">
-    <span>Submit for S30 Verification</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; margin-left: 6px;">
-      <path d="M5 12h14"></path>
-      <path d="m12 5 7 7-7 7"></path>
-    </svg>
-  </button>
+  <!-- Navigation Buttons (Back & Forward) -->
+  <div class="s30-nav-step-row">
+    <a href="{{ url_for('signup_skills') }}" class="s30-btn-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+        <path d="m15 18-6-6 6-6"></path>
+      </svg>
+      <span>Back to Skills</span>
+    </a>
+
+    <button type="submit" class="s30-btn-forward">
+      <span>Submit & Proceed to Verification</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+    </button>
+  </div>
 </form>
 
 <script>
-  function updateUploadLabel(input, labelId) {
+  function updateUploadLabel(input, labelId, boxId) {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       const el = document.getElementById(labelId);
-      el.innerHTML = `<span style="color: #34d399;">✓ ${file.name}</span> <span style="font-size: 11px; color: #94a3b8;">(${(file.size/1024/1024).toFixed(2)} MB)</span>`;
+      el.innerHTML = `<span style="color: #34d399; font-weight: 800;">✓ ${file.name}</span> <span style="font-size: 11px; color: #94a3b8;">(${(file.size/1024/1024).toFixed(2)} MB)</span>`;
+      if (boxId) {
+        const box = document.getElementById(boxId);
+        if (box) {
+          box.style.borderColor = '#22c55e';
+          box.style.boxShadow = '3px 3px 0px #22c55e';
+        }
+      }
     }
+  }
+
+  document.getElementById('document-form').addEventListener('submit', function(e) {
+    const hasFrontUploaded = {{ 'true' if front_doc else 'false' }};
+    const hasBackUploaded = {{ 'true' if back_doc else 'false' }};
+    
+    const fileFrontInput = document.getElementById('file-front');
+    const fileBackInput = document.getElementById('file-back');
+    
+    const frontSelected = fileFrontInput && fileFrontInput.files && fileFrontInput.files.length > 0;
+    const backSelected = fileBackInput && fileBackInput.files && fileBackInput.files.length > 0;
+    
+    const frontOk = hasFrontUploaded || frontSelected;
+    const backOk = hasBackUploaded || backSelected;
+    
+    if (!frontOk || !backOk) {
+      e.preventDefault();
+      
+      if (!frontOk) {
+        const boxFront = document.getElementById('box-front');
+        if (boxFront) {
+          boxFront.style.borderColor = '#ff2a85';
+          boxFront.style.boxShadow = '4px 4px 0px #ff2a85';
+        }
+      }
+      if (!backOk) {
+        const boxBack = document.getElementById('box-back');
+        if (boxBack) {
+          boxBack.style.borderColor = '#ff2a85';
+          boxBack.style.boxShadow = '4px 4px 0px #ff2a85';
+        }
+      }
+      
+      let msg = "⚠️ Document insertion is COMPULSORY:\n\n";
+      if (!frontOk && !backOk) {
+        msg += "• Please upload BOTH Front and Back sides of your College ID Card.";
+      } else if (!frontOk) {
+        msg += "• Please upload the Front side of your College ID Card.";
+      } else {
+        msg += "• Please upload the Back side of your College ID Card.";
+      }
+      alert(msg);
+      return false;
+    }
+  });
+
+  function handleCertDrop(e) {
+    e.preventDefault();
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      uploadFilesArray(e.dataTransfer.files);
+    }
+  }
+
+  function autoUploadCertFiles(input) {
+    if (input.files && input.files.length > 0) {
+      uploadFilesArray(input.files);
+    }
+  }
+
+  async function uploadFilesArray(filesList) {
+    const statusEl = document.getElementById('cert-upload-status');
+    const mainText = document.getElementById('cert-upload-main-text');
+
+    const formData = new FormData();
+    for (let i = 0; i < filesList.length; i++) {
+      formData.append('certificate_files', filesList[i]);
+    }
+
+    statusEl.style.display = 'block';
+    statusEl.style.color = '#38bdf8';
+    statusEl.textContent = `⏳ Uploading ${filesList.length} certificate photo(s)...`;
+    mainText.textContent = 'Uploading...';
+
+    try {
+      const res = await fetch('/api/certificates/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      if (res.ok && data.certificates) {
+        statusEl.style.color = '#34d399';
+        statusEl.textContent = `✓ ${data.certificates.length} certificate photo(s) added successfully!`;
+        
+        // Reset file input
+        const fileInput = document.getElementById('new-cert-file');
+        if (fileInput) fileInput.value = '';
+
+        // Refresh list
+        loadCertificatesList();
+        
+        setTimeout(() => {
+          statusEl.style.display = 'none';
+          mainText.textContent = '+ Click to upload certificate photo / document';
+        }, 2500);
+      } else {
+        statusEl.style.color = '#f87171';
+        statusEl.textContent = `✕ Error: ${data.error || 'Failed to upload certificate'}`;
+        mainText.textContent = '+ Click to upload certificate photo / document';
+      }
+    } catch (err) {
+      console.error(err);
+      statusEl.style.color = '#f87171';
+      statusEl.textContent = '✕ Network error while uploading certificate.';
+      mainText.textContent = '+ Click to upload certificate photo / document';
+    }
+  }
+
+  async function deleteCertificateDirect(certId) {
+    if (!confirm("Are you sure you want to remove this certificate?")) return;
+
+    try {
+      const res = await fetch(`/api/certificates/${certId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      if (res.ok) {
+        const card = document.getElementById(`cert-card-${certId}`);
+        if (card) {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(-10px)';
+          setTimeout(() => {
+            card.remove();
+            updateCertCounter();
+          }, 200);
+        }
+      } else {
+        alert("Failed to delete certificate.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Network error while removing certificate.");
+    }
+  }
+
+  async function loadCertificatesList() {
+    try {
+      const res = await fetch('/api/certificates');
+      if (res.ok) {
+        const certs = await res.json();
+        const container = document.getElementById('certificates-container');
+        const badge = document.getElementById('cert-counter-badge');
+        
+        badge.textContent = `${certs.length} Added`;
+
+        if (certs.length === 0) {
+          container.innerHTML = `
+            <div id="no-certs-notice" style="text-align: center; padding: 20px 10px; color: var(--s30-text-muted); font-size: 12.5px; border: 1px dashed rgba(255,255,255,0.06); border-radius: 10px;">
+              No additional certificates uploaded yet. Use the form above to add your certificates.
+            </div>
+          `;
+          return;
+        }
+
+        let html = '';
+        certs.forEach(cert => {
+          const isPdf = cert.filename.toLowerCase().endsWith('.pdf');
+          const icon = isPdf ? '📄' : '🖼️';
+          const sizeKb = (cert.file_size / 1024).toFixed(1);
+
+          let statusBadge = '';
+          if (cert.review_status === 'APPROVED') {
+            statusBadge = '<span class="badge-status badge-done" style="font-size: 11px; padding: 4px 10px;">✓ Verified by Admin</span>';
+          } else if (cert.review_status === 'REJECTED') {
+            statusBadge = '<span class="badge-status badge-rejected" style="font-size: 11px; padding: 4px 10px;">✕ Rejected by Admin</span>';
+          } else {
+            statusBadge = '<span class="badge-status badge-progress" style="font-size: 11px; padding: 4px 10px;">⏳ Pending Admin Review</span>';
+          }
+
+          html += `
+            <div class="cert-item-card" id="cert-card-${cert.id}" style="background: rgba(15, 23, 42, 0.85); border: 1px solid var(--s30-border); border-radius: var(--s30-radius-md); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: all 0.2s ease;">
+              <div style="display: flex; align-items: center; gap: 12px; min-width: 0; flex: 1;">
+                <div style="width: 36px; height: 36px; border-radius: 8px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); display: flex; align-items: center; justify-content: center; color: #818cf8; flex-shrink: 0;">
+                  <span style="font-size: 16px;">${icon}</span>
+                </div>
+                <div style="min-width: 0;">
+                  <div style="font-size: 13.5px; font-weight: 700; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    ${escapeHtml(cert.original_name)}
+                  </div>
+                  <div style="font-size: 11px; color: var(--s30-text-muted); display: flex; align-items: center; gap: 8px; margin-top: 2px;">
+                    <span>${sizeKb} KB</span>
+                    <span>•</span>
+                    <a href="/documents/view/${cert.filename}" target="_blank" style="color: var(--s30-accent-cyan); text-decoration: underline;">
+                      View Document ↗
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0;">
+                ${statusBadge}
+
+                <button 
+                  type="button" 
+                  onclick="deleteCertificateDirect(${cert.id})" 
+                  title="Delete this certificate" 
+                  style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.25); color: #f87171; border-radius: 6px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0; font-size: 15px;"
+                  onmouseover="this.style.background='rgba(239,68,68,0.25)'"
+                  onmouseout="this.style.background='rgba(239,68,68,0.12)'"
+                >
+                  &times;
+                </button>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function updateCertCounter() {
+    const items = document.querySelectorAll('.cert-item-card');
+    const badge = document.getElementById('cert-counter-badge');
+    const container = document.getElementById('certificates-container');
+    if (badge) badge.textContent = `${items.length} Added`;
+    if (items.length === 0 && container) {
+      container.innerHTML = `
+        <div id="no-certs-notice" style="text-align: center; padding: 20px 10px; color: var(--s30-text-muted); font-size: 12.5px; border: 1px dashed rgba(255,255,255,0.06); border-radius: 10px;">
+          No additional certificates uploaded yet. Use the form above to add your certificates.
+        </div>
+      `;
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
 </script>
 {% endblock %}

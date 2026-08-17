@@ -3,12 +3,13 @@
 {% block title %}Create your account — S30{% endblock %}
 
 {% block content %}
-<!-- S30 Stepper (Panel 6) -->
+<!-- S30 Stepper (Step 1 Active) -->
 <div class="s30-stepper">
-  <div class="s30-step-segment active"></div>
-  <div class="s30-step-segment"></div>
-  <div class="s30-step-segment"></div>
-  <div class="s30-step-segment"></div>
+  <a href="{{ url_for('signup_profile') }}" class="s30-step-segment active" title="Step 1: Profile"></a>
+  <a href="{{ url_for('signup_skills') }}" class="s30-step-segment" title="Step 2: Skills"></a>
+  <a href="{{ url_for('signup_documents') }}" class="s30-step-segment" title="Step 3: Documents"></a>
+  <a href="{{ url_for('signup_analysis') }}" class="s30-step-segment" title="Step 4: AI Analysis"></a>
+  <a href="{{ url_for('signup_verification') }}" class="s30-step-segment" title="Step 5: Verification"></a>
 </div>
 
 <div class="s30-form-header">
@@ -17,8 +18,8 @@
 </div>
 
 {% if error %}
-<div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px; flex-shrink: 0;">
+<div style="background: #000000; border: 2px solid #ff2a85; color: #ff2a85; padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 800; box-shadow: 3px 3px 0px #ff2a85;">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 18px; height: 18px; flex-shrink: 0;">
     <circle cx="12" cy="12" r="10"></circle>
     <line x1="12" y1="8" x2="12" y2="12"></line>
     <line x1="12" y1="16" x2="12.01" y2="16"></line>
@@ -221,14 +222,22 @@
     <label for="terms">I agree to the <a href="#" style="color: var(--s30-accent-blue); text-decoration: none;">Terms & Conditions</a></label>
   </div>
 
-  <!-- Submit Button -->
-  <button type="submit" class="s30-btn-primary" style="width: 100%; height: 48px; font-size: 15px;">
-    <span>Sign Up & Continue</span>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px; margin-left: 6px;">
-      <path d="M5 12h14"></path>
-      <path d="m12 5 7 7-7 7"></path>
-    </svg>
-  </button>
+  <!-- Navigation Buttons (Back & Forward) -->
+  <div class="s30-nav-step-row">
+    <a href="{{ url_for('landing_page') }}" class="s30-btn-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+        <path d="m15 18-6-6 6-6"></path>
+      </svg>
+      <span>Home</span>
+    </a>
+    <button type="submit" class="s30-btn-forward">
+      <span>Continue to Skills (Step 2)</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+    </button>
+  </div>
 
   <div style="text-align: center; font-size: 13px; color: var(--s30-text-secondary); margin-top: 18px;">
     Already have an account? <a href="{{ url_for('login_page') }}" style="color: var(--s30-accent-cyan); font-weight: 600; text-decoration: none;">Login</a>
