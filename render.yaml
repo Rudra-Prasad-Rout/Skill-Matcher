@@ -11,12 +11,6 @@ services:
         generateValue: true
       - key: GMAIL_USER
         value: teamx.contact.admin@gmail.com
-      - key: GMAIL_APP_PASSWORD
-        value: iqfuntuwalaxowcv
-      - key: SMTP_SERVER
-        value: smtp.gmail.com
-      - key: SMTP_PORT
-        value: "465"
       - key: BREVO_API_KEY
         sync: false
       - key: RESEND_API_KEY
