@@ -91,10 +91,12 @@
             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
         </span>
-        <select id="gender" name="gender" class="s30-select">
-          <option value="Male" {% if user and user.gender == 'Male' %}selected{% endif %}>Male</option>
-          <option value="Female" {% if user and user.gender == 'Female' %}selected{% endif %}>Female</option>
-          <option value="Other" {% if user and user.gender == 'Other' %}selected{% endif %}>Other / Prefer not to say</option>
+        {% set cur_gender = form_data.gender if (form_data and form_data.gender) else (user.gender if (user and user.gender) else '') %}
+        <select id="gender" name="gender" class="s30-select" required>
+          <option value="" {% if not cur_gender %}selected{% endif %} disabled hidden>Select Gender</option>
+          <option value="Male" {% if cur_gender == 'Male' %}selected{% endif %}>Male</option>
+          <option value="Female" {% if cur_gender == 'Female' %}selected{% endif %}>Female</option>
+          <option value="Other" {% if cur_gender == 'Other' %}selected{% endif %}>Other / Prefer not to say</option>
         </select>
       </div>
     </div>
@@ -110,15 +112,16 @@
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
         </span>
+        {% set cur_age = form_data.age if (form_data and form_data.age) else (user.age if (user and user.age) else '') %}
         <input 
           type="number" 
           id="age" 
           name="age" 
           class="s30-input" 
-          placeholder="21" 
+          placeholder="e.g. 21" 
           min="16" 
           max="100"
-          value="{{ user.age if user else (form_data.age if form_data else '21') }}" 
+          value="{{ cur_age }}" 
           required
         >
       </div>
@@ -173,7 +176,7 @@
 
   <!-- Row 4: University / College -->
   <div class="s30-form-group">
-    <label class="s30-form-label" for="school">School / College / University</label>
+    <label class="s30-form-label" for="school">College / University</label>
     <div class="s30-input-wrap">
       <span class="s30-input-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

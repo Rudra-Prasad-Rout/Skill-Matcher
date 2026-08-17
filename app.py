@@ -169,8 +169,8 @@ def signup_profile():
     if request.method == "POST":
         full_name = request.form.get("full_name", "").strip()
         email = request.form.get("email", "").strip().lower()
-        gender = request.form.get("gender", "Male").strip()
-        age = request.form.get("age", "20").strip()
+        gender = request.form.get("gender", "").strip()
+        age = request.form.get("age", "").strip()
         password = request.form.get("password", "").strip()
         re_password = request.form.get("re_password", "").strip()
         school = request.form.get("school", "").strip()
@@ -186,6 +186,19 @@ def signup_profile():
                 active_step=1, 
                 form_data=request.form
             )
+
+        if not gender:
+            return render_template("profile.html", error="Please select your gender.", active_step=1, form_data=request.form)
+
+        if not age:
+            return render_template("profile.html", error="Please enter your age.", active_step=1, form_data=request.form)
+            
+        try:
+            age_int = int(age)
+            if age_int < 16 or age_int > 100:
+                return render_template("profile.html", error="Please enter an age between 16 and 100.", active_step=1, form_data=request.form)
+        except ValueError:
+            return render_template("profile.html", error="Please enter a valid number for age.", active_step=1, form_data=request.form)
             
         if password or re_password:
             if password != re_password:
@@ -196,11 +209,6 @@ def signup_profile():
                     form_data=request.form
                 )
         
-        try:
-            age_int = int(age)
-        except ValueError:
-            age_int = 20
-            
         conn = database.get_db_connection()
         cursor = conn.cursor()
         
@@ -821,7 +829,7 @@ def calculate_internship_matches(user, user_skills, admin_mode=False):
                 "is_scam_flagged": row["is_scam_flagged"] if "is_scam_flagged" in row.keys() else 0,
                 "flag_reason": row["flag_reason"] if "flag_reason" in row.keys() else None,
                 "posted_date": row["posted_date"],
-                "approval_status": user_approvals.get(disc_id, "PENDING")
+        "approval_status": user_approvals.get(disc_id, "PENDING")
             })
     except Exception as e:
         print(f"[Discovered matching error]: {e}")
@@ -829,7 +837,64 @@ def calculate_internship_matches(user, user_skills, admin_mode=False):
     results.sort(key=lambda x: x["match_percentage"], reverse=True)
     return results
 
-# ================= STEP 4 (NEW): Real-time AI Profile Analysis & Internship Matching =================
+def calculate_team_formation_matches(user, skills_list):
+    """
+    Match candidate with other verified candidates to form high-impact project/hackathon squads.
+    Calculates peer synergy, complementary skill matrix, and team compatibility.
+    """
+    user_skill_names = set(s.get("skill_name", "").lower() for s in skills_list)
+    user_id = user.get("id")
+    
+    conn = database.get_db_connection()
+    other_users = conn.execute("""
+        SELECT u.*, GROUP_CONCAT(s.skill_name, '||') as all_skills, GROUP_CONCAT(s.project_name, '||') as all_projects
+        FROM users u
+        LEFT JOIN user_skills s ON u.id = s.user_id
+        WHERE u.id != ? AND u.is_banned = 0
+        GROUP BY u.id
+        ORDER BY u.id ASC
+    """, (user_id,)).fetchall()
+    conn.close()
+    
+    team_matches = []
+    for other in other_users:
+        raw_skills = other["all_skills"].split("||") if other["all_skills"] else []
+        other_skills = [sk.strip() for sk in raw_skills if sk.strip()]
+        
+        # Overlapping and complementary skills
+        overlapping = [sk for sk in other_skills if sk.lower() in user_skill_names]
+        complementary = [sk for sk in other_skills if sk.lower() not in user_skill_names]
+        
+        if not other_skills:
+            synergy = 74
+        else:
+            base_score = 68
+            comp_bonus = min(len(complementary) * 10, 24)
+            overlap_bonus = min(len(overlapping) * 6, 12)
+            synergy = min(base_score + comp_bonus + overlap_bonus, 98)
+            
+        role_label = "AI & ML Specialist" if any("ai" in sk.lower() or "python" in sk.lower() for sk in other_skills) else \
+                     "Full-Stack Architect" if any("react" in sk.lower() or "node" in sk.lower() for sk in other_skills) else \
+                     "Systems & Cloud Engineer"
+                     
+        team_matches.append({
+            "id": other["id"],
+            "user_code": other["user_code"],
+            "full_name": other["full_name"],
+            "school": other["school"] or "University",
+            "coursework": other["coursework"] or "Computer Science",
+            "role_label": role_label,
+            "synergy_percentage": synergy,
+            "verified_skills": other_skills[:4],
+            "overlapping_skills": overlapping,
+            "complementary_skills": complementary,
+            "status": "AVAILABLE FOR SQUAD"
+        })
+        
+    team_matches.sort(key=lambda x: x["synergy_percentage"], reverse=True)
+    return team_matches
+
+# ================= STEP 4 (NEW): Real-time AI Profile Analysis & Matchmaking =================
 @app.route("/signup/analysis")
 @app.route("/analysis")
 def signup_analysis():
@@ -844,11 +909,14 @@ def signup_analysis():
     conn = database.get_db_connection()
     skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
     docs = conn.execute("SELECT * FROM user_documents WHERE user_id = ? ORDER BY id DESC", (user["id"],)).fetchall()
+    user_row = conn.execute("SELECT * FROM users WHERE id = ?", (user["id"],)).fetchone()
     conn.close()
     
+    user_dict = dict(user_row) if user_row else dict(user)
     skills_list = [dict(s) for s in skills]
     docs_list = [dict(d) for d in docs]
-    matches = calculate_internship_matches(user, skills_list)
+    matches = calculate_internship_matches(user_dict, skills_list)
+    team_matches = calculate_team_formation_matches(user_dict, skills_list)
     
     # Calculate overall candidate readiness
     top_scores = [m["match_percentage"] for m in matches[:3]]
@@ -857,13 +925,33 @@ def signup_analysis():
     return render_template(
         "analysis.html",
         active_step=4,
-        user=user,
+        user=user_dict,
         skills=skills_list,
         documents=docs_list,
         matches=matches,
+        team_matches=team_matches,
+        career_intent=user_dict.get("career_intent", "both"),
         overall_score=avg_score,
         top_match=matches[0] if matches else None
     )
+
+@app.route("/api/set-career-intent", methods=["POST"])
+def api_set_career_intent():
+    user = get_current_user(create_default=True)
+    if not user:
+        return jsonify({"error": "Unauthorized"}), 401
+        
+    data = request.get_json(silent=True) or request.form
+    intent = data.get("intent", "both")
+    if intent not in ("internship", "team_formation", "both"):
+        intent = "both"
+        
+    conn = database.get_db_connection()
+    conn.execute("UPDATE users SET career_intent = ? WHERE id = ?", (intent, user["id"]))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({"success": True, "career_intent": intent})
 
 @app.route("/api/profile-analysis")
 def api_profile_analysis():

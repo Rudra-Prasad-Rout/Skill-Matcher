@@ -57,11 +57,21 @@ def init_db(force_reset=False):
         step INTEGER DEFAULT 1,
         pdf_status TEXT DEFAULT 'DONE',
         manual_status TEXT DEFAULT 'IN PROGRESS',
+        career_intent TEXT DEFAULT 'both',
         is_banned INTEGER DEFAULT 0,
         ban_reason TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
     """)
+
+    # Ensure career_intent column exists in existing database
+    try:
+        cursor.execute("SELECT career_intent FROM users LIMIT 1")
+    except sqlite3.OperationalError:
+        try:
+            cursor.execute("ALTER TABLE users ADD COLUMN career_intent TEXT DEFAULT 'both'")
+        except Exception:
+            pass
     
     # Skills and Projects table (with GitHub / Website URL)
     cursor.execute("""

@@ -42,13 +42,16 @@
     </div>
   </div>
 
-  <!-- Password Input -->
+  <!-- Password Input with Show/Hide Toggle -->
   <div class="s30-form-group" style="margin-bottom: 18px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
       <label class="s30-form-label" for="login_password" style="margin-bottom: 0;">Password</label>
-      <a href="#" style="font-size: 12px; color: #00f0ff; text-decoration: none; font-weight: 700;">Forgot password?</a>
+      <button type="button" onclick="toggleUserPasswordVisibility()" style="background: none; border: none; color: #00f0ff; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; text-transform: uppercase; letter-spacing: 0.05em;">
+        <span id="userEyeIconHeader">👁️</span>
+        <span id="userToggleTextHeader">SHOW</span>
+      </button>
     </div>
-    <div class="s30-input-wrap">
+    <div class="s30-input-wrap" style="position: relative;">
       <span class="s30-input-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
@@ -62,7 +65,26 @@
         class="s30-input" 
         placeholder="Enter your password" 
         required
+        style="padding-right: 48px;"
       >
+      <!-- In-field Eye Toggle Button -->
+      <button 
+        type="button" 
+        onclick="toggleUserPasswordVisibility()" 
+        title="Show / Hide Password" 
+        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 6px; border-radius: 4px; transition: all 0.15s ease;"
+        onmouseover="this.style.color='#00f0ff'; this.style.background='rgba(0, 240, 255, 0.1)';"
+        onmouseout="this.style.color='#94a3b8'; this.style.background='none';"
+      >
+        <svg id="userEyeOpenSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        </svg>
+        <svg id="userEyeClosedSvg" viewBox="0 0 24 24" fill="none" stroke="#ff2a85" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; display: none;">
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+          <line x1="1" y1="1" x2="23" y2="23"></line>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -73,7 +95,7 @@
   </div>
 
   <!-- Submit Action Button -->
-  <button type="submit" class="neo-btn neo-btn-yellow" style="width: 100%; height: 50px; font-size: 15px; margin-bottom: 20px;">
+  <button type="submit" class="neo-btn neo-btn-cyan" style="width: 100%; height: 50px; font-size: 15px; margin-bottom: 20px;">
     <span>LOG IN TO YOUR ACCOUNT &rarr;</span>
   </button>
 
@@ -85,4 +107,30 @@
     </a>
   </div>
 </form>
+
+<script>
+  function toggleUserPasswordVisibility() {
+    const pwd = document.getElementById('login_password');
+    const eyeOpen = document.getElementById('userEyeOpenSvg');
+    const eyeClosed = document.getElementById('userEyeClosedSvg');
+    const toggleText = document.getElementById('userToggleTextHeader');
+    const eyeIcon = document.getElementById('userEyeIconHeader');
+
+    if (!pwd) return;
+
+    if (pwd.type === 'password') {
+      pwd.type = 'text';
+      if (eyeOpen) eyeOpen.style.display = 'none';
+      if (eyeClosed) eyeClosed.style.display = 'block';
+      if (toggleText) toggleText.innerText = 'HIDE';
+      if (eyeIcon) eyeIcon.innerText = '🙈';
+    } else {
+      pwd.type = 'password';
+      if (eyeOpen) eyeOpen.style.display = 'block';
+      if (eyeClosed) eyeClosed.style.display = 'none';
+      if (toggleText) toggleText.innerText = 'SHOW';
+      if (eyeIcon) eyeIcon.innerText = '👁️';
+    }
+  }
+</script>
 {% endblock %}
