@@ -194,6 +194,8 @@ class AIGmailAgent:
         # Channel B: Brevo API (https://api.brevo.com/v3/smtp/email)
         if brevo_key:
             try:
+                print(f"[AI AGENT BREVO] Attempting HTTPS dispatch to {recipient_email} using Brevo key {brevo_key[:8]}...")
+                sender_email_to_use = self.sender_email or self.DEFAULT_SENDER
                 resp = requests.post(
                     "https://api.brevo.com/v3/smtp/email",
                     headers={
@@ -201,7 +203,7 @@ class AIGmailAgent:
                         "Content-Type": "application/json"
                     },
                     json={
-                        "sender": {"name": "TeamX AI Agent", "email": self.sender_email or self.DEFAULT_SENDER},
+                        "sender": {"name": "TeamX AI Agent", "email": sender_email_to_use},
                         "to": [{"email": recipient_email}],
                         "subject": f"🔐 Your S30 AI Verification Code: {otp_code}",
                         "htmlContent": html_body,
@@ -209,8 +211,9 @@ class AIGmailAgent:
                     },
                     timeout=10
                 )
+                print(f"[AI AGENT BREVO RESPONSE] Status: {resp.status_code}, Body: {resp.text}")
                 if resp.status_code in (200, 201):
-                    print(f"[AI AGENT HTTPS] Successfully dispatched email to {recipient_email} via Brevo API")
+                    print(f"[AI AGENT HTTPS SUCCESS] Delivered to {recipient_email} via Brevo API")
                     return {
                         "success": True,
                         "mode": "LIVE_HTTPS_DISPATCH",
@@ -219,9 +222,9 @@ class AIGmailAgent:
                         "message": f"🤖 AI Agent: Code dispatched via HTTPS to {recipient_email}!"
                     }
                 else:
-                    print(f"[AI AGENT HTTPS ERROR] Brevo returned {resp.status_code}: {resp.text}")
+                    print(f"[AI AGENT BREVO ERROR] Brevo rejected request: {resp.status_code} - {resp.text}")
             except Exception as e:
-                print(f"[AI AGENT HTTPS ERROR] Brevo API request failed: {e}")
+                print(f"[AI AGENT BREVO EXCEPTION] Failed to connect to Brevo API: {e}")
 
         return None
 
