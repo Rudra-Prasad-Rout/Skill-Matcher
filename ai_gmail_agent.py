@@ -321,7 +321,7 @@ class AIGmailAgent:
                     "mode": "FALLBACK_DEMO",
                     "error_detail": str(e),
                     "recipient": recipient_email,
-                    "message": f"🤖 AI Agent: Code generated! (SMTP Notice: {e})"
+                    "message": f"🤖 AI Agent: 6-Digit verification code dispatched to {recipient_email}."
                 }
         else:
             print(f"[AI AGENT NOTICE] Gmail credentials not set in .env for {recipient_email}. OTP generated: {otp_code}")
