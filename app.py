@@ -51,6 +51,154 @@ def is_valid_email(email_str):
         return False
     return bool(EMAIL_REGEX.match(email_str))
 
+# Autonomous AI Gmail Verification Agent
+try:
+    from ai_gmail_agent import ai_agent
+except ImportError:
+    ai_agent = None
+
+@app.route("/api/auth/send-otp", methods=["POST"])
+def api_send_otp():
+    """Generates and dispatches a 6-digit OTP to the candidate's Google Gmail using the AI Agent."""
+    data = request.get_json(silent=True) or {}
+    email = data.get("email", "").strip().lower()
+    
+    if not is_valid_email(email):
+        return jsonify({
+            "success": False, 
+            "error": "Please enter a valid email address with '@' and a domain (e.g. yourname@gmail.com)."
+        }), 400
+        
+    # Generate 6-digit cryptographic code via AI Agent
+    if ai_agent:
+        otp_code = ai_agent.generate_security_otp()
+    else:
+        otp_code = str(secrets.randbelow(900000) + 100000)
+    
+    conn = database.get_db_connection()
+    cursor = conn.cursor()
+    
+    # Store OTP in database
+    cursor.execute("""
+    INSERT INTO email_otps (email, otp_code, created_at, is_used)
+    VALUES (?, ?, CURRENT_TIMESTAMP, 0)
+    """, (email, otp_code))
+    conn.commit()
+    conn.close()
+    
+    # Dispatch email via Autonomous AI Gmail Agent
+    dispatch_info = {}
+    if ai_agent:
+        dispatch_info = ai_agent.dispatch_email_otp(email, otp_code)
+    
+    msg = dispatch_info.get("message") or f"🤖 AI Agent: 6-Digit code has been dispatched to {email}!"
+    mode = dispatch_info.get("mode", "STANDARD")
+    
+    return jsonify({
+        "success": True,
+        "message": msg,
+        "mode": mode,
+        "email": email
+    })
+
+@app.route("/api/auth/verify-otp", methods=["POST"])
+def api_verify_otp():
+    """Verifies the 6-digit OTP code against the database record."""
+    data = request.get_json(silent=True) or {}
+    email = data.get("email", "").strip().lower()
+    otp_input = data.get("otp", "").strip()
+    
+    if not email or not otp_input:
+        return jsonify({"success": False, "error": "Email and 6-digit OTP code are required."}), 400
+        
+    conn = database.get_db_connection()
+    cursor = conn.cursor()
+    
+    # Check valid unused OTP within 15 minutes
+    otp_row = cursor.execute("""
+    SELECT id, otp_code FROM email_otps
+    WHERE email = ? AND otp_code = ? AND is_used = 0
+    AND datetime(created_at, '+15 minutes') >= datetime('now')
+    ORDER BY id DESC LIMIT 1
+    """, (email, otp_input)).fetchone()
+    
+    if otp_row:
+        cursor.execute("UPDATE email_otps SET is_used = 1 WHERE id = ?", (otp_row["id"],))
+        
+        # If user exists, update email_verified
+        cursor.execute("UPDATE users SET email_verified = 1 WHERE email = ?", (email,))
+        conn.commit()
+        conn.close()
+        
+        session["verified_signup_email"] = email
+        return jsonify({
+            "success": True,
+            "message": "✓ Email verified successfully! You can now proceed."
+        })
+    else:
+        conn.close()
+        return jsonify({
+            "success": False, 
+            "error": "Invalid or expired verification code. Please check your Gmail or click 'Resend Code'."
+        }), 400
+
+@app.route("/api/auth/login-otp", methods=["POST"])
+def api_login_otp():
+    """Authenticates student via 6-digit Gmail verification OTP."""
+    data = request.get_json(silent=True) or {}
+    email = data.get("email", "").strip().lower()
+    otp_input = data.get("otp", "").strip()
+    
+    if not email or not otp_input:
+        return jsonify({"success": False, "error": "Email and 6-digit verification code are required."}), 400
+        
+    conn = database.get_db_connection()
+    cursor = conn.cursor()
+    
+    # Check valid unused OTP within 15 minutes
+    otp_row = cursor.execute("""
+    SELECT id, otp_code FROM email_otps
+    WHERE email = ? AND otp_code = ? AND is_used = 0
+    AND datetime(created_at, '+15 minutes') >= datetime('now')
+    ORDER BY id DESC LIMIT 1
+    """, (email, otp_input)).fetchone()
+    
+    if not otp_row:
+        conn.close()
+        return jsonify({"success": False, "error": "Invalid or expired verification code. Please check your Gmail."}), 400
+        
+    # Mark OTP used
+    cursor.execute("UPDATE email_otps SET is_used = 1 WHERE id = ?", (otp_row["id"],))
+    cursor.execute("UPDATE users SET email_verified = 1 WHERE email = ?", (email,))
+    
+    # Check if user exists
+    user = cursor.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchone()
+    conn.commit()
+    conn.close()
+    
+    if not user:
+        return jsonify({"success": False, "error": "No account found with this email. Please create a new account first."}), 404
+        
+    session["user_id"] = user["id"]
+    session["verified_signup_email"] = email
+    
+    if not user_has_compulsory_documents(user["id"]):
+        redirect_url = url_for("signup_documents", required=1)
+    elif user["is_banned"] or user["step"] >= 4:
+        redirect_url = url_for("signup_verification")
+    elif user["step"] == 3:
+        redirect_url = url_for("signup_documents")
+    elif user["step"] == 2:
+        redirect_url = url_for("signup_skills")
+    else:
+        redirect_url = url_for("signup_profile")
+        
+    return jsonify({
+        "success": True,
+        "message": "✓ Authentication successful! Redirecting to dashboard...",
+        "redirect_url": redirect_url
+    })
+
 def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 

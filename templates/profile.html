@@ -29,52 +29,128 @@
 {% endif %}
 
 <form action="{{ url_for('signup_profile') }}" method="POST" id="profile-form">
-  <!-- Row 1: Full Name & Email -->
-  <div class="s30-form-grid-2">
-    <div class="s30-form-group">
-      <label class="s30-form-label" for="full_name">Full Name</label>
-      <div class="s30-input-wrap">
-        <span class="s30-input-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-        </span>
-        <input 
-          type="text" 
-          id="full_name" 
-          name="full_name" 
-          class="s30-input" 
-          placeholder="Enter your full name" 
-          value="{{ user.full_name if user else (form_data.full_name if form_data else '') }}" 
-          required
-        >
-      </div>
+  <!-- Row 1: Full Name (Above Email) -->
+  <div class="s30-form-group">
+    <label class="s30-form-label" for="full_name">Full Name</label>
+    <div class="s30-input-wrap">
+      <span class="s30-input-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+      </span>
+      <input 
+        type="text" 
+        id="full_name" 
+        name="full_name" 
+        class="s30-input" 
+        placeholder="Enter your full name" 
+        value="{{ user.full_name if user else (form_data.full_name if form_data else '') }}" 
+        required
+      >
+    </div>
+  </div>
+
+  <!-- Row 2: College Email / Gmail & Verification Down Below -->
+  <div class="s30-form-group" style="margin-bottom: 22px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+      <label class="s30-form-label" for="email" style="margin-bottom: 0;">College Email / Gmail</label>
+      <span id="email-verified-badge" class="neo-badge {% if user and user.email_verified %}neo-badge-green{% else %}neo-badge-pink{% endif %}" style="font-size: 10px; padding: 2px 8px;">
+        {% if user and user.email_verified %}
+          ✓ EMAIL VERIFIED
+        {% else %}
+          ⚠️ EMAIL UNVERIFIED
+        {% endif %}
+      </span>
     </div>
 
-    <div class="s30-form-group">
-      <label class="s30-form-label" for="email">College Email / Gmail</label>
-      <div class="s30-input-wrap" id="email-container">
-        <span class="s30-input-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-          </svg>
+    <!-- Full-Width Email Input -->
+    <div class="s30-input-wrap" id="email-container">
+      <span class="s30-input-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+        </svg>
+      </span>
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        class="s30-input" 
+        placeholder="you@college.edu or you@gmail.com" 
+        value="{{ user.email if user else (form_data.email if form_data else '') }}" 
+        required
+        oninput="handleEmailInput()"
+        {% if user and user.email_verified %}readonly style="background: #0f1a30; border-color: #22c55e;"{% endif %}
+      >
+    </div>
+
+    <div id="email-error-msg" style="display: none; font-size: 11px; color: #f87171; margin-top: 4px;">
+      ⚠️ Please enter a complete email with '@' and domain (e.g. name@gmail.com).
+    </div>
+
+    <!-- Sender Button (Down Below the Gmail Field) -->
+    <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+      <button 
+        type="button" 
+        id="btn-send-otp" 
+        class="neo-btn neo-btn-cyan" 
+        style="padding: 9px 18px; font-size: 12px; {% if user and user.email_verified %}display: none;{% endif %}"
+        onclick="sendVerificationOtp()"
+      >
+        <span>📨 SEND VERIFICATION CODE TO GMAIL</span>
+      </button>
+      <span style="font-size: 11px; color: #94a3b8; font-weight: 500;">
+        ⚡ Instant 6-digit code for account security
+      </span>
+    </div>
+
+    <!-- Live OTP Verification Card (Down Below) -->
+    <div id="otp-verification-box" style="display: none; margin-top: 12px; background: #0c1322; border: 2px solid #00f0ff; border-radius: 8px; padding: 18px; box-shadow: 4px 4px 0px #00f0ff;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+        <span style="font-size: 12px; font-weight: 800; color: #00f0ff; text-transform: uppercase;">
+          📩 ENTER 6-DIGIT VERIFICATION CODE FROM GMAIL
         </span>
+        <span id="otp-status-badge" class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 6px;">
+          CODE DISPATCHED TO GMAIL
+        </span>
+      </div>
+      
+      <p style="font-size: 12.5px; color: #cbd5e1; margin-bottom: 14px; line-height: 1.5;">
+        A 6-digit security verification code has been dispatched to <strong id="otp-target-email" style="color: #FFE600;">your email</strong>. Please open your <strong>Google Gmail</strong> inbox (or Spam/Promotions folder) and enter the code below:
+      </p>
+
+      <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
         <input 
-          type="email" 
-          id="email" 
-          name="email" 
+          type="text" 
+          id="otp-input" 
+          name="otp_code" 
+          maxlength="6" 
+          placeholder="000000" 
           class="s30-input" 
-          placeholder="you@college.edu or you@gmail.com" 
-          value="{{ user.email if user else (form_data.email if form_data else '') }}" 
-          required
-          oninput="validateEmailLive()"
+          style="letter-spacing: 6px; font-size: 18px; font-weight: 900; font-family: monospace; text-align: center; max-width: 160px; border: 2px solid #FFE600;"
         >
+        <button 
+          type="button" 
+          id="btn-verify-otp" 
+          onclick="verifyEmailOtp()" 
+          class="neo-btn neo-btn-yellow" 
+          style="padding: 10px 18px; font-size: 12px;"
+        >
+          <span>✓ VERIFY CODE</span>
+        </button>
+        <button 
+          type="button" 
+          id="btn-resend-otp" 
+          onclick="sendVerificationOtp()" 
+          class="neo-btn neo-btn-white" 
+          style="padding: 10px 14px; font-size: 11px;"
+        >
+          <span>🔄 Resend Code</span>
+        </button>
       </div>
-      <div id="email-error-msg" style="display: none; font-size: 11px; color: #f87171; margin-top: 4px;">
-        ⚠️ Please enter a complete email with '@' and domain (e.g. name@gmail.com).
-      </div>
+
+      <div id="otp-feedback-msg" style="display: none; font-size: 11.5px; margin-top: 10px; font-weight: 700;"></div>
     </div>
   </div>
 
@@ -248,6 +324,31 @@
 </form>
 
 <script>
+  let isEmailVerified = {{ 'true' if (user and user.email_verified == 1) else 'false' }};
+  let latestDemoOtp = '';
+
+  function handleEmailInput() {
+    validateEmailLive();
+    const emailVerifiedBadge = document.getElementById('email-verified-badge');
+    const sendBtn = document.getElementById('btn-send-otp');
+    const emailInput = document.getElementById('email');
+    
+    isEmailVerified = false;
+    if (emailVerifiedBadge) {
+      emailVerifiedBadge.className = 'neo-badge neo-badge-pink';
+      emailVerifiedBadge.innerText = '⚠️ EMAIL UNVERIFIED';
+      emailVerifiedBadge.style.display = 'inline-flex';
+    }
+    if (sendBtn) {
+      sendBtn.style.display = 'inline-flex';
+    }
+    if (emailInput) {
+      emailInput.readOnly = false;
+      emailInput.style.borderColor = '';
+      emailInput.style.background = '';
+    }
+  }
+
   function validateEmailLive() {
     const emailInput = document.getElementById('email');
     const container = document.getElementById('email-container');
@@ -263,6 +364,141 @@
       container.style.borderColor = '';
       errorMsg.style.display = 'none';
       return true;
+    }
+  }
+
+  async function sendVerificationOtp() {
+    const emailInput = document.getElementById('email');
+    const emailVal = emailInput.value.trim();
+    const sendBtn = document.getElementById('btn-send-otp');
+    const otpBox = document.getElementById('otp-verification-box');
+    const feedback = document.getElementById('otp-feedback-msg');
+
+    if (!validateEmailLive() || !emailVal) {
+      alert("Please enter a valid Gmail / college email first.");
+      emailInput.focus();
+      return;
+    }
+
+    const origText = sendBtn.innerHTML;
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<span>⏳ SENDING...</span>';
+
+    try {
+      const resp = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailVal })
+      });
+      const data = await resp.json();
+
+      if (data.success) {
+        otpBox.style.display = 'block';
+        document.getElementById('otp-target-email').textContent = emailVal;
+        
+        if (feedback) {
+          feedback.style.display = 'block';
+          if (data.mode === 'LIVE_GMAIL_DISPATCH') {
+            feedback.style.color = '#22c55e';
+            feedback.textContent = '✓ 6-Digit verification code delivered to your Google Gmail inbox! Check your email.';
+          } else {
+            feedback.style.color = '#00f0ff';
+            feedback.textContent = '✓ ' + (data.message || '6-Digit verification code dispatched to your Gmail!');
+          }
+        }
+
+        document.getElementById('otp-input').focus();
+      } else {
+        alert(data.error || 'Failed to send verification code.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error sending code. Please check your connection.');
+    } finally {
+      sendBtn.disabled = false;
+      sendBtn.innerHTML = origText;
+    }
+  }
+
+  async function verifyEmailOtp() {
+    const emailVal = document.getElementById('email').value.trim();
+    const otpInput = document.getElementById('otp-input');
+    const otpVal = otpInput.value.trim();
+    const feedback = document.getElementById('otp-feedback-msg');
+    const verifyBtn = document.getElementById('btn-verify-otp');
+    const badge = document.getElementById('email-verified-badge');
+
+    if (!otpVal || otpVal.length < 4) {
+      if (feedback) {
+        feedback.style.display = 'block';
+        feedback.style.color = '#ff2a85';
+        feedback.textContent = '⚠️ Please enter the 6-digit code sent to your email.';
+      }
+      otpInput.focus();
+      return;
+    }
+
+    verifyBtn.disabled = true;
+    verifyBtn.innerHTML = '<span>⏳ VERIFYING...</span>';
+
+    try {
+      const resp = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailVal, otp: otpVal })
+      });
+      const data = await resp.json();
+
+      if (data.success) {
+        isEmailVerified = true;
+        
+        // Update UI to verified state
+        const emailInput = document.getElementById('email');
+        const sendBtn = document.getElementById('btn-send-otp');
+        const otpBox = document.getElementById('otp-verification-box');
+
+        emailInput.readOnly = true;
+        emailInput.style.borderColor = '#22c55e';
+        emailInput.style.background = '#0f1a30';
+        
+        if (sendBtn) sendBtn.style.display = 'none';
+        if (badge) {
+          badge.className = 'neo-badge neo-badge-green';
+          badge.innerText = '✓ EMAIL VERIFIED';
+          badge.style.display = 'inline-flex';
+        }
+        
+        if (feedback) {
+          feedback.style.display = 'block';
+          feedback.style.color = '#22c55e';
+          feedback.textContent = '✓ ' + data.message;
+        }
+
+        setTimeout(() => {
+          if (otpBox) otpBox.style.display = 'none';
+        }, 1200);
+
+      } else {
+        if (badge) {
+          badge.className = 'neo-badge neo-badge-pink';
+          badge.innerText = '⚠️ EMAIL UNVERIFIED';
+        }
+        if (feedback) {
+          feedback.style.display = 'block';
+          feedback.style.color = '#ff2a85';
+          feedback.textContent = '✕ ' + (data.error || 'Invalid code.');
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      if (feedback) {
+        feedback.style.display = 'block';
+        feedback.style.color = '#ff2a85';
+        feedback.textContent = '✕ Error verifying code. Please try again.';
+      }
+    } finally {
+      verifyBtn.disabled = false;
+      verifyBtn.innerHTML = '<span>✓ VERIFY CODE</span>';
     }
   }
 
@@ -299,12 +535,41 @@
       alert("Please enter a valid email address containing '@' and domain (e.g. name@gmail.com).");
       return false;
     }
+
+    if (!isEmailVerified) {
+      e.preventDefault();
+      document.getElementById('otp-verification-box').style.display = 'block';
+      sendVerificationOtp();
+      alert("Please verify your Gmail address with the 6-digit verification code before continuing.");
+      return false;
+    }
+
     const p1 = document.getElementById('password').value;
     const p2 = document.getElementById('re_password').value;
     if (p1 !== p2) {
       e.preventDefault();
       alert("Passwords do not match. Please ensure both passwords match.");
       return false;
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailParam = urlParams.get('email');
+    const autoSend = urlParams.get('autosend');
+    
+    if (emailParam) {
+      const emailInput = document.getElementById('email');
+      if (emailInput) {
+        emailInput.value = emailParam;
+        validateEmailLive();
+      }
+    }
+    
+    if (autoSend === '1') {
+      setTimeout(() => {
+        sendVerificationOtp();
+      }, 400);
     }
   });
 </script>

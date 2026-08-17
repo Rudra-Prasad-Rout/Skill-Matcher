@@ -72,6 +72,26 @@ def init_db(force_reset=False):
             cursor.execute("ALTER TABLE users ADD COLUMN career_intent TEXT DEFAULT 'both'")
         except Exception:
             pass
+
+    # Ensure email_verified column exists in existing database
+    try:
+        cursor.execute("SELECT email_verified FROM users LIMIT 1")
+    except sqlite3.OperationalError:
+        try:
+            cursor.execute("ALTER TABLE users ADD COLUMN email_verified INTEGER DEFAULT 0")
+        except Exception:
+            pass
+
+    # Email OTP verification table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS email_otps (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        email TEXT NOT NULL,
+        otp_code TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        is_used INTEGER DEFAULT 0
+    );
+    """)
     
     # Skills and Projects table (with GitHub / Website URL)
     cursor.execute("""
