@@ -182,20 +182,39 @@ class AIGmailAgent:
                 html_body = self.format_ai_email_template(recipient_email, otp_code)
                 msg.attach(MIMEText(html_body, "html"))
                 
-                # Dispatch via SMTP
-                with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=12) as server:
-                    server.starttls()
-                    server.login(self.sender_email, self.app_password)
-                    server.sendmail(self.sender_email, recipient_email, msg.as_string())
-                    
-                print(f"[AI AGENT SUCCESS] Live email dispatched to {recipient_email} via {self.sender_email}")
-                return {
-                    "success": True,
-                    "mode": "LIVE_GMAIL_DISPATCH",
-                    "sender": self.sender_email,
-                    "recipient": recipient_email,
-                    "message": f"🤖 AI Agent: 6-Digit code has been dispatched directly to {recipient_email}!"
-                }
+                # Dispatch via SMTP (Try SSL Port 465 first for cloud hosting compatibility, fallback to 587)
+                dispatched = False
+                last_error = None
+
+                # Method 1: Direct SSL on Port 465
+                try:
+                    with smtplib.SMTP_SSL(self.smtp_host, 465, timeout=12) as server:
+                        server.login(self.sender_email, self.app_password)
+                        server.sendmail(self.sender_email, recipient_email, msg.as_string())
+                        dispatched = True
+                except Exception as err_ssl:
+                    last_error = err_ssl
+                    # Method 2: STARTTLS on Port 587
+                    try:
+                        with smtplib.SMTP(self.smtp_host, 587, timeout=12) as server:
+                            server.starttls()
+                            server.login(self.sender_email, self.app_password)
+                            server.sendmail(self.sender_email, recipient_email, msg.as_string())
+                            dispatched = True
+                    except Exception as err_tls:
+                        last_error = err_tls
+
+                if dispatched:
+                    print(f"[AI AGENT SUCCESS] Live email dispatched to {recipient_email} via {self.sender_email}")
+                    return {
+                        "success": True,
+                        "mode": "LIVE_GMAIL_DISPATCH",
+                        "sender": self.sender_email,
+                        "recipient": recipient_email,
+                        "message": f"🤖 AI Agent: 6-Digit code has been dispatched directly to {recipient_email}!"
+                    }
+                else:
+                    raise last_error or Exception("Failed to connect to Google SMTP on ports 465/587.")
             except Exception as e:
                 print(f"[AI AGENT WARNING] Google SMTP error: {e}")
                 return {
