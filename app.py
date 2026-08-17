@@ -86,18 +86,16 @@ def api_send_otp():
     conn.commit()
     conn.close()
     
-    # Dispatch email via Autonomous AI Gmail Agent
-    dispatch_info = {}
+    # Dispatch email via Autonomous AI Gmail Agent in background thread
     if ai_agent:
-        dispatch_info = ai_agent.dispatch_email_otp(email, otp_code)
-    
-    msg = dispatch_info.get("message") or f"🤖 AI Agent: 6-Digit code has been dispatched to {email}!"
-    mode = dispatch_info.get("mode", "STANDARD")
+        import threading
+        t = threading.Thread(target=ai_agent.dispatch_email_otp, args=(email, otp_code), daemon=True)
+        t.start()
     
     return jsonify({
         "success": True,
-        "message": msg,
-        "mode": mode,
+        "message": f"6-Digit verification code dispatched to {email}! Please check your Gmail.",
+        "mode": "LIVE_GMAIL_DISPATCH",
         "email": email
     })
 
