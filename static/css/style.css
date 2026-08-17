@@ -352,26 +352,30 @@ body {
 }
 
 /* ==========================================================================
-   Neo-Brutalist Layout Cards
+   Neo-Brutalist Layout Cards (89-90% Viewport Standard)
    ========================================================================== */
 .s30-auth-wrapper {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 36px 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .s30-auth-grid {
   display: grid;
   grid-template-columns: 1fr 1.15fr;
-  max-width: 1040px;
-  width: 100%;
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
   background: #0f172a;
   border: 3px solid #ffffff;
   border-radius: 12px;
-  box-shadow: 10px 10px 0px #FFE600;
+  box-shadow: 8px 8px 0px #FFE600;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* Left Hero Showcase */
@@ -742,6 +746,8 @@ select:-webkit-autofill {
   gap: 4px;
   border: 1.5px solid #000000;
   box-shadow: 2px 2px 0px #000000;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .badge-verified,
@@ -761,49 +767,293 @@ select:-webkit-autofill {
   color: #ffffff;
 }
 
+/* S30 Checklist & Status Banner Styles */
+.s30-verify-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+}
+
+.s30-verify-header-text {
+  min-width: 0;
+  flex: 1 1 200px;
+}
+
+.s30-id-badge {
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.4);
+  color: #38bdf8;
+  font-family: monospace;
+  font-weight: 800;
+  font-size: 13.5px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+
+.s30-status-banner {
+  padding: 12px 14px;
+  border-radius: 6px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.banner-banned {
+  background: #000000;
+  border: 2.5px solid #ff2a85;
+  color: #ff2a85;
+  box-shadow: 4px 4px 0px #ff2a85;
+}
+
+.banner-approved {
+  background: #090f1d;
+  border: 2.5px solid #22c55e;
+  color: #22c55e;
+  box-shadow: 4px 4px 0px #22c55e;
+}
+
+.banner-pending {
+  background: #090f1d;
+  border: 2.5px solid #FFE600;
+  color: #FFE600;
+  box-shadow: 4px 4px 0px #FFE600;
+}
+
+.banner-icon {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 4px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border: 1.5px solid #000;
+}
+
+.icon-approved, .icon-done {
+  background: #22c55e;
+  color: #000;
+  border: 1.5px solid #000;
+  box-shadow: 1.5px 1.5px 0px #000;
+}
+
+.icon-pending {
+  background: #FFE600;
+  color: #000;
+  border: 1.5px solid #000;
+  box-shadow: 1.5px 1.5px 0px #000;
+}
+
+.icon-rejected {
+  background: #ff2a85;
+  color: #fff;
+  border: 1.5px solid #000;
+  box-shadow: 1.5px 1.5px 0px #000;
+}
+
+.icon-cyan {
+  background: #00f0ff;
+  color: #000;
+  border: 1.5px solid #000;
+  box-shadow: 1.5px 1.5px 0px #000;
+}
+
+.banner-content {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.banner-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  line-height: 1.3;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.banner-desc {
+  display: block;
+  color: #cbd5e1;
+  font-weight: 500;
+  font-size: 11.5px;
+  line-height: 1.4;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.s30-checklist-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.s30-checklist-card {
+  background: #090f1d;
+  border-radius: 6px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.card-done {
+  border: 2px solid #22c55e;
+  box-shadow: 3.5px 3.5px 0px #22c55e;
+}
+
+.card-pending {
+  border: 2px solid #FFE600;
+  box-shadow: 3.5px 3.5px 0px #FFE600;
+}
+
+.card-rejected {
+  border: 2px solid #ff2a85;
+  box-shadow: 3.5px 3.5px 0px #ff2a85;
+}
+
+.card-cyan {
+  border: 2px solid #00f0ff;
+  box-shadow: 3.5px 3.5px 0px #00f0ff;
+}
+
+.s30-checklist-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.s30-checklist-icon {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.s30-checklist-text {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.s30-checklist-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.35;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+.s30-checklist-sub {
+  font-size: 11.5px;
+  color: #cbd5e1;
+  font-weight: 500;
+  line-height: 1.35;
+  margin-top: 2px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
 /* ==========================================================================
-   Comprehensive Mobile & Tablet Responsive Engine
+   Comprehensive Mobile, Tablet & PC Responsive Engine (89-90% Fit Standard)
    ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 html, body {
   overflow-x: hidden !important;
   width: 100% !important;
   max-width: 100vw !important;
 }
 
+/* Tablet / Medium Screens */
 @media (max-width: 900px) {
+  .s30-auth-wrapper {
+    padding: 28px 0;
+    width: 100%;
+  }
   .s30-auth-grid {
     grid-template-columns: 1fr;
-    max-width: 100%;
+    width: 90%;
+    max-width: 90vw;
+    margin: 0 auto;
     box-shadow: 6px 6px 0px #FFE600;
   }
   .s30-auth-hero {
     display: none;
   }
   .s30-auth-card {
-    padding: 30px 20px;
+    padding: 30px 22px;
     width: 100%;
   }
   .s30-nav-links {
     display: none;
   }
+  .s30-nav-container {
+    width: 90%;
+    margin: 0 auto;
+  }
 }
 
+/* Mobile Screens */
 @media (max-width: 600px) {
   /* Navbar adjustments */
   .s30-navbar {
     height: 60px;
-    padding: 0 10px;
+    padding: 0;
   }
   .s30-nav-container {
-    padding: 0 4px;
-    gap: 8px;
+    width: 90%;
+    margin: 0 auto;
+    padding: 0;
+    gap: 6px;
   }
   .s30-brand {
     gap: 6px;
   }
   .s30-logo-badge {
-    font-size: 17px;
-    padding: 2px 7px;
+    font-size: 16px;
+    padding: 2px 6px;
     box-shadow: 2px 2px 0px #FFE600;
   }
   .s30-brand-sub {
@@ -814,57 +1064,92 @@ html, body {
     gap: 6px;
   }
   .s30-btn-outline, a.s30-btn-outline {
-    padding: 5px 10px !important;
+    padding: 5px 8px !important;
     font-size: 11px !important;
     box-shadow: 2px 2px 0px #ffffff !important;
   }
   .s30-btn-primary, a.s30-btn-primary {
-    padding: 6px 12px !important;
-    font-size: 11.5px !important;
+    padding: 5px 10px !important;
+    font-size: 11px !important;
     box-shadow: 2px 2px 0px #FFE600 !important;
   }
 
-  /* Form & Card adjustments */
+  /* Form & Card adjustments (Strict 90% Screen Width) */
   .s30-auth-wrapper {
-    padding: 20px 12px;
+    padding: 16px 0;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
   }
   .s30-auth-grid {
-    border-radius: 12px;
-    border-width: 2.5px;
+    border-radius: 10px;
+    border-width: 2px;
     box-shadow: 4px 4px 0px #FFE600;
     width: 90%;
-    max-width: 440px;
+    max-width: 90vw;
     margin: 0 auto;
     overflow: hidden;
   }
   .s30-auth-card {
-    padding: 24px 18px;
+    padding: 20px 14px;
     width: 100%;
   }
   .s30-form-header {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
   .s30-form-title {
-    font-size: 20px;
+    font-size: 19px;
     line-height: 1.25;
     word-break: break-word;
+    overflow-wrap: anywhere;
   }
   .s30-form-subtitle {
-    font-size: 12.5px;
-    line-height: 1.45;
+    font-size: 12px;
+    line-height: 1.4;
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
 
   /* Stepper */
   .s30-stepper {
     gap: 4px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
   .s30-step-segment {
-    height: 6px;
+    height: 5px;
+  }
+
+  /* Checklist & Status items on Mobile */
+  .s30-checklist-card {
+    padding: 10px 12px;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .s30-checklist-left {
+    flex: 1 1 auto;
+    gap: 8px;
+    min-width: 0;
+  }
+  .s30-checklist-icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+  .s30-checklist-title {
+    font-size: 12.5px;
+    line-height: 1.3;
+  }
+  .s30-checklist-sub {
+    font-size: 10.5px;
+    line-height: 1.3;
+  }
+  .badge-status {
+    font-size: 9px;
+    padding: 2px 5px;
+    margin-top: 1px;
   }
 
   /* Inputs & Grid */
@@ -874,14 +1159,14 @@ html, body {
     margin-bottom: 12px;
   }
   .s30-form-group {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .s30-input-wrap {
     width: 100%;
   }
   .s30-input, .s30-select {
-    font-size: 13.5px;
-    padding: 10px 12px 10px 38px;
+    font-size: 13px;
+    padding: 9px 10px 9px 34px;
     width: 100%;
   }
 
@@ -891,8 +1176,8 @@ html, body {
     text-align: center;
     justify-content: center;
     max-width: 100%;
-    padding: 10px 14px !important;
-    font-size: 12px !important;
+    padding: 9px 12px !important;
+    font-size: 11.5px !important;
     line-height: 1.3 !important;
   }
   #btn-send-otp {
@@ -901,12 +1186,15 @@ html, body {
   .s30-nav-step-row {
     flex-direction: column-reverse;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 18px;
+    width: 100%;
   }
-  .s30-btn-back, .s30-btn-forward {
+  .s30-btn-back, #action-btn-container, #action-btn-container a, #action-btn-container button {
     width: 100%;
     justify-content: center;
-    height: 44px;
+    text-align: center;
+    height: auto;
+    min-height: 42px;
   }
 
   /* OTP Verification Box */
@@ -926,26 +1214,27 @@ html, body {
   }
 }
 
+/* Small Mobile Screens (e.g., iPhone SE, Galaxy Fold) */
 @media (max-width: 380px) {
   .s30-auth-wrapper {
-    padding: 14px 8px;
+    padding: 12px 0;
   }
   .s30-auth-grid {
-    width: 92%;
-    max-width: 340px;
+    width: 90%;
+    max-width: 90vw;
     box-shadow: 3px 3px 0px #FFE600;
   }
   .s30-auth-card {
-    padding: 18px 12px;
+    padding: 16px 10px;
   }
   .s30-form-title {
-    font-size: 18px;
+    font-size: 17px;
   }
   .s30-brand {
     gap: 4px;
   }
   .s30-logo-badge {
-    font-size: 15px;
+    font-size: 14px;
     padding: 1px 5px;
   }
   .s30-brand-sub {
@@ -954,8 +1243,19 @@ html, body {
   }
   .s30-btn-outline, a.s30-btn-outline,
   .s30-btn-primary, a.s30-btn-primary {
-    padding: 4px 8px !important;
-    font-size: 10px !important;
+    padding: 4px 6px !important;
+    font-size: 9.5px !important;
+  }
+  .s30-checklist-card {
+    padding: 10px 10px;
+  }
+  .s30-checklist-left {
+    gap: 8px;
+  }
+  .s30-checklist-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
   }
 }
 
