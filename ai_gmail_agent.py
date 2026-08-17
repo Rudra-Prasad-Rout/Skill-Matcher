@@ -155,8 +155,8 @@ class AIGmailAgent:
         Supports Resend API and Brevo API.
         """
         import requests
-        resend_key = os.environ.get("RESEND_API_KEY", "").strip()
-        brevo_key = os.environ.get("BREVO_API_KEY", "").strip()
+        resend_key = (os.environ.get("RESEND_API_KEY") or os.environ.get("RESEND_KEY") or "").strip()
+        brevo_key = (os.environ.get("BREVO_API_KEY") or os.environ.get("BREVO_KEY") or os.environ.get("Brevo") or "").strip()
 
         # Channel A: Resend API (https://api.resend.com/emails)
         if resend_key:
