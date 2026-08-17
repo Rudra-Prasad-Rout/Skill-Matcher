@@ -149,10 +149,86 @@ class AIGmailAgent:
 </body>
 </html>"""
 
+    def dispatch_via_https_api(self, recipient_email: str, otp_code: str, html_body: str, plain_body: str) -> dict:
+        """
+        Dispatches email via HTTPS REST API (Port 443) which is 100% open and unblocked on Render cloud.
+        Supports Resend API and Brevo API.
+        """
+        import requests
+        resend_key = os.environ.get("RESEND_API_KEY", "").strip()
+        brevo_key = os.environ.get("BREVO_API_KEY", "").strip()
+
+        # Channel A: Resend API (https://api.resend.com/emails)
+        if resend_key:
+            try:
+                sender_from = os.environ.get("RESEND_FROM", "TeamX AI <onboarding@resend.dev>")
+                resp = requests.post(
+                    "https://api.resend.com/emails",
+                    headers={
+                        "Authorization": f"Bearer {resend_key}",
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "from": sender_from,
+                        "to": [recipient_email],
+                        "subject": f"🔐 Your S30 AI Verification Code: {otp_code}",
+                        "html": html_body,
+                        "text": plain_body
+                    },
+                    timeout=10
+                )
+                if resp.status_code in (200, 201):
+                    print(f"[AI AGENT HTTPS] Successfully dispatched email to {recipient_email} via Resend API")
+                    return {
+                        "success": True,
+                        "mode": "LIVE_HTTPS_DISPATCH",
+                        "provider": "Resend",
+                        "recipient": recipient_email,
+                        "message": f"🤖 AI Agent: Code dispatched via HTTPS to {recipient_email}!"
+                    }
+                else:
+                    print(f"[AI AGENT HTTPS ERROR] Resend returned {resp.status_code}: {resp.text}")
+            except Exception as e:
+                print(f"[AI AGENT HTTPS ERROR] Resend API request failed: {e}")
+
+        # Channel B: Brevo API (https://api.brevo.com/v3/smtp/email)
+        if brevo_key:
+            try:
+                resp = requests.post(
+                    "https://api.brevo.com/v3/smtp/email",
+                    headers={
+                        "api-key": brevo_key,
+                        "Content-Type": "application/json"
+                    },
+                    json={
+                        "sender": {"name": "TeamX AI Agent", "email": self.sender_email or self.DEFAULT_SENDER},
+                        "to": [{"email": recipient_email}],
+                        "subject": f"🔐 Your S30 AI Verification Code: {otp_code}",
+                        "htmlContent": html_body,
+                        "textContent": plain_body
+                    },
+                    timeout=10
+                )
+                if resp.status_code in (200, 201):
+                    print(f"[AI AGENT HTTPS] Successfully dispatched email to {recipient_email} via Brevo API")
+                    return {
+                        "success": True,
+                        "mode": "LIVE_HTTPS_DISPATCH",
+                        "provider": "Brevo",
+                        "recipient": recipient_email,
+                        "message": f"🤖 AI Agent: Code dispatched via HTTPS to {recipient_email}!"
+                    }
+                else:
+                    print(f"[AI AGENT HTTPS ERROR] Brevo returned {resp.status_code}: {resp.text}")
+            except Exception as e:
+                print(f"[AI AGENT HTTPS ERROR] Brevo API request failed: {e}")
+
+        return None
+
     def dispatch_email_otp(self, recipient_email: str, otp_code: str) -> dict:
         """
         Dispatches the 6-digit code to Google Gmail.
-        Returns a rich status dictionary with delivery metadata.
+        Tries HTTPS REST API first (Cloud-Safe Port 443), then Google SMTP (SSL 465 / TLS 587).
         """
         load_env_file()
         self.sender_email = (
@@ -169,38 +245,38 @@ class AIGmailAgent:
         ).strip().replace(" ", "")
 
         recipient_email = recipient_email.strip().lower()
+        html_body = self.format_ai_email_template(recipient_email, otp_code)
+        plain_body = f"Your TeamX S30 verification code is: {otp_code}\n\nThis code is valid for 15 minutes."
+
+        # 1. First Priority: Try HTTPS REST API over Port 443 (Never blocked by Render Cloud)
+        https_res = self.dispatch_via_https_api(recipient_email, otp_code, html_body, plain_body)
+        if https_res and https_res.get("success"):
+            return https_res
         
-        # Check if real Gmail credentials are provided
+        # 2. Second Priority: Direct Google SMTP over Port 465 / 587
         if self.sender_email and self.app_password and "your_" not in self.sender_email:
             try:
                 msg = MIMEMultipart("alternative")
                 msg["Subject"] = f"🔐 Your S30 AI Verification Code: {otp_code}"
                 msg["From"] = f"TeamX AI Agent <{self.sender_email}>"
                 msg["To"] = recipient_email
-                
-                # Plaintext fallback
-                plain_body = f"Your TeamX S30 verification code is: {otp_code}\n\nThis code is valid for 15 minutes."
                 msg.attach(MIMEText(plain_body, "plain"))
-                
-                # Rich HTML version
-                html_body = self.format_ai_email_template(recipient_email, otp_code)
                 msg.attach(MIMEText(html_body, "html"))
                 
-                # Dispatch via SMTP (Try SSL Port 465 first for cloud hosting compatibility, fallback to 587)
                 dispatched = False
                 last_error = None
 
-                # Method 1: Direct SSL on Port 465
+                # Try SSL on Port 465
                 try:
-                    with smtplib.SMTP_SSL(self.smtp_host, 465, timeout=12) as server:
+                    with smtplib.SMTP_SSL(self.smtp_host, 465, timeout=8) as server:
                         server.login(self.sender_email, self.app_password)
                         server.sendmail(self.sender_email, recipient_email, msg.as_string())
                         dispatched = True
                 except Exception as err_ssl:
                     last_error = err_ssl
-                    # Method 2: STARTTLS on Port 587
+                    # Fallback to TLS on Port 587
                     try:
-                        with smtplib.SMTP(self.smtp_host, 587, timeout=12) as server:
+                        with smtplib.SMTP(self.smtp_host, 587, timeout=8) as server:
                             server.starttls()
                             server.login(self.sender_email, self.app_password)
                             server.sendmail(self.sender_email, recipient_email, msg.as_string())
