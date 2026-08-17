@@ -60,10 +60,51 @@
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-* {
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+}
+
+/* ==========================================================================
+   Universal Platform-Wide Text Containment & Box Fitting System
+   Ensures all text across every container, card, modal, and box fits 100%
+   ========================================================================== */
+p, h1, h2, h3, h4, h5, h6, span, a, label, strong, em, div, li, td, th {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+/* Flexbox Min-Width 0 Protection on all Containers & Cards */
+.s30-auth-grid,
+.s30-auth-card,
+.s30-auth-hero,
+.neo-card,
+.neo-card-cyan,
+.neo-card-yellow,
+.neo-card-pink,
+.neo-card-green,
+.neo-stat-card,
+.neo-intent-card,
+.s30-checklist-card,
+.s30-status-banner,
+.s30-upload-box,
+.s30-preview-card,
+.s30-form-group,
+.s30-form-header,
+.s30-checklist-left,
+.s30-checklist-text,
+.banner-content {
+  box-sizing: border-box !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
 }
 
 body {
