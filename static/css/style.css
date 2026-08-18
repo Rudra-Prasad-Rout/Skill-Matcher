@@ -402,16 +402,17 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 36px 0;
+  padding: 40px 16px;
   width: 100%;
+  min-height: calc(100vh - 75px);
   box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .s30-auth-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  width: 90%;
-  max-width: 1100px;
+  display: block;
+  width: 100%;
+  max-width: 620px;
   margin: 0 auto;
   background: #0f172a;
   border: 3px solid #ffffff;
@@ -421,15 +422,9 @@ body {
   box-sizing: border-box;
 }
 
-/* Left Hero Showcase */
+/* Left Hero Showcase (Hidden for clean centered focus on PC, Tablet, Mobile) */
 .s30-auth-hero {
-  position: relative;
-  background: #090f1d;
-  padding: 44px 36px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-right: 3px solid #ffffff;
+  display: none !important;
 }
 
 .s30-hero-content h2 {
@@ -491,10 +486,12 @@ body {
 
 /* Right Form Card */
 .s30-auth-card {
-  padding: 44px;
+  padding: 38px 36px;
   display: flex;
   flex-direction: column;
   background: #0f172a;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .s30-form-header {
