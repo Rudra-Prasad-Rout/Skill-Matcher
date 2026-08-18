@@ -180,7 +180,9 @@ def api_login_otp():
     session["user_id"] = user["id"]
     session["verified_signup_email"] = email
     
-    if not user_has_compulsory_documents(user["id"]):
+    if not user_has_compulsory_skills(user["id"]):
+        redirect_url = url_for("signup_skills", required=1)
+    elif not user_has_compulsory_documents(user["id"]):
         redirect_url = url_for("signup_documents", required=1)
     elif user["is_banned"] or user["step"] >= 4:
         redirect_url = url_for("signup_verification")
@@ -238,6 +240,18 @@ def user_has_compulsory_documents(user_id):
     except Exception:
         return False
 
+def user_has_compulsory_skills(user_id):
+    """Check if the user has added at least 1 technical skill with project proof."""
+    if not user_id:
+        return False
+    try:
+        conn = database.get_db_connection()
+        count = conn.execute("SELECT COUNT(*) as cnt FROM user_skills WHERE user_id = ?", (user_id,)).fetchone()["cnt"]
+        conn.close()
+        return count >= 1
+    except Exception:
+        return False
+
 def user_is_approved_by_admin(user_id):
     """Check if the user has been fully approved by the Admin staff."""
     if not user_id:
@@ -286,7 +300,9 @@ def login_page():
         
         if user:
             session["user_id"] = user["id"]
-            if not user_has_compulsory_documents(user["id"]):
+            if not user_has_compulsory_skills(user["id"]):
+                return redirect(url_for("signup_skills", required=1))
+            elif not user_has_compulsory_documents(user["id"]):
                 return redirect(url_for("signup_documents", required=1))
             elif user["is_banned"] or user["step"] >= 4:
                 return redirect(url_for("signup_verification"))
@@ -387,16 +403,6 @@ def signup_profile():
             """, (new_user_code, full_name, email, gender, age_int, password or "default_pass", school, coursework))
             user_id = cursor.lastrowid
             
-            cursor.execute("""
-            INSERT INTO user_skills (user_id, skill_name, project_name, project_url, status)
-            VALUES (?, ?, ?, ?, ?)
-            """, (user_id, "React", "Campus events app", "https://github.com/alexrivera/campus-events-app", "VERIFIED"))
-            
-            cursor.execute("""
-            INSERT INTO user_skills (user_id, skill_name, project_name, project_url, status)
-            VALUES (?, ?, ?, ?, ?)
-            """, (user_id, "Data analysis", "Attendance dashboard", "https://attendance-analytics.du.ac.in", "CHECKING"))
-            
         conn.commit()
         conn.close()
         
@@ -413,18 +419,30 @@ def signup_skills():
     if not user:
         return redirect(url_for("signup_profile"))
         
+    conn = database.get_db_connection()
+    skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
+    
+    error = None
+    if request.args.get("required") == "1":
+        error = "Technical skill verification is compulsory: Please add at least 1 technical skill with its project URL (GitHub repo or live demo) to proceed."
+        
     if request.method == "POST":
-        conn = database.get_db_connection()
+        if not skills or len(skills) < 1:
+            conn.close()
+            return render_template(
+                "skills.html", 
+                active_step=2, 
+                user=user, 
+                skills=skills, 
+                error="Technical skill verification is compulsory: Please add at least 1 technical skill with its project URL (GitHub repo or live demo) before proceeding to documents."
+            )
         conn.execute("UPDATE users SET step = MAX(step, 3) WHERE id = ?", (user["id"],))
         conn.commit()
         conn.close()
         return redirect(url_for("signup_documents"))
         
-    conn = database.get_db_connection()
-    skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
     conn.close()
-    
-    return render_template("skills.html", active_step=2, user=user, skills=skills)
+    return render_template("skills.html", active_step=2, user=user, skills=skills, error=error)
 
 # ================= STEP 3: Documents =================
 @app.route("/signup/documents", methods=["GET", "POST"])
@@ -432,6 +450,9 @@ def signup_documents():
     user = get_current_user(create_default=True)
     if not user:
         return redirect(url_for("signup_profile"))
+        
+    if not user_has_compulsory_skills(user["id"]):
+        return redirect(url_for("signup_skills", required=1))
         
     conn = database.get_db_connection()
     front_doc = conn.execute("SELECT * FROM user_documents WHERE user_id = ? AND doc_category = 'id_front' ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()

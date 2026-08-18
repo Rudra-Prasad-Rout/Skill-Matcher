@@ -13,12 +13,33 @@
 </div>
 
 <div class="s30-form-header">
+  <div style="margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+    <span class="neo-badge neo-badge-yellow">⚡ STEP 2 OF 5</span>
+    <span class="neo-badge {% if skills and skills|length > 0 %}neo-badge-green{% else %}neo-badge-pink{% endif %}">
+      {% if skills and skills|length > 0 %}
+        ✓ {{ skills|length }} SKILL{% if skills|length > 1 %}S{% endif %} ADDED
+      {% else %}
+        ⚠️ MINIMUM 1 SKILL COMPULSORY
+      {% endif %}
+    </span>
+  </div>
   <h1 class="s30-form-title">Skills & Project Proofs</h1>
-  <p class="s30-form-subtitle">Pair your core technical skills with direct live GitHub repository or project URLs.</p>
+  <p class="s30-form-subtitle">Pair your core technical skills with direct live GitHub repository or project URLs. At least <strong>1 verified skill with project proof</strong> is required to proceed.</p>
 </div>
 
+{% if error %}
+<div style="background: #000000; border: 2px solid #ff2a85; color: #ff2a85; padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 800; box-shadow: 3px 3px 0px #ff2a85;">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 18px; height: 18px; flex-shrink: 0;">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="8" x2="12" y2="12"></line>
+    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+  </svg>
+  <span>{{ error }}</span>
+</div>
+{% endif %}
+
 <div id="skills-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
-  {% if skills %}
+  {% if skills and skills|length > 0 %}
     {% for skill in skills %}
     <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; box-shadow: 3.5px 3.5px 0px #00f0ff; box-sizing: border-box; overflow: hidden;">
       <div style="min-width: 0; flex: 1 1 auto; word-break: break-word; overflow-wrap: break-word;">
@@ -36,10 +57,18 @@
         <span class="badge-status {% if skill.status == 'VERIFIED' %}badge-verified{% elif skill.status == 'REJECTED' %}badge-rejected{% else %}badge-checking{% endif %}">
           {{ skill.status }}
         </span>
-        <button type="button" onclick="deleteSkill({{ skill.id }})" style="background: #000; border: 1.5px solid #ff2a85; color: #ff2a85; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 13px; padding: 2px 7px; box-shadow: 2px 2px 0px #ff2a85;">✕</button>
+        <button type="button" onclick="deleteSkill({{ skill.id }})" title="Remove skill" style="background: #000; border: 1.5px solid #ff2a85; color: #ff2a85; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 13px; padding: 2px 7px; box-shadow: 2px 2px 0px #ff2a85;">✕</button>
       </div>
     </div>
     {% endfor %}
+  {% else %}
+    <div style="background: #090f1d; border: 2px dashed #ff2a85; border-radius: 6px; padding: 20px; text-align: center; color: #cbd5e1; font-size: 13px; font-weight: 600;">
+      <div style="font-size: 24px; margin-bottom: 6px;">⚡</div>
+      <strong style="color: #FFE600; text-transform: uppercase;">No technical skills added yet</strong><br>
+      <span style="font-size: 12px; color: #94a3b8; display: inline-block; margin-top: 4px;">
+        You must add at least <span style="color: #ff2a85; font-weight: 800;">1 skill & project proof</span> below to unlock Step 3.
+      </span>
+    </div>
   {% endif %}
 </div>
 
@@ -49,33 +78,33 @@
   
   <div class="s30-form-grid-2">
     <div class="s30-form-group">
-      <label class="s30-form-label">Skill Name</label>
+      <label class="s30-form-label">Skill Name *</label>
       <div class="s30-input-wrap">
-        <input type="text" id="new-skill-name" class="s30-input" placeholder="e.g. Python, React, PyTorch">
+        <input type="text" id="new-skill-name" class="s30-input" placeholder="e.g. Python, React, Machine Learning">
       </div>
     </div>
     <div class="s30-form-group">
-      <label class="s30-form-label">Project Title</label>
+      <label class="s30-form-label">Project Title *</label>
       <div class="s30-input-wrap">
-        <input type="text" id="new-project-name" class="s30-input" placeholder="e.g. Campus Portal / Vision App">
+        <input type="text" id="new-project-name" class="s30-input" placeholder="e.g. E-Commerce Backend / Portfolio">
       </div>
     </div>
   </div>
 
   <div class="s30-form-group">
-    <label class="s30-form-label">Project URL (GitHub Repo or Live Website)</label>
+    <label class="s30-form-label">Project URL (GitHub Repo or Live Website) *</label>
     <div class="s30-input-wrap">
-      <input type="url" id="new-project-url" class="s30-input" placeholder="https://github.com/yourname/project">
+      <input type="url" id="new-project-url" class="s30-input" placeholder="https://github.com/yourusername/project-repo">
     </div>
   </div>
 
-  <button type="button" class="neo-btn neo-btn-cyan" onclick="addSkill()" style="width: 100%; padding: 11px; font-size: 12.5px;">
-    + ADD SKILL TO PROFILE
+  <button type="button" id="btn-add-skill" class="neo-btn neo-btn-cyan" onclick="addSkill()" style="width: 100%; padding: 11px; font-size: 12.5px;">
+    <span>+ ADD SKILL TO PROFILE</span>
   </button>
 </div>
 
 <!-- Navigation Buttons (Back & Forward) -->
-<form action="{{ url_for('signup_skills') }}" method="POST">
+<form action="{{ url_for('signup_skills') }}" method="POST" id="skills-form" onsubmit="return validateSkillsExist();">
   <div class="s30-nav-step-row">
     <a href="{{ url_for('signup_profile') }}" class="s30-btn-back">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
@@ -84,7 +113,7 @@
       <span>Back to Profile</span>
     </a>
 
-    <button type="submit" class="s30-btn-forward">
+    <button type="submit" class="s30-btn-forward" id="btn-submit-skills">
       <span>Continue to Documents (Step 3 — Compulsory)</span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;">
         <path d="M5 12h14"></path>
@@ -95,15 +124,32 @@
 </form>
 
 <script>
+  const totalSkillsCount = {{ skills|length if skills else 0 }};
+
+  function validateSkillsExist() {
+    if (totalSkillsCount < 1) {
+      alert("Technical skill verification is compulsory: Please add at least 1 technical skill with its project URL (GitHub repo or live demo) before continuing.");
+      const sInput = document.getElementById('new-skill-name');
+      if (sInput) sInput.focus();
+      return false;
+    }
+    return true;
+  }
+
   async function addSkill() {
     const sName = document.getElementById('new-skill-name').value.trim();
     const pName = document.getElementById('new-project-name').value.trim();
     const pUrl = document.getElementById('new-project-url').value.trim();
+    const btn = document.getElementById('btn-add-skill');
 
     if (!sName || !pName || !pUrl) {
-      alert("Please provide Skill Name, Project Title, and a valid GitHub or website URL.");
+      alert("Please provide Skill Name, Project Title, and a valid GitHub repository or live website URL.");
       return;
     }
+
+    const origText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳ SAVING SKILL...</span>';
 
     try {
       const res = await fetch('/api/skills', {
@@ -116,15 +162,20 @@
         window.location.reload();
       } else {
         const data = await res.json();
-        alert(data.error || "Failed to add skill");
+        alert(data.error || "Failed to add skill.");
+        btn.disabled = false;
+        btn.innerHTML = origText;
       }
     } catch (e) {
       console.error(e);
+      alert("Network error adding skill. Please try again.");
+      btn.disabled = false;
+      btn.innerHTML = origText;
     }
   }
 
   async function deleteSkill(skillId) {
-    if (!confirm("Remove this skill from your profile?")) return;
+    if (!confirm("Remove this technical skill from your profile?")) return;
     try {
       const res = await fetch('/api/skills', {
         method: 'DELETE',
