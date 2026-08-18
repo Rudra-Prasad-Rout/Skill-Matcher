@@ -250,12 +250,11 @@
         </span>
       </div>
 
-      <!-- Main Material Headline with Interactive Typewriter Effect -->
-      <h1 class="neo-hero-title">
-        Verify Your Skills. Claim Your <br>
-        <span class="neo-hero-highlight" aria-live="polite">
-          <span id="s30-typewriter-text" class="typewriter-text">OPPORTUNITY PASSPORT.</span><span class="typewriter-cursor" aria-hidden="true"></span>
-        </span>
+      <!-- Main Material Headline with Full Text Typewriter Effect -->
+      <h1 class="neo-hero-title" aria-label="Verify Your Skills. Claim Your OPPORTUNITY PASSPORT.">
+        <span id="s30-typewriter-line1"></span>
+        <br id="s30-typewriter-br" style="display: none;">
+        <span id="s30-typewriter-line2" class="neo-hero-highlight" style="display: none;"></span><span class="typewriter-cursor" id="s30-typewriter-cursor" aria-hidden="true"></span>
       </h1>
 
       <p class="neo-hero-desc" style="max-width: 780px; margin: 0 auto 38px auto;">
@@ -434,32 +433,54 @@
 
 </div>
 
-<!-- S30 Material Design 3 Typewriter Animation Engine (Single Forward Letter-by-Letter Stream) -->
+<!-- S30 Material Design 3 Full Headline Typewriter Animation Engine -->
 <script>
-  (function initS30Typewriter() {
-    const textEl = document.getElementById('s30-typewriter-text');
-    if (!textEl) return;
+  (function initS30FullHeadlineTypewriter() {
+    const line1El = document.getElementById('s30-typewriter-line1');
+    const line2El = document.getElementById('s30-typewriter-line2');
+    const brEl = document.getElementById('s30-typewriter-br');
+    const cursorEl = document.getElementById('s30-typewriter-cursor');
 
-    const targetText = "OPPORTUNITY PASSPORT.";
-    let charIndex = 0;
-    const TYPING_SPEED = 75;
+    if (!line1El || !line2El) return;
 
-    // Start with empty text and stream letters in one by one
-    textEl.textContent = "";
+    const line1Text = "VERIFY YOUR SKILLS. CLAIM YOUR";
+    const line2Text = "OPPORTUNITY PASSPORT.";
 
-    function typeNextChar() {
-      if (charIndex < targetText.length) {
-        textEl.textContent += targetText.charAt(charIndex);
-        charIndex++;
-        
-        // Add natural typing speed with subtle variation
-        const jitter = Math.floor(Math.random() * 20);
-        setTimeout(typeNextChar, TYPING_SPEED + jitter);
+    let idx1 = 0;
+    let idx2 = 0;
+    const SPEED_LINE1 = 45; // Smooth progression for prefix
+    const SPEED_LINE2 = 70; // Punchy impactful speed for highlight
+
+    line1El.textContent = "";
+    line2El.textContent = "";
+
+    function typeLine1() {
+      if (idx1 < line1Text.length) {
+        line1El.textContent += line1Text.charAt(idx1);
+        idx1++;
+        const jitter = Math.floor(Math.random() * 15);
+        setTimeout(typeLine1, SPEED_LINE1 + jitter);
+      } else {
+        // Line 1 completed! Show line break and proceed with Line 2
+        setTimeout(function() {
+          if (brEl) brEl.style.display = 'inline';
+          if (line2El) line2El.style.display = 'inline';
+          typeLine2();
+        }, 160);
       }
     }
 
-    // Begin typing character-by-character on page load
-    setTimeout(typeNextChar, 350);
+    function typeLine2() {
+      if (idx2 < line2Text.length) {
+        line2El.textContent += line2Text.charAt(idx2);
+        idx2++;
+        const jitter = Math.floor(Math.random() * 20);
+        setTimeout(typeLine2, SPEED_LINE2 + jitter);
+      }
+    }
+
+    // Start streaming from the very start of the text on page load
+    setTimeout(typeLine1, 300);
   })();
 </script>
 {% endblock %}
