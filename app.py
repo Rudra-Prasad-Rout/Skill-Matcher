@@ -1904,5 +1904,85 @@ def api_inspect_internship_url():
 
     return jsonify(audit_result)
 
+@app.route("/api/admin/live-candidates-feed", methods=["GET", "POST"])
+@admin_required
+def api_admin_live_candidates_feed():
+    """
+    Real-Time Candidate Approvals Live Feed Endpoint:
+    Returns full candidate roster, pre-rendered cards, dynamic counters,
+    and enables zero-refresh instant updates when new candidates sign up.
+    """
+    try:
+        conn = database.get_db_connection()
+        users = conn.execute("SELECT * FROM users ORDER BY id DESC").fetchall()
+        
+        candidates = []
+        total_count = len(users)
+        pending_count = 0
+        approved_count = 0
+        rejected_count = 0
+        
+        for u in users:
+            u_dict = dict(u)
+            skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (u["id"],)).fetchall()
+            docs = conn.execute("""
+            SELECT * FROM user_documents 
+            WHERE user_id = ? 
+            ORDER BY CASE doc_category 
+                WHEN 'id_front' THEN 1 
+                WHEN 'id_back' THEN 2 
+                ELSE 3 END, id DESC
+            """, (u["id"],)).fetchall()
+            
+            u_dict["skills"] = [dict(s) for s in skills]
+            u_dict["documents"] = [dict(d) for d in docs]
+            
+            if u_dict.get("is_banned"):
+                rejected_count += 1
+                status_tag = "banned"
+            elif u_dict.get("manual_status") in ["DONE", "APPROVED"]:
+                approved_count += 1
+                status_tag = "approved"
+            elif u_dict.get("manual_status") == "REJECTED" or u_dict.get("pdf_status") == "REJECTED":
+                rejected_count += 1
+                status_tag = "banned"
+            else:
+                pending_count += 1
+                status_tag = "pending"
+                
+            u_dict["status_tag"] = status_tag
+            
+            try:
+                card_html = render_template("_candidate_card.html", u=u_dict)
+            except Exception as rend_err:
+                card_html = ""
+                
+            candidates.append({
+                "id": u_dict["id"],
+                "user_code": u_dict.get("user_code", ""),
+                "full_name": u_dict.get("full_name", ""),
+                "email": u_dict.get("email", ""),
+                "school": u_dict.get("school", ""),
+                "status": status_tag,
+                "card_html": card_html
+            })
+            
+        conn.close()
+        
+        return jsonify({
+            "success": True,
+            "stats": {
+                "total": total_count,
+                "pending": pending_count,
+                "approved": approved_count,
+                "rejected": rejected_count
+            },
+            "candidates": candidates,
+            "active_user_ids": [c["id"] for c in candidates]
+        })
+    except Exception as e:
+        print(f"[Live Feed Error]: {e}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000, debug=True)

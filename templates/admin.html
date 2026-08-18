@@ -285,6 +285,61 @@
       }
     }
 
+    /* Real-Time Live Sync & Toast Notification System */
+    @keyframes livePulse {
+      0% { transform: scale(0.85); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.85); opacity: 0.6; }
+    }
+    .live-pulse-dot {
+      animation: livePulse 1.6s infinite ease-in-out;
+    }
+
+    @keyframes cardSlideIn {
+      0% { 
+        transform: translateY(-25px); 
+        opacity: 0; 
+        box-shadow: 0 0 25px #FFE600;
+        border-color: #FFE600;
+      }
+      50% {
+        box-shadow: 0 0 35px #00f0ff;
+        border-color: #00f0ff;
+      }
+      100% { 
+        transform: translateY(0); 
+        opacity: 1; 
+        box-shadow: 6px 6px 0px #FFE600;
+        border-color: #ffffff;
+      }
+    }
+    .new-candidate-slidein {
+      animation: cardSlideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .neo-live-toast {
+      background: #090f1d;
+      border: 2.5px solid #00f0ff;
+      box-shadow: 6px 6px 0px #FFE600;
+      border-radius: 8px;
+      padding: 14px 18px;
+      color: #ffffff;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: auto;
+      animation: toastSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+      max-width: 100%;
+    }
+    @keyframes toastSlideUp {
+      0% { transform: translateY(50px) scale(0.9); opacity: 0; }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
     .neo-badge {
       display: inline-flex;
       align-items: center;
@@ -680,8 +735,12 @@
         <!-- Student Approvals Header Banner (Neo-Brutalist) -->
         <div class="neo-card-yellow" style="padding: 24px; margin-bottom: 26px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; background: #0c1322;">
           <div>
-            <div style="margin-bottom: 8px;">
+            <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <span class="neo-badge neo-badge-yellow">⭐ S30 CANDIDATE VERIFICATION DESK</span>
+              <div id="admin-live-indicator" class="neo-badge neo-badge-green" style="font-size: 11px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px; border: 2px solid #000; box-shadow: 2.5px 2.5px 0px #00f0ff;">
+                <span class="live-pulse-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #000000; display: inline-block;"></span>
+                <span id="live-indicator-text">LIVE AUTO-SYNC ACTIVE</span>
+              </div>
             </div>
             <h2 style="font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.02em;">
               Student Candidate Approvals Queue
@@ -705,7 +764,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
           <div>
             <h3 style="font-size: 20px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.01em;">
-              Candidate Verification Queue ({{ users|length }})
+              Candidate Verification Queue (<span id="total-queue-count">{{ users|length }}</span>)
             </h3>
             <p style="font-size: 13px; color: #cbd5e1; margin-top: 2px; font-weight: 500;">
               Inspect credentials, run OCR validation, and issue verified candidate status.
@@ -713,10 +772,10 @@
           </div>
 
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button class="neo-btn neo-btn-yellow" onclick="setAdminFilter('all', this)" style="font-size: 12px; padding: 8px 16px;">ALL ({{ users|length }})</button>
-            <button class="neo-btn neo-btn-white" onclick="setAdminFilter('pending', this)" style="font-size: 12px; padding: 8px 16px;">PENDING</button>
-            <button class="neo-btn neo-btn-green" onclick="setAdminFilter('approved', this)" style="font-size: 12px; padding: 8px 16px;">VERIFIED</button>
-            <button class="neo-btn neo-btn-pink" onclick="setAdminFilter('banned', this)" style="font-size: 12px; padding: 8px 16px;">BANNED</button>
+            <button id="filter-btn-all" class="neo-btn neo-btn-yellow" onclick="setAdminFilter('all', this)" style="font-size: 12px; padding: 8px 16px;">ALL (<span id="filter-count-all">{{ users|length }}</span>)</button>
+            <button id="filter-btn-pending" class="neo-btn neo-btn-white" onclick="setAdminFilter('pending', this)" style="font-size: 12px; padding: 8px 16px;">PENDING (<span id="filter-count-pending">{{ pending_count }}</span>)</button>
+            <button id="filter-btn-approved" class="neo-btn neo-btn-green" onclick="setAdminFilter('approved', this)" style="font-size: 12px; padding: 8px 16px;">VERIFIED (<span id="filter-count-approved">{{ approved_count }}</span>)</button>
+            <button id="filter-btn-banned" class="neo-btn neo-btn-pink" onclick="setAdminFilter('banned', this)" style="font-size: 12px; padding: 8px 16px;">BANNED (<span id="filter-count-banned">{{ rejected_count }}</span>)</button>
           </div>
         </div>
 
@@ -727,197 +786,10 @@
           </div>
         </div>
 
-        <!-- Candidate Cards (Neo-Brutalist Overhaul) -->
+        <!-- Candidate Cards (Neo-Brutalist Zero-Refresh Live Queue) -->
         <div id="admin-candidates-list" style="display: flex; flex-direction: column; gap: 20px;">
           {% for u in users %}
-          <div class="neo-card candidate-card-row {% if u.is_banned %}banned{% endif %}" 
-               id="card-{{ u.id }}"
-               data-code="{{ u.user_code|upper }}"
-               data-name="{{ u.full_name|lower }}"
-               data-email="{{ u.email|lower }}"
-               data-status="{% if u.is_banned %}banned{% elif u.manual_status in ['DONE', 'APPROVED'] %}approved{% else %}pending{% endif %}"
-               style="padding: 24px; border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px {% if u.is_banned %}#ff2a85{% elif u.manual_status in ['DONE', 'APPROVED'] %}#22c55e{% else %}#FFE600{% endif %}; background: #0c1322;">
-            
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; border-bottom: 2px solid rgba(255,255,255,0.15); padding-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-              <div>
-                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                  <span style="font-size: 20px; font-weight: 900; color: #ffffff;">{{ u.full_name }}</span>
-                  <span class="neo-badge neo-badge-cyan" style="font-size: 13px; padding: 3px 10px;">
-                    ID: {{ u.user_code }}
-                  </span>
-                  {% if u.is_banned %}
-                  <span class="neo-badge neo-badge-pink">BANNED</span>
-                  {% elif u.manual_status in ['DONE', 'APPROVED'] %}
-                  <span class="neo-badge neo-badge-green">VERIFIED</span>
-                  {% else %}
-                  <span class="neo-badge neo-badge-yellow">{{ u.manual_status }}</span>
-                  {% endif %}
-                </div>
-                <div style="font-size: 13.5px; color: #cbd5e1; margin-top: 6px; font-weight: 600;">
-                  📧 <strong style="color: #00f0ff;">{{ u.email }}</strong> • 🏛️ {{ u.school or 'N/A' }}{% if u.coursework %} • <em>{{ u.coursework }}</em>{% endif %}
-                </div>
-              </div>
-
-              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <a href="{{ url_for('admin_candidate_detail', user_code=u.user_code) }}" class="neo-btn neo-btn-cyan" style="font-size: 11.5px; padding: 7px 14px;">
-                  🔍 FULL DOSSIER &rarr;
-                </a>
-                {% if u.is_banned %}
-                <button class="btn-act btn-act-done" onclick="toggleBan({{ u.id }}, 0)">✓ Unban</button>
-                {% else %}
-                <button class="btn-act btn-act-reject" onclick="promptBan({{ u.id }})">🚫 Ban ID</button>
-                {% endif %}
-                <button class="btn-act btn-act-reject" onclick="deleteUser({{ u.id }})" title="Delete">&times;</button>
-              </div>
-            </div>
-
-            <div class="candidate-two-col" style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; width: 100%; box-sizing: border-box;">
-              <!-- Left Column: Uploaded Documents & ID Cards -->
-              <div style="min-width: 0; box-sizing: border-box;">
-                <div style="font-size: 11.5px; font-weight: 900; color: #00f0ff; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em;">
-                  📄 UPLOADED ID CARDS & CERTIFICATES
-                </div>
-                {% if u.documents and u.documents|length > 0 %}
-                  {% for doc in u.documents %}
-                  <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; box-shadow: 3px 3px 0px #00f0ff; box-sizing: border-box;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
-                      <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
-                        <span class="neo-badge neo-badge-purple" style="font-size: 9.5px; padding: 2px 5px; flex-shrink: 0;">
-                          {% if doc.doc_category == 'id_front' %}ID FRONT{% elif doc.doc_category == 'id_back' %}ID BACK{% else %}CERTIFICATE{% endif %}
-                        </span>
-                        <span style="color: #ffffff; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12.5px;" title="{{ doc.original_name }}">{{ doc.original_name }}</span>
-                      </div>
-                      <div style="display: flex; gap: 4px; flex-shrink: 0;">
-                        <button type="button" class="neo-btn neo-btn-white" style="font-size: 10px; padding: 3px 8px;" onclick="openDocModal('{{ doc.original_name }}', '/documents/view/{{ doc.filename }}', '{{ u.full_name }}', {{ u.id }})">
-                          👁 VIEW
-                        </button>
-                        <a href="/documents/view/{{ doc.filename }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 10px; padding: 3px 8px;">↗ TAB</a>
-                      </div>
-                    </div>
-
-                    <!-- Verification Controls Row -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px dashed rgba(255,255,255,0.15); padding-top: 6px; margin-top: 6px; flex-wrap: wrap; gap: 4px;">
-                      <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
-                        {% if doc.doc_category == 'certificate' %}
-                          {% if doc.ai_score >= 0.7 %}
-                            <span class="neo-badge neo-badge-pink" style="font-size: 9px; padding: 1px 4px;">
-                              🔴 HIGH RISK: {{ (doc.ai_score * 100)|int }}%
-                            </span>
-                          {% elif doc.ai_score >= 0.35 %}
-                            <span class="neo-badge neo-badge-yellow" style="font-size: 9px; padding: 1px 4px;">
-                              🟡 MED RISK: {{ (doc.ai_score * 100)|int }}%
-                            </span>
-                          {% else %}
-                            <span class="neo-badge neo-badge-green" style="font-size: 9px; padding: 1px 4px;">
-                              🟢 SCORE: {{ (doc.ai_score * 100)|int }}%
-                            </span>
-                          {% endif %}
-                        {% else %}
-                          <span class="neo-badge neo-badge-cyan" style="font-size: 9px; padding: 1px 4px;">
-                            ID PROOF
-                          </span>
-                        {% endif %}
-
-                        <span style="font-size: 10.5px; color: #cbd5e1; font-weight: 700;">
-                          <strong id="cert-status-text-{{ doc.id }}" style="color: {% if doc.review_status == 'APPROVED' %}#22c55e{% elif doc.review_status == 'REJECTED' %}#ff2a85{% else %}#FFE600{% endif %};">{{ doc.review_status or 'PENDING' }}</strong>
-                        </span>
-                      </div>
-                      
-                      <div style="display: flex; gap: 4px;">
-                        <button type="button" class="btn-act btn-act-done" style="padding: 2px 7px; font-size: 10px;" onclick="verifyCertificateDirect({{ doc.id }}, 'APPROVED')">
-                          ✓ Verify
-                        </button>
-                        <button type="button" class="btn-act btn-act-reject" style="padding: 2px 7px; font-size: 10px;" onclick="verifyCertificateDirect({{ doc.id }}, 'REJECTED')">
-                          ✕ Reject
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  {% endfor %}
-                {% else %}
-                  <div style="font-size: 12px; color: #94a3b8; font-style: italic; background: #090f1d; padding: 12px; border-radius: 6px; border: 1.5px dashed rgba(255,255,255,0.15);">No documents uploaded yet.</div>
-                {% endif %}
-              </div>
-
-              <!-- Right Column: Top Skills & Verification Decisions -->
-              <div style="display: flex; flex-direction: column; min-width: 0; box-sizing: border-box;">
-                
-                <!-- 1. Skills Header (outside matching Uploaded text style) -->
-                <div style="font-size: 11.5px; font-weight: 900; color: #FFE600; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-                  <span>⚡</span> TECHNICAL SKILLS & GITHUB PROOFS
-                </div>
-                
-                {% if u.skills and u.skills|length > 0 %}
-                  <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
-                    {% for sk in u.skills %}
-                    <div style="background: #090f1d; border: 2px solid #FFE600; border-radius: 6px; padding: 10px 12px; box-shadow: 3px 3px 0px #FFE600; box-sizing: border-box;">
-                      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; gap: 6px;">
-                        <div style="min-width: 0; flex: 1;">
-                          <strong style="color: #fff; font-size: 13px;">{{ sk.skill_name }}</strong>
-                          {% if sk.project_name %}
-                            <span style="color: #00f0ff; font-size: 11.5px; font-weight: 700;">— {{ sk.project_name }}</span>
-                          {% endif %}
-                        </div>
-                        <span class="badge-status {% if sk.status == 'VERIFIED' %}badge-done{% elif sk.status == 'REJECTED' %}badge-rejected{% else %}badge-progress{% endif %}" id="badge-skill-{{ sk.id }}" style="font-size: 9.5px; padding: 2px 6px; flex-shrink: 0;">
-                          {{ sk.status }}
-                        </span>
-                      </div>
-                      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 5px; gap: 6px;">
-                        {% if sk.project_url %}
-                        <a href="{{ sk.project_url }}" target="_blank" style="font-size: 11px; color: #00f0ff; text-decoration: underline; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700;" title="{{ sk.project_url }}">
-                          🔗 {{ sk.project_url }} &rarr;
-                        </a>
-                        {% else %}
-                        <span style="font-size: 10.5px; color: #94a3b8;">No link attached</span>
-                        {% endif %}
-                        <div style="display: flex; gap: 4px; flex-shrink: 0;">
-                          <button class="btn-act btn-act-done" style="padding: 2px 7px; font-size: 10px;" onclick="verifySkillDirect({{ sk.id }}, 'VERIFIED')">✓ Verify</button>
-                          <button class="btn-act btn-act-reject" style="padding: 2px 7px; font-size: 10px;" onclick="verifySkillDirect({{ sk.id }}, 'REJECTED')">✕ Reject</button>
-                        </div>
-                      </div>
-                    </div>
-                    {% endfor %}
-                  </div>
-                {% else %}
-                  <div style="font-size: 12px; color: #94a3b8; font-style: italic; background: #090f1d; padding: 10px 12px; border-radius: 6px; border: 1.5px dashed rgba(255,255,255,0.15); margin-bottom: 14px;">
-                    No technical skills or project links submitted.
-                  </div>
-                {% endif %}
-
-                <!-- 2. Verification Decisions Header (outside matching Uploaded text style) -->
-                <div style="font-size: 11.5px; font-weight: 900; color: #22c55e; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-                  <span>🛡️</span> VERIFICATION DECISIONS & CLEARANCE
-                </div>
-
-                <div style="background: #090f1d; border: 2px solid #22c55e; border-radius: 6px; padding: 12px 14px; box-shadow: 3px 3px 0px #22c55e; box-sizing: border-box;">
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1.5px dashed rgba(255,255,255,0.12); gap: 8px; flex-wrap: wrap;">
-                    <div>
-                      <div style="font-size: 12.5px; font-weight: 900; color: #fff;">ID Card & OCR Validation</div>
-                      <div style="font-size: 11px; color: #cbd5e1; font-weight: 600;">Status: <strong id="pdf-val-{{ u.id }}" style="color: #FFE600;">{{ u.pdf_status }}</strong></div>
-                    </div>
-                    <div style="display: flex; gap: 4px; flex-shrink: 0;">
-                      <button class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'DONE', null)">DONE</button>
-                      <button class="btn-act btn-act-wait" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'CHECKING', null)">CHECK</button>
-                      <button class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'REJECTED', null)">REJECT</button>
-                    </div>
-                  </div>
-
-                  <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
-                    <div>
-                      <div style="font-size: 12.5px; font-weight: 900; color: #fff;">Manual Staff Clearance</div>
-                      <div style="font-size: 11px; color: #cbd5e1; font-weight: 600;">Status: <strong id="manual-val-{{ u.id }}" style="color: #FFE600;">{{ u.manual_status }}</strong></div>
-                    </div>
-                    <div style="display: flex; gap: 4px; flex-shrink: 0;">
-                      <button class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'DONE')">APPROVE</button>
-                      <button class="btn-act btn-act-wait" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'IN PROGRESS')">PROGRESS</button>
-                      <button class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'REJECTED')">REJECT</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
+            {% include "_candidate_card.html" %}
           {% endfor %}
         </div>
       </div>
@@ -1675,8 +1547,120 @@
     </div>
   </div>
 
+  <!-- Real-Time Neo-Brutalist Toast Alerts Container -->
+  <div id="admin-live-toast-container" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; max-width: 380px; pointer-events: none;"></div>
+
   <script>
     let adminFilter = 'all';
+    const knownCandidateIds = new Set();
+
+    // Initialize Known Candidate IDs & Start Zero-Refresh Real-Time Sync
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('#admin-candidates-list .candidate-card-row').forEach(card => {
+        const cardId = card.id.replace('card-', '');
+        if (cardId) knownCandidateIds.add(parseInt(cardId));
+      });
+      
+      // Start Real-Time Live Feed Polling every 4 seconds
+      setInterval(pollLiveCandidatesFeed, 4000);
+    });
+
+    async function pollLiveCandidatesFeed() {
+      try {
+        const res = await fetch('/api/admin/live-candidates-feed');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data.success || !data.candidates) return;
+
+        // 1. Dynamically Update Live Counters
+        if (data.stats) {
+          const qCount = document.getElementById('total-queue-count');
+          if (qCount) qCount.textContent = data.stats.total;
+          
+          const fAll = document.getElementById('filter-count-all');
+          if (fAll) fAll.textContent = data.stats.total;
+          
+          const fPending = document.getElementById('filter-count-pending');
+          if (fPending) fPending.textContent = data.stats.pending;
+          
+          const fApproved = document.getElementById('filter-count-approved');
+          if (fApproved) fApproved.textContent = data.stats.approved;
+          
+          const fBanned = document.getElementById('filter-count-banned');
+          if (fBanned) fBanned.textContent = data.stats.rejected;
+
+          // Update Scoreboard counters if dashboard section is open
+          const sbTotal = document.getElementById('stat-total-students');
+          if (sbTotal) sbTotal.textContent = data.stats.total;
+          const sbPending = document.getElementById('stat-pending-reviews');
+          if (sbPending) sbPending.textContent = data.stats.pending;
+          const sbVerified = document.getElementById('stat-verified-students');
+          if (sbVerified) sbVerified.textContent = data.stats.approved;
+        }
+
+        const container = document.getElementById('admin-candidates-list');
+        if (!container) return;
+
+        let hasNew = false;
+        // Check new candidates in reverse order (oldest to newest among new arrivals)
+        // so prepending puts the newest at the very top
+        for (let i = data.candidates.length - 1; i >= 0; i--) {
+          const cand = data.candidates[i];
+          if (!knownCandidateIds.has(cand.id)) {
+            knownCandidateIds.add(cand.id);
+            hasNew = true;
+
+            if (cand.card_html) {
+              const temp = document.createElement('div');
+              temp.innerHTML = cand.card_html.trim();
+              const newCard = temp.firstElementChild;
+              if (newCard) {
+                newCard.classList.add('new-candidate-slidein');
+                container.insertBefore(newCard, container.firstChild);
+              }
+            }
+
+            // Show Toast Alert
+            showAdminLiveToast(cand.full_name, cand.user_code, cand.email);
+          }
+        }
+
+        if (hasNew) {
+          filterAdminCards();
+        }
+      } catch (err) {
+        console.warn('[Real-Time Admin Sync]:', err);
+      }
+    }
+
+    function showAdminLiveToast(fullName, userCode, email) {
+      const container = document.getElementById('admin-live-toast-container');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = 'neo-live-toast';
+      toast.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">⚡</span>
+          <div>
+            <div style="font-weight: 900; color: #FFE600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em;">NEW CANDIDATE REGISTERED</div>
+            <div style="font-weight: 800; font-size: 13px; color: #ffffff;">${fullName || 'Student'} <span class="neo-badge neo-badge-cyan" style="font-size: 9.5px; padding: 1px 5px;">ID: ${userCode || 'N/A'}</span></div>
+          </div>
+        </div>
+        <button type="button" onclick="this.parentElement.remove()" style="background: none; border: none; color: #94a3b8; font-size: 16px; font-weight: 900; cursor: pointer; padding: 2px 6px;">&times;</button>
+      `;
+
+      container.appendChild(toast);
+
+      // Auto-remove after 6 seconds
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(20px)';
+          setTimeout(() => toast.remove(), 350);
+        }
+      }, 6000);
+    }
 
     function openNavPopup() {
       document.getElementById('dashboard-popup-modal').classList.add('open');
@@ -1701,8 +1685,10 @@
 
     function setAdminFilter(f, btn) {
       adminFilter = f;
-      document.querySelectorAll('.s30-btn-outline').forEach(b => b.style.borderColor = '');
-      btn.style.borderColor = '#6366f1';
+      document.querySelectorAll('#filter-btn-all, #filter-btn-pending, #filter-btn-approved, #filter-btn-banned').forEach(b => {
+        b.style.transform = 'none';
+      });
+      if (btn) btn.style.transform = 'scale(1.05)';
       filterAdminCards();
     }
 

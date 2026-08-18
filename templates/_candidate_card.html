@@ -1,0 +1,188 @@
+<div class="neo-card candidate-card-row {% if u.is_banned %}banned{% endif %}" 
+     id="card-{{ u.id }}"
+     data-code="{{ u.user_code|upper }}"
+     data-name="{{ u.full_name|lower }}"
+     data-email="{{ u.email|lower }}"
+     data-status="{% if u.is_banned %}banned{% elif u.manual_status in ['DONE', 'APPROVED'] %}approved{% else %}pending{% endif %}"
+     style="padding: 24px; border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px {% if u.is_banned %}#ff2a85{% elif u.manual_status in ['DONE', 'APPROVED'] %}#22c55e{% else %}#FFE600{% endif %}; background: #0c1322;">
+  
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; border-bottom: 2px solid rgba(255,255,255,0.15); padding-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+    <div>
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <span style="font-size: 20px; font-weight: 900; color: #ffffff;">{{ u.full_name }}</span>
+        <span class="neo-badge neo-badge-cyan" style="font-size: 13px; padding: 3px 10px;">
+          ID: {{ u.user_code }}
+        </span>
+        {% if u.is_banned %}
+        <span class="neo-badge neo-badge-pink">BANNED</span>
+        {% elif u.manual_status in ['DONE', 'APPROVED'] %}
+        <span class="neo-badge neo-badge-green">VERIFIED</span>
+        {% else %}
+        <span class="neo-badge neo-badge-yellow">{{ u.manual_status }}</span>
+        {% endif %}
+      </div>
+      <div style="font-size: 13.5px; color: #cbd5e1; margin-top: 6px; font-weight: 600;">
+        📧 <strong style="color: #00f0ff;">{{ u.email }}</strong> • 🏛️ {{ u.school or 'N/A' }}{% if u.coursework %} • <em>{{ u.coursework }}</em>{% endif %}
+      </div>
+    </div>
+
+    <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+      <a href="{{ url_for('admin_candidate_detail', user_code=u.user_code) }}" class="neo-btn neo-btn-cyan" style="font-size: 11.5px; padding: 7px 14px;">
+        🔍 FULL DOSSIER &rarr;
+      </a>
+      {% if u.is_banned %}
+      <button class="btn-act btn-act-done" onclick="toggleBan({{ u.id }}, 0)">✓ Unban</button>
+      {% else %}
+      <button class="btn-act btn-act-reject" onclick="promptBan({{ u.id }})">🚫 Ban ID</button>
+      {% endif %}
+      <button class="btn-act btn-act-reject" onclick="deleteUser({{ u.id }})" title="Delete">&times;</button>
+    </div>
+  </div>
+
+  <div class="candidate-two-col" style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; width: 100%; box-sizing: border-box;">
+    <!-- Left Column: Uploaded Documents & ID Cards -->
+    <div style="min-width: 0; box-sizing: border-box;">
+      <div style="font-size: 11.5px; font-weight: 900; color: #00f0ff; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em;">
+        📄 UPLOADED ID CARDS & CERTIFICATES
+      </div>
+      {% if u.documents and u.documents|length > 0 %}
+        {% for doc in u.documents %}
+        <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; box-shadow: 3px 3px 0px #00f0ff; box-sizing: border-box;">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+            <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
+              <span class="neo-badge neo-badge-purple" style="font-size: 9.5px; padding: 2px 5px; flex-shrink: 0;">
+                {% if doc.doc_category == 'id_front' %}ID FRONT{% elif doc.doc_category == 'id_back' %}ID BACK{% else %}CERTIFICATE{% endif %}
+              </span>
+              <span style="color: #ffffff; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12.5px;" title="{{ doc.original_name }}">{{ doc.original_name }}</span>
+            </div>
+            <div style="display: flex; gap: 4px; flex-shrink: 0;">
+              <button type="button" class="neo-btn neo-btn-white" style="font-size: 10px; padding: 3px 8px;" onclick="openDocModal('{{ doc.original_name }}', '/documents/view/{{ doc.filename }}', '{{ u.full_name }}', {{ u.id }})">
+                👁 VIEW
+              </button>
+              <a href="/documents/view/{{ doc.filename }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 10px; padding: 3px 8px;">↗ TAB</a>
+            </div>
+          </div>
+
+          <!-- Verification Controls Row -->
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px dashed rgba(255,255,255,0.15); padding-top: 6px; margin-top: 6px; flex-wrap: wrap; gap: 4px;">
+            <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+              {% if doc.doc_category == 'certificate' %}
+                {% if doc.ai_score >= 0.7 %}
+                  <span class="neo-badge neo-badge-pink" style="font-size: 9px; padding: 1px 4px;">
+                    🔴 HIGH RISK: {{ (doc.ai_score * 100)|int }}%
+                  </span>
+                {% elif doc.ai_score >= 0.35 %}
+                  <span class="neo-badge neo-badge-yellow" style="font-size: 9px; padding: 1px 4px;">
+                    🟡 MED RISK: {{ (doc.ai_score * 100)|int }}%
+                  </span>
+                {% else %}
+                  <span class="neo-badge neo-badge-green" style="font-size: 9px; padding: 1px 4px;">
+                    🟢 SCORE: {{ (doc.ai_score * 100)|int }}%
+                  </span>
+                {% endif %}
+              {% else %}
+                <span class="neo-badge neo-badge-cyan" style="font-size: 9px; padding: 1px 4px;">
+                  ID PROOF
+                </span>
+              {% endif %}
+
+              <span style="font-size: 10.5px; color: #cbd5e1; font-weight: 700;">
+                <strong id="cert-status-text-{{ doc.id }}" style="color: {% if doc.review_status == 'APPROVED' %}#22c55e{% elif doc.review_status == 'REJECTED' %}#ff2a85{% else %}#FFE600{% endif %};">{{ doc.review_status or 'PENDING' }}</strong>
+              </span>
+            </div>
+            
+            <div style="display: flex; gap: 4px;">
+              <button type="button" class="btn-act btn-act-done" style="padding: 2px 7px; font-size: 10px;" onclick="verifyCertificateDirect({{ doc.id }}, 'APPROVED')">
+                ✓ Verify
+              </button>
+              <button type="button" class="btn-act btn-act-reject" style="padding: 2px 7px; font-size: 10px;" onclick="verifyCertificateDirect({{ doc.id }}, 'REJECTED')">
+                ✕ Reject
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div style="font-size: 12px; color: #94a3b8; font-style: italic; background: #090f1d; padding: 12px; border-radius: 6px; border: 1.5px dashed rgba(255,255,255,0.15);">No documents uploaded yet.</div>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Top Skills & Verification Decisions -->
+    <div style="display: flex; flex-direction: column; min-width: 0; box-sizing: border-box;">
+      
+      <!-- 1. Skills Header (outside matching Uploaded text style) -->
+      <div style="font-size: 11.5px; font-weight: 900; color: #FFE600; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+        <span>⚡</span> TECHNICAL SKILLS & GITHUB PROOFS
+      </div>
+      
+      {% if u.skills and u.skills|length > 0 %}
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+          {% for sk in u.skills %}
+          <div style="background: #090f1d; border: 2px solid #FFE600; border-radius: 6px; padding: 10px 12px; box-shadow: 3px 3px 0px #FFE600; box-sizing: border-box;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; gap: 6px;">
+              <div style="min-width: 0; flex: 1;">
+                <strong style="color: #fff; font-size: 13px;">{{ sk.skill_name }}</strong>
+                {% if sk.project_name %}
+                  <span style="color: #00f0ff; font-size: 11.5px; font-weight: 700;">— {{ sk.project_name }}</span>
+                {% endif %}
+              </div>
+              <span class="badge-status {% if sk.status == 'VERIFIED' %}badge-done{% elif sk.status == 'REJECTED' %}badge-rejected{% else %}badge-progress{% endif %}" id="badge-skill-{{ sk.id }}" style="font-size: 9.5px; padding: 2px 6px; flex-shrink: 0;">
+                {{ sk.status }}
+              </span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 5px; gap: 6px;">
+              {% if sk.project_url %}
+              <a href="{{ sk.project_url }}" target="_blank" style="font-size: 11px; color: #00f0ff; text-decoration: underline; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700;" title="{{ sk.project_url }}">
+                🔗 {{ sk.project_url }} &rarr;
+              </a>
+              {% else %}
+              <span style="font-size: 10.5px; color: #94a3b8;">No link attached</span>
+              {% endif %}
+              <div style="display: flex; gap: 4px; flex-shrink: 0;">
+                <button class="btn-act btn-act-done" style="padding: 2px 7px; font-size: 10px;" onclick="verifySkillDirect({{ sk.id }}, 'VERIFIED')">✓ Verify</button>
+                <button class="btn-act btn-act-reject" style="padding: 2px 7px; font-size: 10px;" onclick="verifySkillDirect({{ sk.id }}, 'REJECTED')">✕ Reject</button>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div style="font-size: 12px; color: #94a3b8; font-style: italic; background: #090f1d; padding: 10px 12px; border-radius: 6px; border: 1.5px dashed rgba(255,255,255,0.15); margin-bottom: 14px;">
+          No technical skills or project links submitted.
+        </div>
+      {% endif %}
+
+      <!-- 2. Verification Decisions Header (outside matching Uploaded text style) -->
+      <div style="font-size: 11.5px; font-weight: 900; color: #22c55e; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+        <span>🛡️</span> VERIFICATION DECISIONS & CLEARANCE
+      </div>
+
+      <div style="background: #090f1d; border: 2px solid #22c55e; border-radius: 6px; padding: 12px 14px; box-shadow: 3px 3px 0px #22c55e; box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1.5px dashed rgba(255,255,255,0.12); gap: 8px; flex-wrap: wrap;">
+          <div>
+            <div style="font-size: 12.5px; font-weight: 900; color: #fff;">ID Card & OCR Validation</div>
+            <div style="font-size: 11px; color: #cbd5e1; font-weight: 600;">Status: <strong id="pdf-val-{{ u.id }}" style="color: #FFE600;">{{ u.pdf_status }}</strong></div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-shrink: 0;">
+            <button class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'DONE', null)">DONE</button>
+            <button class="btn-act btn-act-wait" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'CHECKING', null)">CHECK</button>
+            <button class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'REJECTED', null)">REJECT</button>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <div>
+            <div style="font-size: 12.5px; font-weight: 900; color: #fff;">Manual Staff Clearance</div>
+            <div style="font-size: 11px; color: #cbd5e1; font-weight: 600;">Status: <strong id="manual-val-{{ u.id }}" style="color: #FFE600;">{{ u.manual_status }}</strong></div>
+          </div>
+          <div style="display: flex; gap: 4px; flex-shrink: 0;">
+            <button class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'DONE')">APPROVE</button>
+            <button class="btn-act btn-act-wait" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'IN PROGRESS')">PROGRESS</button>
+            <button class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'REJECTED')">REJECT</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
