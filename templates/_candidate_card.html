@@ -4,9 +4,9 @@
      data-name="{{ u.full_name|lower }}"
      data-email="{{ u.email|lower }}"
      data-status="{% if u.is_banned %}banned{% elif u.manual_status in ['DONE', 'APPROVED'] %}approved{% else %}pending{% endif %}"
-     style="padding: 24px; border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px {% if u.is_banned %}#E0536C{% elif u.manual_status in ['DONE', 'APPROVED'] %}#34A853{% else %}#D9A726{% endif %}; background: #0c1322;">
+     style="padding: 24px; border: 1px solid var(--md-sys-color-outline); box-shadow: var(--md-elevation-2); background: var(--md-sys-color-surface);">
   
-  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; border-bottom: 2px solid rgba(255,255,255,0.15); padding-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; border-bottom: 1px solid var(--md-sys-color-outline-variant); padding-bottom: 16px; flex-wrap: wrap; gap: 12px;">
     <div>
       <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
         <span style="font-size: 20px; font-weight: 900; color: #ffffff;">{{ u.full_name }}</span>
@@ -42,29 +42,29 @@
   <div class="candidate-two-col" style="display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; width: 100%; box-sizing: border-box;">
     <!-- Left Column: Uploaded Documents & ID Cards -->
     <div style="min-width: 0; box-sizing: border-box;">
-      <div style="font-size: 11.5px; font-weight: 900; color: #38BDF8; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em;">
+      <div style="font-size: 11.5px; font-weight: 700; color: var(--md-sys-color-secondary); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.04em;">
         📄 UPLOADED ID CARDS & CERTIFICATES
       </div>
       {% if u.documents and u.documents|length > 0 %}
         {% for doc in u.documents %}
-        <div style="background: #090f1d; border: 2px solid #38BDF8; border-radius: 6px; padding: 10px 12px; margin-bottom: 8px; box-shadow: 3px 3px 0px #38BDF8; box-sizing: border-box;">
+        <div style="background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-md); padding: 12px 14px; margin-bottom: 8px; box-shadow: var(--md-elevation-1); box-sizing: border-box;">
           <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
             <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;">
               <span class="neo-badge neo-badge-purple" style="font-size: 9.5px; padding: 2px 5px; flex-shrink: 0;">
                 {% if doc.doc_category == 'id_front' %}ID FRONT{% elif doc.doc_category == 'id_back' %}ID BACK{% else %}CERTIFICATE{% endif %}
               </span>
-              <span style="color: #ffffff; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12.5px;" title="{{ doc.original_name }}">{{ doc.original_name }}</span>
+              <span style="color: var(--s30-text-primary); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12.5px;" title="{{ doc.original_name }}">{{ doc.original_name }}</span>
             </div>
             <div style="display: flex; gap: 4px; flex-shrink: 0;">
-              <button type="button" class="neo-btn neo-btn-white" style="font-size: 10px; padding: 3px 8px;" onclick="openDocModal('{{ doc.original_name }}', '/documents/view/{{ doc.filename }}', '{{ u.full_name }}', {{ u.id }})">
+              <button type="button" class="neo-btn neo-btn-white" style="font-size: 10px; padding: 4px 8px;" onclick="openDocModal('{{ doc.original_name }}', '/documents/view/{{ doc.filename }}', '{{ u.full_name }}', {{ u.id }})">
                 👁 VIEW
               </button>
-              <a href="/documents/view/{{ doc.filename }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 10px; padding: 3px 8px;">↗ TAB</a>
+              <a href="/documents/view/{{ doc.filename }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 10px; padding: 4px 8px;">↗ TAB</a>
             </div>
           </div>
 
           <!-- Verification Controls Row -->
-          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px dashed rgba(255,255,255,0.15); padding-top: 6px; margin-top: 6px; flex-wrap: wrap; gap: 4px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--md-sys-color-outline-variant); padding-top: 8px; margin-top: 8px; flex-wrap: wrap; gap: 4px;">
             <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
               {% if doc.doc_category == 'certificate' %}
                 {% if doc.ai_score >= 0.7 %}
@@ -86,16 +86,16 @@
                 </span>
               {% endif %}
 
-              <span style="font-size: 10.5px; color: #cbd5e1; font-weight: 700;">
-                <strong id="cert-status-text-{{ doc.id }}" style="color: {% if doc.review_status == 'APPROVED' %}#34A853{% elif doc.review_status == 'REJECTED' %}#E0536C{% else %}#D9A726{% endif %};">{{ doc.review_status or 'PENDING' }}</strong>
+              <span style="font-size: 10.5px; color: var(--s30-text-secondary); font-weight: 700;">
+                <strong id="cert-status-text-{{ doc.id }}" style="color: {% if doc.review_status == 'APPROVED' %}var(--md-sys-color-tertiary){% elif doc.review_status == 'REJECTED' %}var(--md-sys-color-error){% else %}var(--md-sys-color-primary){% endif %};">{{ doc.review_status or 'PENDING' }}</strong>
               </span>
             </div>
             
             <div style="display: flex; gap: 4px;">
-              <button type="button" class="btn-act btn-act-done" style="padding: 2px 7px; font-size: 10px;" onclick="verifyCertificateDirect({{ doc.id }}, 'APPROVED')">
+              <button type="button" class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 10px;" onclick="verifyCertificateDirect({{ doc.id }}, 'APPROVED')">
                 ✓ Verify
               </button>
-              <button type="button" class="btn-act btn-act-reject" style="padding: 2px 7px; font-size: 10px;" onclick="verifyCertificateDirect({{ doc.id }}, 'REJECTED')">
+              <button type="button" class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 10px;" onclick="verifyCertificateDirect({{ doc.id }}, 'REJECTED')">
                 ✕ Reject
               </button>
             </div>
@@ -103,7 +103,7 @@
         </div>
         {% endfor %}
       {% else %}
-        <div style="font-size: 12px; color: #94a3b8; font-style: italic; background: #090f1d; padding: 12px; border-radius: 6px; border: 1.5px dashed rgba(255,255,255,0.15);">No documents uploaded yet.</div>
+        <div style="font-size: 12px; color: var(--s30-text-muted); font-style: italic; background: var(--md-sys-color-surface-container); padding: 12px; border-radius: var(--md-shape-sm); border: 1px dashed var(--md-sys-color-outline);">No documents uploaded yet.</div>
       {% endif %}
     </div>
 
@@ -111,73 +111,73 @@
     <div style="display: flex; flex-direction: column; min-width: 0; box-sizing: border-box;">
       
       <!-- 1. Skills Header (outside matching Uploaded text style) -->
-      <div style="font-size: 11.5px; font-weight: 900; color: #D9A726; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+      <div style="font-size: 11.5px; font-weight: 700; color: var(--md-sys-color-primary); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.04em; display: flex; align-items: center; gap: 6px;">
         <span>⚡</span> TECHNICAL SKILLS & GITHUB PROOFS
       </div>
       
       {% if u.skills and u.skills|length > 0 %}
         <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
           {% for sk in u.skills %}
-          <div style="background: #090f1d; border: 2px solid #D9A726; border-radius: 6px; padding: 10px 12px; box-shadow: 3px 3px 0px #D9A726; box-sizing: border-box;">
+          <div style="background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-md); padding: 12px 14px; box-shadow: var(--md-elevation-1); box-sizing: border-box;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; gap: 6px;">
               <div style="min-width: 0; flex: 1;">
-                <strong style="color: #fff; font-size: 13px;">{{ sk.skill_name }}</strong>
+                <strong style="color: var(--s30-text-primary); font-size: 13px;">{{ sk.skill_name }}</strong>
                 {% if sk.project_name %}
-                  <span style="color: #38BDF8; font-size: 11.5px; font-weight: 700;">— {{ sk.project_name }}</span>
+                  <span style="color: var(--md-sys-color-secondary); font-size: 11.5px; font-weight: 700;">— {{ sk.project_name }}</span>
                 {% endif %}
               </div>
               <span class="badge-status {% if sk.status == 'VERIFIED' %}badge-done{% elif sk.status == 'REJECTED' %}badge-rejected{% else %}badge-progress{% endif %}" id="badge-skill-{{ sk.id }}" style="font-size: 9.5px; padding: 2px 6px; flex-shrink: 0;">
                 {{ sk.status }}
               </span>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 5px; gap: 6px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--md-sys-color-outline-variant); padding-top: 6px; gap: 6px;">
               {% if sk.project_url %}
-              <a href="{{ sk.project_url }}" target="_blank" style="font-size: 11px; color: #38BDF8; text-decoration: underline; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700;" title="{{ sk.project_url }}">
+              <a href="{{ sk.project_url }}" target="_blank" style="font-size: 11px; color: var(--md-sys-color-secondary); text-decoration: underline; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 700;" title="{{ sk.project_url }}">
                 🔗 {{ sk.project_url }} &rarr;
               </a>
               {% else %}
-              <span style="font-size: 10.5px; color: #94a3b8;">No link attached</span>
+              <span style="font-size: 10.5px; color: var(--s30-text-muted);">No link attached</span>
               {% endif %}
               <div style="display: flex; gap: 4px; flex-shrink: 0;">
-                <button class="btn-act btn-act-done" style="padding: 2px 7px; font-size: 10px;" onclick="verifySkillDirect({{ sk.id }}, 'VERIFIED')">✓ Verify</button>
-                <button class="btn-act btn-act-reject" style="padding: 2px 7px; font-size: 10px;" onclick="verifySkillDirect({{ sk.id }}, 'REJECTED')">✕ Reject</button>
+                <button class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 10px;" onclick="verifySkillDirect({{ sk.id }}, 'VERIFIED')">✓ Verify</button>
+                <button class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 10px;" onclick="verifySkillDirect({{ sk.id }}, 'REJECTED')">✕ Reject</button>
               </div>
             </div>
           </div>
           {% endfor %}
         </div>
       {% else %}
-        <div style="font-size: 12px; color: #94a3b8; font-style: italic; background: #090f1d; padding: 10px 12px; border-radius: 6px; border: 1.5px dashed rgba(255,255,255,0.15); margin-bottom: 14px;">
+        <div style="font-size: 12px; color: var(--s30-text-muted); font-style: italic; background: var(--md-sys-color-surface-container); padding: 10px 12px; border-radius: var(--md-shape-sm); border: 1px dashed var(--md-sys-color-outline); margin-bottom: 14px;">
           No technical skills or project links submitted.
         </div>
       {% endif %}
 
       <!-- 2. Verification Decisions Header (outside matching Uploaded text style) -->
-      <div style="font-size: 11.5px; font-weight: 900; color: #34A853; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
+      <div style="font-size: 11.5px; font-weight: 700; color: var(--md-sys-color-tertiary); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.04em; display: flex; align-items: center; gap: 6px;">
         <span>🛡️</span> VERIFICATION DECISIONS & CLEARANCE
       </div>
 
-      <div style="background: #090f1d; border: 2px solid #34A853; border-radius: 6px; padding: 12px 14px; box-shadow: 3px 3px 0px #34A853; box-sizing: border-box;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1.5px dashed rgba(255,255,255,0.12); gap: 8px; flex-wrap: wrap;">
+      <div style="background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-md); padding: 12px 14px; box-shadow: var(--md-elevation-1); box-sizing: border-box;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--md-sys-color-outline-variant); gap: 8px; flex-wrap: wrap;">
           <div>
-            <div style="font-size: 12.5px; font-weight: 900; color: #fff;">ID Card & OCR Validation</div>
-            <div style="font-size: 11px; color: #cbd5e1; font-weight: 600;">Status: <strong id="pdf-val-{{ u.id }}" style="color: #D9A726;">{{ u.pdf_status }}</strong></div>
+            <div style="font-size: 12.5px; font-weight: 700; color: var(--s30-text-primary);">ID Card & OCR Validation</div>
+            <div style="font-size: 11px; color: var(--s30-text-secondary); font-weight: 600;">Status: <strong id="pdf-val-{{ u.id }}" style="color: var(--md-sys-color-primary);">{{ u.pdf_status }}</strong></div>
           </div>
           <div style="display: flex; gap: 4px; flex-shrink: 0;">
-            <button class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'DONE', null)">DONE</button>
-            <button class="btn-act btn-act-wait" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'CHECKING', null)">CHECK</button>
-            <button class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'REJECTED', null)">REJECT</button>
+            <button class="btn-act btn-act-done" style="padding: 4px 10px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'DONE', null)">DONE</button>
+            <button class="btn-act btn-act-wait" style="padding: 4px 10px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'CHECKING', null)">CHECK</button>
+            <button class="btn-act btn-act-reject" style="padding: 4px 10px; font-size: 10px;" onclick="updateDecision({{ u.id }}, 'REJECTED', null)">REJECT</button>
           </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap;">
           <div>
-            <div style="font-size: 12.5px; font-weight: 900; color: #fff;">Manual Staff Clearance</div>
-            <div style="font-size: 11px; color: #cbd5e1; font-weight: 600;">Status: <strong id="manual-val-{{ u.id }}" style="color: #D9A726;">{{ u.manual_status }}</strong></div>
+            <div style="font-size: 12.5px; font-weight: 700; color: var(--s30-text-primary);">Manual Staff Clearance</div>
+            <div style="font-size: 11px; color: var(--s30-text-secondary); font-weight: 600;">Status: <strong id="manual-val-{{ u.id }}" style="color: var(--md-sys-color-primary);">{{ u.manual_status }}</strong></div>
           </div>
           <div style="display: flex; gap: 4px; flex-shrink: 0;">
-            <button class="btn-act btn-act-done" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'DONE')">APPROVE</button>
-            <button class="btn-act btn-act-wait" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'IN PROGRESS')">PROGRESS</button>
+            <button class="btn-act btn-act-done" style="padding: 4px 10px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'DONE')">APPROVE</button>
+            <button class="btn-act btn-act-wait" style="padding: 4px 10px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'IN PROGRESS')">PROGRESS</button>
             <button class="btn-act btn-act-reject" style="padding: 3px 8px; font-size: 10px;" onclick="updateDecision({{ u.id }}, null, 'REJECTED')">REJECT</button>
           </div>
         </div>

@@ -180,9 +180,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(11, 15, 25, 0.7);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      background: var(--md-sys-color-scrim);
       z-index: 9998;
       opacity: 0;
       visibility: hidden;
@@ -232,23 +230,21 @@
     .s30-drawer-close-btn {
       width: 36px;
       height: 36px;
-      background: #0f172a;
-      border: 2px solid #ffffff;
-      box-shadow: 2.5px 2.5px 0px #FFE600;
-      color: #ffffff;
-      border-radius: 6px;
+      background: var(--md-sys-color-surface-container-high);
+      border: 1px solid var(--md-sys-color-outline);
+      box-shadow: var(--md-elevation-1);
+      color: var(--s30-text-primary);
+      border-radius: var(--md-shape-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
     }
     .s30-drawer-close-btn:hover {
-      background: #ff2a85;
-      border-color: #000000;
+      background: var(--md-sys-color-surface-container-highest);
       color: #ffffff;
-      box-shadow: 1px 1px 0px #000000;
-      transform: translate(1px, 1px);
+      box-shadow: var(--md-elevation-2);
     }
 
     .s30-drawer-body {
@@ -264,18 +260,18 @@
       width: 6px;
     }
     .s30-drawer-body::-webkit-scrollbar-thumb {
-      background: #1e293b;
+      background: var(--md-sys-color-outline-variant);
       border-radius: 4px;
     }
     .s30-drawer-body::-webkit-scrollbar-thumb:hover {
-      background: #FFE600;
+      background: var(--md-sys-color-primary);
     }
 
     .s30-drawer-profile-card {
-      background: #0c1322;
-      border: 2.5px solid #FFE600;
-      box-shadow: 4px 4px 0px #00f0ff;
-      border-radius: 8px;
+      background: var(--md-sys-color-surface-container);
+      border: 1px solid var(--md-sys-color-outline);
+      box-shadow: var(--md-elevation-2);
+      border-radius: var(--md-shape-md);
       padding: 16px;
       display: flex;
       gap: 14px;
@@ -285,16 +281,16 @@
     .s30-drawer-avatar {
       width: 48px;
       height: 48px;
-      border-radius: 8px;
-      background: #FFE600;
-      color: #000000;
-      border: 2px solid #000000;
-      box-shadow: 2.5px 2.5px 0px #000000;
+      border-radius: var(--md-shape-md);
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-primary);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      box-shadow: var(--md-elevation-1);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 17px;
-      font-weight: 900;
+      font-weight: 800;
       flex-shrink: 0;
     }
 
@@ -308,8 +304,8 @@
 
     .s30-drawer-user-name {
       font-size: 15px;
-      font-weight: 900;
-      color: #ffffff;
+      font-weight: 800;
+      color: var(--s30-text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -317,7 +313,7 @@
 
     .s30-drawer-user-email {
       font-size: 11.5px;
-      color: #94a3b8;
+      color: var(--s30-text-secondary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -332,9 +328,9 @@
 
     .s30-drawer-section-title {
       font-size: 11px;
-      font-weight: 900;
-      color: #94a3b8;
-      letter-spacing: 0.1em;
+      font-weight: 800;
+      color: var(--s30-text-muted);
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       margin-top: 4px;
       margin-bottom: -6px;
@@ -346,7 +342,7 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: #1e293b;
+      background: var(--md-sys-color-outline-variant);
     }
 
     .s30-drawer-nav {
@@ -360,36 +356,36 @@
       align-items: center;
       gap: 12px;
       padding: 10px 12px;
-      border-radius: 6px;
-      background: #0c1322;
-      border: 1.5px solid #1e293b;
-      color: #ffffff;
+      border-radius: var(--md-shape-sm);
+      background: var(--md-sys-color-surface-container);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      color: var(--s30-text-primary);
       text-decoration: none;
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
     }
     .s30-drawer-nav-item:hover {
-      background: #131d33;
-      border-color: #FFE600;
-      transform: translateX(4px);
-      box-shadow: 3px 3px 0px #FFE600;
+      background: var(--md-sys-color-surface-container-high);
+      border-color: var(--md-sys-color-outline);
+      transform: translateX(3px);
+      box-shadow: var(--md-elevation-2);
     }
     .s30-drawer-nav-item.admin-access-item:hover {
-      border-color: #00f0ff;
-      box-shadow: 3px 3px 0px #00f0ff;
+      border-color: var(--md-sys-color-secondary);
+      box-shadow: var(--md-elevation-2);
     }
 
     .s30-nav-item-icon {
       width: 32px;
       height: 32px;
-      border-radius: 5px;
+      border-radius: var(--md-shape-sm);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 13px;
-      font-weight: 900;
+      font-weight: 800;
       flex-shrink: 0;
-      background: #0f172a;
-      border: 1.5px solid #1e293b;
+      background: var(--md-sys-color-surface);
+      border: 1px solid var(--md-sys-color-outline-variant);
     }
 
     .s30-nav-item-text {
@@ -400,12 +396,12 @@
     }
     .s30-nav-item-text strong {
       font-size: 13px;
-      font-weight: 800;
-      color: #ffffff;
+      font-weight: 700;
+      color: var(--s30-text-primary);
     }
     .s30-nav-item-text span {
       font-size: 11px;
-      color: #94a3b8;
+      color: var(--s30-text-secondary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -413,8 +409,8 @@
 
     .s30-nav-item-arrow {
       font-size: 14px;
-      font-weight: 900;
-      color: #FFE600;
+      font-weight: 800;
+      color: var(--md-sys-color-primary);
       transition: transform 0.15s ease;
     }
     .s30-drawer-nav-item:hover .s30-nav-item-arrow {
@@ -423,8 +419,8 @@
 
     .s30-drawer-footer {
       padding: 16px 20px;
-      background: #050811;
-      border-top: 2.5px solid #1e293b;
+      background: var(--md-sys-color-surface-container-low);
+      border-top: 1px solid var(--md-sys-color-outline-variant);
     }
 
     @keyframes pulseNotification {
@@ -477,11 +473,11 @@
       <div class="s30-nav-actions" style="display: flex; align-items: center; gap: 12px;">
         {% if logged_user and logged_user.user_code %}
           <div style="display: flex; align-items: center; gap: 10px;">
-            <button id="s30-id-badge-btn" class="s30-profile-trigger-btn" style="position: relative; padding: 5px 12px !important; gap: 6px !important; background: #090f1d !important; cursor: pointer !important;" title="Click to view candidate passport menu">
-              <span style="font-size: 11px; font-weight: 900; color: #FFE600; text-transform: uppercase; letter-spacing: 0.05em;">ID:</span>
-              <span style="font-family: monospace; font-size: 13px; font-weight: 900; color: #ffffff; letter-spacing: 0.08em;">{{ logged_user.user_code }}</span>
+            <button id="s30-id-badge-btn" class="s30-profile-trigger-btn" style="position: relative; padding: 6px 14px !important; gap: 6px !important; background: var(--md-sys-color-surface-container) !important; cursor: pointer !important; border: 1px solid var(--md-sys-color-outline) !important; border-radius: var(--md-shape-sm) !important; box-shadow: var(--md-elevation-1) !important;" title="Click to view candidate passport menu">
+              <span style="font-size: 11px; font-weight: 800; color: var(--md-sys-color-primary); text-transform: uppercase; letter-spacing: 0.05em;">ID:</span>
+              <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: var(--s30-text-primary); letter-spacing: 0.05em;">{{ logged_user.user_code }}</span>
               {% if unread_mailbox_count and unread_mailbox_count > 0 %}
-                <span style="position: absolute; top: -4px; right: -4px; width: 10px; height: 10px; background: #ff2a85; border-radius: 50%; border: 1.5px solid #000000; box-shadow: 0 0 6px #ff2a85;"></span>
+                <span style="position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: var(--md-sys-color-error); border-radius: 50%;"></span>
               {% endif %}
             </button>
             <a href="{{ url_for('user_logout') }}" class="neo-btn neo-btn-pink" style="padding: 6px 14px !important; font-size: 11.5px !important;">
@@ -489,8 +485,8 @@
             </a>
           </div>
         {% elif request.endpoint in ['landing_page', 'login_page', 'signup_profile', 'signup_new'] %}
-          <a href="{{ url_for('login_page') }}" class="s30-btn-outline" style="border: 2.5px solid #ffffff !important; background: #0f172a !important; color: #ffffff !important; box-shadow: 4px 4px 0px #00f0ff !important; font-weight: 900 !important;">LOGIN</a>
-          <a href="{{ url_for('signup_profile') }}" class="s30-btn-primary" style="background: #FFE600 !important; color: #000000 !important; border: 2.5px solid #000000 !important; box-shadow: 4px 4px 0px #00f0ff !important; font-weight: 900 !important;">GET STARTED</a>
+          <a href="{{ url_for('login_page') }}" class="s30-btn-outline" style="border: 1px solid var(--md-sys-color-outline) !important; background: var(--md-sys-color-surface-container) !important; color: #ffffff !important; box-shadow: var(--md-elevation-1) !important; font-weight: 700 !important;">LOGIN</a>
+          <a href="{{ url_for('signup_profile') }}" class="s30-btn-primary" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; border: none !important; box-shadow: var(--md-elevation-1) !important; font-weight: 800 !important;">GET STARTED</a>
         {% endif %}
       </div>
     </div>
@@ -504,10 +500,10 @@
     <div class="s30-drawer-header">
       <div class="s30-drawer-brand">
         <span class="s30-logo-badge" style="font-size: 16px; padding: 2px 7px;">S30</span>
-        <span style="font-size: 12.5px; font-weight: 900; color: #FFE600; letter-spacing: 0.05em; text-transform: uppercase;">PROFILE &amp; MENU</span>
+        <span style="font-size: 12.5px; font-weight: 800; color: var(--md-sys-color-primary); letter-spacing: 0.05em; text-transform: uppercase;">PROFILE &amp; MENU</span>
       </div>
       <button id="s30-drawer-close" class="s30-drawer-close-btn" aria-label="Close navigation menu" title="Close Menu (Esc)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -547,64 +543,64 @@
       <!-- Matchmaking & Squad Options -->
       <div class="s30-drawer-section-title">MATCHMAKING &amp; SQUAD</div>
       <nav class="s30-drawer-nav">
-        <a href="{{ url_for('signup_analysis') }}" id="drawer-link-internship" class="s30-drawer-nav-item" style="border-color: #00f0ff; box-shadow: 3px 3px 0px #00f0ff; background: #0c1527;">
-          <span class="s30-nav-item-icon" style="background: rgba(0, 240, 255, 0.2); color: #00f0ff; border-color: #00f0ff; font-size: 16px;">💼</span>
+        <a href="{{ url_for('signup_analysis') }}" id="drawer-link-internship" class="s30-drawer-nav-item">
+          <span class="s30-nav-item-icon" style="color: var(--md-sys-color-secondary);">💼</span>
           <div class="s30-nav-item-text">
-            <strong style="color: #00f0ff;">1. Internship Purpose</strong>
-            <span style="color: #cbd5e1;">Legal government &amp; corporate partner internships</span>
+            <strong style="color: var(--md-sys-color-secondary);">1. Internship Purpose</strong>
+            <span>Legal government &amp; corporate partner internships</span>
           </div>
-          <span class="s30-nav-item-arrow" style="color: #00f0ff;">→</span>
+          <span class="s30-nav-item-arrow">→</span>
         </a>
 
         {% if current_squad %}
-        <a href="{{ url_for('team_manage') }}" id="drawer-link-team" class="s30-drawer-nav-item" style="border-color: #ff2a85; box-shadow: 3px 3px 0px #ff2a85; background: #0c1527;">
-          <span class="s30-nav-item-icon" style="background: rgba(255, 42, 133, 0.2); color: #ff2a85; border-color: #ff2a85; font-size: 16px;">🚀</span>
+        <a href="{{ url_for('team_manage') }}" id="drawer-link-team" class="s30-drawer-nav-item">
+          <span class="s30-nav-item-icon" style="color: var(--md-sys-color-error);">🚀</span>
           <div class="s30-nav-item-text">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
-              <strong style="color: #ff2a85;">My Squad &amp; Teammates</strong>
+              <strong style="color: var(--md-sys-color-error);">My Squad &amp; Teammates</strong>
               <span class="neo-badge neo-badge-pink" style="font-size: 9.5px; padding: 1px 6px;">{{ current_squad.role }}</span>
             </div>
-            <span style="color: #cbd5e1;">{{ current_squad.team_name }} ({{ current_squad.team_code }})</span>
+            <span>{{ current_squad.team_name }} ({{ current_squad.team_code }})</span>
           </div>
-          <span class="s30-nav-item-arrow" style="color: #ff2a85;">→</span>
+          <span class="s30-nav-item-arrow" style="color: var(--md-sys-color-error);">→</span>
         </a>
         {% else %}
-        <a href="{{ url_for('team_create') }}" id="drawer-link-team" class="s30-drawer-nav-item" style="border-color: #ff2a85; box-shadow: 3px 3px 0px #ff2a85; background: #0c1527;">
-          <span class="s30-nav-item-icon" style="background: rgba(255, 42, 133, 0.2); color: #ff2a85; border-color: #ff2a85; font-size: 16px;">🚀</span>
+        <a href="{{ url_for('team_create') }}" id="drawer-link-team" class="s30-drawer-nav-item">
+          <span class="s30-nav-item-icon" style="color: var(--md-sys-color-error);">🚀</span>
           <div class="s30-nav-item-text">
-            <strong style="color: #ff2a85;">Create Team / Squad</strong>
-            <span style="color: #cbd5e1;">Define team name, size &amp; invite candidates by ID</span>
+            <strong style="color: var(--md-sys-color-error);">Create Team / Squad</strong>
+            <span>Define team name, size &amp; invite candidates by ID</span>
           </div>
-          <span class="s30-nav-item-arrow" style="color: #ff2a85;">→</span>
+          <span class="s30-nav-item-arrow" style="color: var(--md-sys-color-error);">→</span>
         </a>
         {% endif %}
 
-        <a href="{{ url_for('mailbox') }}" id="drawer-link-mailbox" class="s30-drawer-nav-item" style="border-color: #FFE600; box-shadow: 3px 3px 0px #FFE600; background: #0c1527;">
-          <span class="s30-nav-item-icon" style="background: rgba(255, 230, 0, 0.2); color: #FFE600; border-color: #FFE600; font-size: 16px; position: relative;">
+        <a href="{{ url_for('mailbox') }}" id="drawer-link-mailbox" class="s30-drawer-nav-item">
+          <span class="s30-nav-item-icon" style="color: var(--md-sys-color-primary); position: relative;">
             📬
             {% if unread_mailbox_count and unread_mailbox_count > 0 %}
-              <span style="position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: #ff2a85; border-radius: 50%; border: 1.5px solid #000000;"></span>
+              <span style="position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: var(--md-sys-color-error); border-radius: 50%;"></span>
             {% endif %}
           </span>
           <div class="s30-nav-item-text">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px;">
-              <strong style="color: #FFE600;">Mailbox</strong>
+              <strong style="color: var(--md-sys-color-primary);">Mailbox</strong>
               {% if unread_mailbox_count and unread_mailbox_count > 0 %}
-                <span class="neo-badge neo-badge-pink" style="font-size: 10px; padding: 1px 7px; animation: pulseNotification 1.8s infinite;">{{ unread_mailbox_count }} NEW</span>
+                <span class="neo-badge neo-badge-pink" style="font-size: 10px; padding: 1px 7px;">{{ unread_mailbox_count }} NEW</span>
               {% endif %}
             </div>
-            <span style="color: #cbd5e1;">Team invitations &amp; member join requests</span>
+            <span>Team invitations &amp; member join requests</span>
           </div>
-          <span class="s30-nav-item-arrow" style="color: #FFE600;">→</span>
+          <span class="s30-nav-item-arrow">→</span>
         </a>
 
-        <a href="{{ url_for('find_teams') }}" id="drawer-link-findteam" class="s30-drawer-nav-item" style="border-color: #22c55e; box-shadow: 3px 3px 0px #22c55e; background: #0c1527;">
-          <span class="s30-nav-item-icon" style="background: rgba(34, 197, 94, 0.2); color: #22c55e; border-color: #22c55e; font-size: 16px;">🔎</span>
+        <a href="{{ url_for('find_teams') }}" id="drawer-link-findteam" class="s30-drawer-nav-item">
+          <span class="s30-nav-item-icon" style="color: var(--md-sys-color-tertiary);">🔎</span>
           <div class="s30-nav-item-text">
-            <strong style="color: #22c55e;">Find a Squad</strong>
-            <span style="color: #cbd5e1;">Browse open squads &amp; request to join by code</span>
+            <strong style="color: var(--md-sys-color-tertiary);">Find a Squad</strong>
+            <span>Browse open squads &amp; request to join by code</span>
           </div>
-          <span class="s30-nav-item-arrow" style="color: #22c55e;">→</span>
+          <span class="s30-nav-item-arrow" style="color: var(--md-sys-color-tertiary);">→</span>
         </a>
       </nav>
     </div>
@@ -691,225 +687,8 @@
   </main>
   {% endblock %}
 
-  <!-- ================= MOVING NEO-BRUTALIST BACKGROUND OBJECTS ================= -->
-  <div class="neo-bg-container" style="position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;">
-    <!-- Interactive Canvas Particles -->
-    <canvas id="neoBgCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
-
-    <!-- Floating Ambient Geometric Shapes -->
-    <div class="neo-float-shape shape-1">✦</div>
-    <div class="neo-float-shape shape-2">⬡</div>
-    <div class="neo-float-shape shape-3">✚</div>
-    <div class="neo-float-shape shape-4">⚡</div>
-    <div class="neo-float-shape shape-5">◆</div>
-    <div class="neo-float-shape shape-6">✦</div>
-    <div class="neo-float-shape shape-7">✚</div>
-  </div>
-
-  <style>
-    .neo-float-shape {
-      position: absolute;
-      font-weight: 900;
-      user-select: none;
-      pointer-events: none;
-      filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.8));
-    }
-    
-    .shape-1 {
-      top: 12%;
-      left: 6%;
-      font-size: 38px;
-      color: #FFE600;
-      animation: floatRotate1 14s infinite ease-in-out;
-      opacity: 0.65;
-    }
-    .shape-2 {
-      top: 25%;
-      right: 8%;
-      font-size: 46px;
-      color: #00f0ff;
-      animation: floatRotate2 18s infinite ease-in-out;
-      opacity: 0.55;
-    }
-    .shape-3 {
-      bottom: 22%;
-      left: 10%;
-      font-size: 42px;
-      color: #ff2a85;
-      animation: floatRotate3 16s infinite ease-in-out;
-      opacity: 0.6;
-    }
-    .shape-4 {
-      top: 60%;
-      right: 12%;
-      font-size: 34px;
-      color: #FFE600;
-      animation: floatRotate1 12s infinite ease-in-out;
-      opacity: 0.7;
-    }
-    .shape-5 {
-      bottom: 10%;
-      right: 25%;
-      font-size: 36px;
-      color: #22c55e;
-      animation: floatRotate2 15s infinite ease-in-out;
-      opacity: 0.6;
-    }
-    .shape-6 {
-      top: 80%;
-      left: 20%;
-      font-size: 32px;
-      color: #c084fc;
-      animation: floatRotate3 20s infinite ease-in-out;
-      opacity: 0.5;
-    }
-    .shape-7 {
-      top: 8%;
-      right: 32%;
-      font-size: 30px;
-      color: #ffffff;
-      animation: floatRotate1 17s infinite ease-in-out;
-      opacity: 0.45;
-    }
-
-    @keyframes floatRotate1 {
-      0% { transform: translateY(0px) rotate(0deg) scale(1); }
-      50% { transform: translateY(-24px) rotate(180deg) scale(1.1); }
-      100% { transform: translateY(0px) rotate(360deg) scale(1); }
-    }
-    @keyframes floatRotate2 {
-      0% { transform: translateY(0px) rotate(0deg) scale(1.1); }
-      50% { transform: translateY(28px) rotate(-180deg) scale(0.95); }
-      100% { transform: translateY(0px) rotate(-360deg) scale(1.1); }
-    }
-    @keyframes floatRotate3 {
-      0% { transform: translate(0px, 0px) rotate(0deg); }
-      33% { transform: translate(18px, -20px) rotate(120deg); }
-      66% { transform: translate(-18px, 15px) rotate(240deg); }
-      100% { transform: translate(0px, 0px) rotate(360deg); }
-    }
-  </style>
-
-  <!-- High-Performance Animated Particle Engine -->
+  <!-- Interactive Controller for Profile & Navigation Menu Drawer -->
   <script>
-    (function() {
-      const canvas = document.getElementById('neoBgCanvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      let width, height;
-      let mouse = { x: null, y: null };
-
-      function resize() {
-        width = canvas.width = window.innerWidth;
-        height = canvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resize);
-      window.addEventListener('mousemove', (e) => {
-        mouse.x = e.clientX;
-        mouse.y = e.clientY;
-      });
-      resize();
-
-      const colors = ['#FFE600', '#00f0ff', '#ff2a85', '#22c55e', '#ffffff'];
-      const shapes = ['star', 'plus', 'square', 'ring', 'triangle'];
-
-      class NeoParticle {
-        constructor() {
-          this.reset();
-        }
-        reset() {
-          this.x = Math.random() * width;
-          this.y = Math.random() * height;
-          this.size = Math.random() * 14 + 10;
-          this.vx = (Math.random() - 0.5) * 0.6;
-          this.vy = (Math.random() - 0.5) * 0.6;
-          this.rotation = Math.random() * Math.PI * 2;
-          this.vRot = (Math.random() - 0.5) * 0.03;
-          this.color = colors[Math.floor(Math.random() * colors.length)];
-          this.shape = shapes[Math.floor(Math.random() * shapes.length)];
-          this.opacity = Math.random() * 0.4 + 0.25;
-        }
-        update() {
-          this.x += this.vx;
-          this.y += this.vy;
-          this.rotation += this.vRot;
-
-          // Wrap screen bounds
-          if (this.x < -40) this.x = width + 40;
-          if (this.x > width + 40) this.x = -40;
-          if (this.y < -40) this.y = height + 40;
-          if (this.y > height + 40) this.y = -40;
-
-          // Subtle mouse repel
-          if (mouse.x !== null) {
-            let dx = this.x - mouse.x;
-            let dy = this.y - mouse.y;
-            let dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 120) {
-              let force = (120 - dist) / 120;
-              this.x += (dx / dist) * force * 1.5;
-              this.y += (dy / dist) * force * 1.5;
-            }
-          }
-        }
-        draw() {
-          ctx.save();
-          ctx.translate(this.x, this.y);
-          ctx.rotate(this.rotation);
-          ctx.globalAlpha = this.opacity;
-          ctx.strokeStyle = this.color;
-          ctx.lineWidth = 2;
-          ctx.fillStyle = this.color;
-
-          if (this.shape === 'plus') {
-            const s = this.size;
-            ctx.beginPath();
-            ctx.moveTo(-s/2, 0); ctx.lineTo(s/2, 0);
-            ctx.moveTo(0, -s/2); ctx.lineTo(0, s/2);
-            ctx.stroke();
-          } else if (this.shape === 'square') {
-            const s = this.size * 0.7;
-            ctx.strokeRect(-s/2, -s/2, s, s);
-          } else if (this.shape === 'ring') {
-            ctx.beginPath();
-            ctx.arc(0, 0, this.size * 0.4, 0, Math.PI * 2);
-            ctx.stroke();
-          } else if (this.shape === 'triangle') {
-            const s = this.size * 0.6;
-            ctx.beginPath();
-            ctx.moveTo(0, -s);
-            ctx.lineTo(s, s * 0.8);
-            ctx.lineTo(-s, s * 0.8);
-            ctx.closePath();
-            ctx.stroke();
-          } else if (this.shape === 'star') {
-            const s = this.size * 0.6;
-            ctx.beginPath();
-            ctx.moveTo(0, -s);
-            ctx.quadraticCurveTo(0, 0, s, 0);
-            ctx.quadraticCurveTo(0, 0, 0, s);
-            ctx.quadraticCurveTo(0, 0, -s, 0);
-            ctx.quadraticCurveTo(0, 0, 0, -s);
-            ctx.fill();
-          }
-          ctx.restore();
-        }
-      }
-
-      const particles = Array.from({ length: 26 }, () => new NeoParticle());
-
-      function animate() {
-        ctx.clearRect(0, 0, width, height);
-        for (let i = 0; i < particles.length; i++) {
-          particles[i].update();
-          particles[i].draw();
-        }
-        requestAnimationFrame(animate);
-      }
-      animate();
-    })();
-
-    // Interactive Controller for Profile & Navigation Menu Drawer
     (function initS30NavDrawer() {
       const profileBtn = document.getElementById('s30-profile-menu-btn');
       const idBadgeBtn = document.getElementById('s30-id-badge-btn');
@@ -1124,18 +903,18 @@
   </script>
 
   <!-- ================= UNIVERSAL PHOTO & DOCUMENT VIEWER MODAL (CROSS-BROWSER) ================= -->
-  <div id="s30-universal-media-modal" style="display: none; position: fixed; inset: 0; background: rgba(3, 7, 18, 0.88); backdrop-filter: blur(8px); z-index: 99999; align-items: center; justify-content: center; padding: 16px;" onclick="if(event.target.id==='s30-universal-media-modal') closeMediaPreview();">
-    <div style="background: #0c1322; border: 3px solid #00f0ff; border-radius: 10px; width: 100%; max-width: 900px; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 8px 8px 0px #FFE600;">
+  <div id="s30-universal-media-modal" style="display: none; position: fixed; inset: 0; background: var(--md-sys-color-scrim); z-index: 99999; align-items: center; justify-content: center; padding: 16px;" onclick="if(event.target.id==='s30-universal-media-modal') closeMediaPreview();">
+    <div style="background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-lg); width: 100%; max-width: 900px; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: var(--md-elevation-4);">
       
       <!-- Modal Header -->
-      <div style="padding: 16px 20px; background: #090f1d; border-bottom: 2.5px solid #00f0ff; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <div style="padding: 16px 20px; background: var(--md-sys-color-surface-container-low); border-bottom: 1px solid var(--md-sys-color-outline-variant); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
         <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
           <span id="modal-preview-badge" class="neo-badge neo-badge-yellow" style="font-size: 11px; padding: 3px 8px; flex-shrink: 0;">PHOTO PREVIEW</span>
           <div style="min-width: 0;">
-            <h3 id="modal-preview-title" style="font-size: 15px; font-weight: 900; color: #ffffff; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">
+            <h3 id="modal-preview-title" style="font-size: 15px; font-weight: 800; color: var(--s30-text-primary); margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">
               Document Viewer
             </h3>
-            <div id="modal-preview-subtitle" style="font-size: 11.5px; color: #94a3b8; font-weight: 600;">
+            <div id="modal-preview-subtitle" style="font-size: 11.5px; color: var(--s30-text-secondary); font-weight: 500;">
               High-resolution direct credential inspection
             </div>
           </div>

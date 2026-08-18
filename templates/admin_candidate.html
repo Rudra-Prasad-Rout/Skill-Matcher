@@ -48,12 +48,12 @@
 
     /* Dossier Cards */
     .s30-dossier-card {
-      background: #0c1322;
-      border: 2.5px solid #ffffff;
-      border-radius: 8px;
+      background: var(--md-sys-color-surface-container);
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: var(--md-shape-lg);
       padding: 24px;
       margin-bottom: 20px;
-      box-shadow: 6px 6px 0px #38BDF8;
+      box-shadow: var(--md-elevation-2);
       width: 100%;
       overflow: hidden;
     }
@@ -86,20 +86,20 @@
     .candidate-name-h1 {
       font-size: 24px;
       font-weight: 800;
-      color: #ffffff;
+      color: var(--s30-text-primary);
       margin: 0;
       word-break: break-word;
     }
 
     .candidate-id-pill {
-      background: rgba(99, 102, 241, 0.25);
-      border: 1px solid rgba(99, 102, 241, 0.5);
-      color: #38bdf8;
+      background: var(--md-sys-color-secondary-container);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--md-sys-color-secondary);
       font-family: monospace;
-      font-size: 14px;
-      font-weight: 800;
+      font-size: 13.5px;
+      font-weight: 700;
       padding: 4px 10px;
-      border-radius: 8px;
+      border-radius: var(--md-shape-sm);
       white-space: nowrap;
     }
 
@@ -108,10 +108,10 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 14px;
-      background: #090f1d;
-      border: 2px solid #D9A726;
-      box-shadow: 3px 3px 0px #D9A726;
-      border-radius: 6px;
+      background: var(--md-sys-color-surface);
+      border: 1px solid var(--md-sys-color-outline);
+      box-shadow: var(--md-elevation-1);
+      border-radius: var(--md-shape-md);
       padding: 16px;
       margin-top: 14px;
       width: 100%;
@@ -134,7 +134,7 @@
     .detail-val {
       font-size: 14px;
       font-weight: 600;
-      color: #fff;
+      color: var(--s30-text-primary);
       margin-top: 3px;
       overflow-wrap: anywhere;
       word-break: break-word;
@@ -150,11 +150,11 @@
     }
 
     .id-card-preview-box {
-      border: 2px solid #38BDF8;
-      box-shadow: 4px 4px 0px #38BDF8;
-      border-radius: 6px;
+      border: 1px solid var(--md-sys-color-outline);
+      box-shadow: var(--md-elevation-2);
+      border-radius: var(--md-shape-md);
       overflow: hidden;
-      background: #020617;
+      background: var(--md-sys-color-surface);
       display: flex;
       flex-direction: column;
     }
@@ -168,20 +168,20 @@
 
     .id-card-footer {
       padding: 10px 14px;
-      background: rgba(15, 23, 42, 0.9);
+      background: var(--md-sys-color-surface-container);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-top: 1px solid var(--s30-border);
+      border-top: 1px solid var(--md-sys-color-outline-variant);
       flex-wrap: wrap;
       gap: 8px;
     }
 
     /* Skills */
     .skill-card-item {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--s30-border);
-      border-radius: 10px;
+      background: var(--md-sys-color-surface);
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: var(--md-shape-md);
       padding: 14px 16px;
       display: flex;
       justify-content: space-between;
@@ -189,6 +189,7 @@
       gap: 12px;
       flex-wrap: wrap;
       width: 100%;
+      box-shadow: var(--md-elevation-1);
     }
 
     .skill-card-info {
@@ -198,7 +199,7 @@
 
     .skill-url {
       font-size: 12.5px;
-      color: var(--s30-accent-cyan);
+      color: var(--md-sys-color-secondary);
       text-decoration: underline;
       display: inline-flex;
       align-items: center;
@@ -218,9 +219,9 @@
 
     /* Certificate Rows */
     .cert-row-item {
-      background: rgba(15, 23, 42, 0.7);
-      border: 1px solid var(--s30-border);
-      border-radius: 12px;
+      background: var(--md-sys-color-surface);
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: var(--md-shape-md);
       padding: 16px;
       display: flex;
       justify-content: space-between;
@@ -228,6 +229,7 @@
       gap: 14px;
       flex-wrap: wrap;
       width: 100%;
+      box-shadow: var(--md-elevation-1);
     }
 
     .cert-row-info {
@@ -252,15 +254,16 @@
     }
 
     .internship-match-card {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--s30-border);
-      border-radius: 12px;
+      background: var(--md-sys-color-surface);
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: var(--md-shape-md);
       padding: 16px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       gap: 12px;
       width: 100%;
+      box-shadow: var(--md-elevation-1);
     }
 
     /* Mobile Responsive Rules */
@@ -284,8 +287,7 @@
       .s30-dossier-card {
         padding: 16px 12px;
         margin-bottom: 16px;
-        box-shadow: 4px 4px 0px #38BDF8;
-        border-width: 2px;
+        box-shadow: var(--md-elevation-2);
       }
 
       .candidate-header-bar {
@@ -781,31 +783,5 @@
     }
   </script>
 
-  <!-- Moving Background Floating Shapes (Candidate Dossier) -->
-  <div style="position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;">
-    <div style="position: absolute; top: 14%; left: 5%; font-size: 38px; color: #D9A726; animation: floatRotate1 15s infinite ease-in-out; opacity: 0.45; filter: drop-shadow(3px 3px 0px #000);">✦</div>
-    <div style="position: absolute; top: 35%; right: 6%; font-size: 44px; color: #38BDF8; animation: floatRotate2 18s infinite ease-in-out; opacity: 0.4; filter: drop-shadow(3px 3px 0px #000);">⬡</div>
-    <div style="position: absolute; bottom: 22%; left: 8%; font-size: 40px; color: #E0536C; animation: floatRotate3 16s infinite ease-in-out; opacity: 0.4; filter: drop-shadow(3px 3px 0px #000);">✚</div>
-    <div style="position: absolute; bottom: 12%; right: 10%; font-size: 36px; color: #34A853; animation: floatRotate1 13s infinite ease-in-out; opacity: 0.45; filter: drop-shadow(3px 3px 0px #000);">◆</div>
-  </div>
-
-  <style>
-    @keyframes floatRotate1 {
-      0% { transform: translateY(0px) rotate(0deg) scale(1); }
-      50% { transform: translateY(-22px) rotate(180deg) scale(1.1); }
-      100% { transform: translateY(0px) rotate(360deg) scale(1); }
-    }
-    @keyframes floatRotate2 {
-      0% { transform: translateY(0px) rotate(0deg) scale(1.1); }
-      50% { transform: translateY(26px) rotate(-180deg) scale(0.95); }
-      100% { transform: translateY(0px) rotate(-360deg) scale(1.1); }
-    }
-    @keyframes floatRotate3 {
-      0% { transform: translate(0px, 0px) rotate(0deg); }
-      33% { transform: translate(16px, -18px) rotate(120deg); }
-      66% { transform: translate(-16px, 14px) rotate(240deg); }
-      100% { transform: translate(0px, 0px) rotate(360deg); }
-    }
-  </style>
 </body>
 </html>
