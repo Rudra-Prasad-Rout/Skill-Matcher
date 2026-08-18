@@ -511,21 +511,31 @@
         let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 12px;">';
         data.candidates.forEach(c => {
           const alreadyInvited = {{ invited_ids | tojson }}.includes(c.id);
+          const inTeam = c.is_in_team;
           html += `
-            <div style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid ${inTeam ? 'rgba(220, 38, 38, 0.35)' : 'rgba(221, 213, 199, 0.7)'}; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px;">
               <div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                   <strong style="color: var(--s30-text-primary, #1c1917); font-size: 14.5px;">${c.full_name}</strong>
                   <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; font-size: 10px;">ID: ${c.user_code}</span>
                 </div>
                 <div style="font-size: 12px; color: var(--s30-text-secondary, #57534e);">${c.school || 'Verified Student'}</div>
-                <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;">
-                  ${(c.skills || []).map(s => `<span class="neo-badge" style="background: rgba(37, 99, 235, 0.08); color: #2563eb; font-size: 9.5px;">${s}</span>`).join('')}
-                </div>
+
+                ${inTeam 
+                  ? `<div style="background: rgba(220, 38, 38, 0.08); border: 1px solid rgba(220, 38, 38, 0.25); border-radius: 6px; padding: 6px 10px; margin-top: 8px; font-size: 11.5px; color: #dc2626; font-weight: 700; display: flex; align-items: center; gap: 6px;">
+                      <span>⚠️ ${c.team_status_msg || 'Already in an active squad'}</span>
+                    </div>`
+                  : `<div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;">
+                      ${(c.skills || []).map(s => `<span class="neo-badge" style="background: rgba(37, 99, 235, 0.08); color: #2563eb; font-size: 9.5px;">${s}</span>`).join('')}
+                    </div>`
+                }
               </div>
-              ${alreadyInvited
-                ? `<button disabled class="neo-btn" style="width: 100%; padding: 7px !important; font-size: 11.5px !important; background: rgba(234, 228, 217, 0.6); color: var(--s30-text-muted, #78716c); border: 1px solid rgba(221, 213, 199, 0.7); cursor: not-allowed;">✓ ALREADY INVITED / IN SQUAD</button>`
-                : `<button type="button" onclick="sendInviteToCandidate(${c.id}, '${c.user_code}', '${c.full_name}')" class="neo-btn" style="width: 100%; padding: 7px !important; font-size: 11.5px !important; font-weight: 800 !important; background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important;">✉️ INVITE ${c.user_code} →</button>`
+              ${inTeam
+                ? `<button disabled class="neo-btn" style="width: 100%; padding: 7px !important; font-size: 11px !important; background: rgba(220, 38, 38, 0.08); color: #dc2626; border: 1px solid rgba(220, 38, 38, 0.25); cursor: not-allowed; font-weight: 800;">🚫 ALREADY IN A SQUAD</button>`
+                : (alreadyInvited
+                  ? `<button disabled class="neo-btn" style="width: 100%; padding: 7px !important; font-size: 11.5px !important; background: rgba(234, 228, 217, 0.6); color: var(--s30-text-muted, #78716c); border: 1px solid rgba(221, 213, 199, 0.7); cursor: not-allowed;">✓ ALREADY INVITED</button>`
+                  : `<button type="button" id="btn-invite-${c.id}" onclick="sendInviteToCandidate(${c.id}, '${c.user_code}', '${c.full_name}')" class="neo-btn" style="width: 100%; padding: 7px !important; font-size: 11.5px !important; font-weight: 800 !important; background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important;">✉️ INVITE ${c.user_code} →</button>`
+                )
               }
             </div>
           `;

@@ -1993,6 +1993,36 @@ def api_team_search_candidate():
         cand_dict = dict(r)
         skills = conn.execute("SELECT skill_name FROM user_skills WHERE user_id = ?", (cand_dict["id"],)).fetchall()
         cand_dict["skills"] = [s["skill_name"] for s in skills]
+
+        # Check if candidate leads a squad
+        leads_team = conn.execute("SELECT team_name, team_code FROM teams WHERE leader_id = ?", (cand_dict["id"],)).fetchone()
+        if leads_team:
+            cand_dict["is_in_team"] = True
+            cand_dict["team_name"] = leads_team["team_name"]
+            cand_dict["team_role"] = "Leader"
+            cand_dict["team_status_msg"] = f"Already in a squad (leads '{leads_team['team_name']}')"
+        else:
+            # Check if candidate is an accepted member of any squad
+            member_of = conn.execute("""
+            SELECT t.team_name, t.team_code FROM team_invites ti
+            JOIN teams t ON ti.team_id = t.id
+            WHERE ti.status = 'ACCEPTED' AND (
+                (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+                (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+            )
+            LIMIT 1
+            """, (cand_dict["id"], cand_dict["id"])).fetchone()
+            if member_of:
+                cand_dict["is_in_team"] = True
+                cand_dict["team_name"] = member_of["team_name"]
+                cand_dict["team_role"] = "Member"
+                cand_dict["team_status_msg"] = f"Already in a squad (member of '{member_of['team_name']}')"
+            else:
+                cand_dict["is_in_team"] = False
+                cand_dict["team_name"] = None
+                cand_dict["team_role"] = None
+                cand_dict["team_status_msg"] = "Available for squad"
+
         candidates.append(cand_dict)
         
     conn.close()
