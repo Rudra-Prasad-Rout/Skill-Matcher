@@ -9,7 +9,7 @@
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;">
     <div>
       <div style="margin-bottom: 8px;">
-        <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.25);">📬 INBOX &amp; COMMUNICATIONS</span>
+        <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.25); backdrop-filter: blur(8px);">📬 INBOX &amp; COMMUNICATIONS</span>
       </div>
       <h1 style="font-size: 32px; font-weight: 900; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: -0.02em; margin: 0;">
         Mailbox
@@ -23,7 +23,7 @@
       <a href="{{ url_for('team_create') }}" class="neo-btn" style="background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; padding: 10px 18px !important; font-size: 13px !important; font-weight: 700 !important;">
         <span>+ CREATE NEW SQUAD</span>
       </a>
-      <a href="{{ url_for('candidate_home') }}" class="neo-btn" style="background: #ffffff !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important; padding: 10px 18px !important; font-size: 13px !important;">
+      <a href="{{ url_for('candidate_home') }}" class="neo-btn" style="background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid rgba(221, 213, 199, 0.8) !important; padding: 10px 18px !important; font-size: 13px !important; backdrop-filter: blur(8px);">
         <span>&larr; CANDIDATE DASHBOARD</span>
       </a>
     </div>
@@ -33,7 +33,7 @@
   <div id="toast-container" style="margin-bottom: 20px; display: none;"></div>
 
   <!-- Mini Join Request by Squad Code Box -->
-  <div style="padding: 20px 24px; margin-bottom: 28px; background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="padding: 20px 24px; margin-bottom: 28px; background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
     <div style="max-width: 540px;">
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
         <span style="font-size: 18px;">🔑</span>
@@ -49,7 +49,7 @@
         type="text" 
         id="join-team-code-input" 
         placeholder="e.g. SQD-A7X9" 
-        style="background: #ffffff; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 10px 14px; font-size: 14px; font-weight: 700; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; width: 160px; outline: none;"
+        style="background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 10px 14px; font-size: 14px; font-weight: 700; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; width: 160px; outline: none;"
       >
       <button 
         type="button" 
@@ -63,7 +63,7 @@
   </div>
 
   <!-- Interactive Mailbox Tabs -->
-  <div style="display: flex; gap: 10px; margin-bottom: 22px; border-bottom: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-bottom: 12px; flex-wrap: wrap;">
+  <div style="display: flex; gap: 10px; margin-bottom: 22px; border-bottom: 1px solid rgba(221, 213, 199, 0.7); padding-bottom: 12px; flex-wrap: wrap;">
     <button 
       id="tab-btn-invites" 
       onclick="switchMailboxTab('invites')" 
@@ -78,7 +78,7 @@
       id="tab-btn-requests" 
       onclick="switchMailboxTab('requests')" 
       class="neo-btn" 
-      style="padding: 9px 18px !important; font-size: 13px !important; font-weight: 600 !important; background: #ffffff !important; color: var(--s30-text-secondary, #57534e) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important; display: flex; align-items: center; gap: 8px;"
+      style="padding: 9px 18px !important; font-size: 13px !important; font-weight: 600 !important; background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-secondary, #57534e) !important; border: 1.5px solid rgba(221, 213, 199, 0.8) !important; display: flex; align-items: center; gap: 8px; backdrop-filter: blur(8px);"
     >
       <span>👥 MEMBER JOIN REQUESTS</span>
       <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; font-size: 10px; padding: 1px 7px;">{{ join_requests|length }}</span>
@@ -88,7 +88,7 @@
       id="tab-btn-sent" 
       onclick="switchMailboxTab('sent')" 
       class="neo-btn" 
-      style="padding: 9px 18px !important; font-size: 13px !important; font-weight: 600 !important; background: #ffffff !important; color: var(--s30-text-secondary, #57534e) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important;"
+      style="padding: 9px 18px !important; font-size: 13px !important; font-weight: 600 !important; background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-secondary, #57534e) !important; border: 1.5px solid rgba(221, 213, 199, 0.8) !important; backdrop-filter: blur(8px);"
     >
       <span>📤 SENT HISTORY ({{ sent_items|length }})</span>
     </button>
@@ -99,7 +99,7 @@
     {% if invitations %}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px;">
       {% for inv in invitations %}
-      <div id="mailbox-item-{{ inv.invite_id }}" style="padding: 22px; background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
+      <div id="mailbox-item-{{ inv.invite_id }}" style="padding: 22px; background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
         <div>
           <!-- Header -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px;">
@@ -115,7 +115,7 @@
           </div>
 
           <!-- Squad Meta -->
-          <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
+          <div style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); border: 1px solid rgba(221, 213, 199, 0.7); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px;">
             <div style="font-size: 12.5px; color: var(--s30-text-secondary, #57534e);">
               Leader: <strong style="color: var(--s30-text-primary, #1c1917);">{{ inv.leader_name }}</strong> <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; font-size: 9.5px; padding: 1px 5px;">ID: {{ inv.leader_code }}</span>
             </div>
@@ -135,7 +135,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <div id="actions-box-{{ inv.invite_id }}" style="border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 12px; display: flex; gap: 8px;">
+        <div id="actions-box-{{ inv.invite_id }}" style="border-top: 1px solid rgba(221, 213, 199, 0.6); padding-top: 12px; display: flex; gap: 8px;">
           {% if inv.status in ['PENDING', 'INVITED'] %}
           <button 
             type="button" 
@@ -165,7 +165,7 @@
       {% endfor %}
     </div>
     {% else %}
-    <div style="background: var(--md-sys-color-surface, #ffffff); border: 2px dashed var(--md-sys-color-outline, #ddd5c7); border-radius: 12px; padding: 36px 20px; text-align: center; color: var(--s30-text-secondary, #57534e);">
+    <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px dashed rgba(221, 213, 199, 0.85); border-radius: 16px; padding: 36px 20px; text-align: center; color: var(--s30-text-secondary, #57534e);">
       <div style="font-size: 32px; margin-bottom: 8px;">📭</div>
       <strong style="color: var(--s30-text-primary, #1c1917); font-size: 16px; display: block; margin-bottom: 4px;">No Pending Squad Invitations</strong>
       <p style="font-size: 13.5px; max-width: 480px; margin: 0 auto; color: var(--s30-text-secondary, #57534e);">
@@ -180,7 +180,7 @@
     {% if join_requests %}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px;">
       {% for req in join_requests %}
-      <div id="mailbox-item-{{ req.request_id }}" style="padding: 22px; background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
+      <div id="mailbox-item-{{ req.request_id }}" style="padding: 22px; background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
         <div>
           <!-- Header -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px;">
@@ -196,7 +196,7 @@
           </div>
 
           <!-- Applicant Details -->
-          <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
+          <div style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); border: 1px solid rgba(221, 213, 199, 0.7); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px;">
             <div style="font-size: 12.5px; color: var(--s30-text-secondary, #57534e);">
               Requesting to Join: <strong style="color: #d97706;">{{ req.team_name }}</strong> (<code>{{ req.team_code }}</code>)
             </div>
@@ -221,7 +221,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <div id="actions-box-{{ req.request_id }}" style="border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 12px; display: flex; gap: 8px;">
+        <div id="actions-box-{{ req.request_id }}" style="border-top: 1px solid rgba(221, 213, 199, 0.6); padding-top: 12px; display: flex; gap: 8px;">
           {% if req.status in ['PENDING', 'INVITED'] %}
           <button 
             type="button" 
@@ -251,7 +251,7 @@
       {% endfor %}
     </div>
     {% else %}
-    <div style="background: var(--md-sys-color-surface, #ffffff); border: 2px dashed var(--md-sys-color-outline, #ddd5c7); border-radius: 12px; padding: 36px 20px; text-align: center; color: var(--s30-text-secondary, #57534e);">
+    <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px dashed rgba(221, 213, 199, 0.85); border-radius: 16px; padding: 36px 20px; text-align: center; color: var(--s30-text-secondary, #57534e);">
       <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
       <strong style="color: var(--s30-text-primary, #1c1917); font-size: 16px; display: block; margin-bottom: 4px;">No Pending Member Join Requests</strong>
       <p style="font-size: 13.5px; max-width: 480px; margin: 0 auto; color: var(--s30-text-secondary, #57534e);">
@@ -264,10 +264,10 @@
   <!-- ================= TAB 3: SENT HISTORY ================= -->
   <div id="tab-content-sent" style="display: none;">
     {% if sent_items %}
-    <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); overflow: hidden;">
+    <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); overflow: hidden;">
       <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px;">
         <thead>
-          <tr style="background: var(--md-sys-color-surface-container-low, #faf8f5); border-bottom: 1.5px solid var(--md-sys-color-outline, #ddd5c7); color: var(--s30-text-secondary, #57534e); font-weight: 800; text-transform: uppercase; font-size: 11px;">
+          <tr style="background: rgba(255, 255, 255, 0.6); border-bottom: 1.5px solid rgba(221, 213, 199, 0.7); color: var(--s30-text-secondary, #57534e); font-weight: 800; text-transform: uppercase; font-size: 11px;">
             <th style="padding: 14px 18px;">Type</th>
             <th style="padding: 14px 18px;">Target Squad / Candidate</th>
             <th style="padding: 14px 18px;">Sent Date</th>
@@ -276,7 +276,7 @@
         </thead>
         <tbody>
           {% for item in sent_items %}
-          <tr style="border-bottom: 1px solid var(--md-sys-color-outline, #ddd5c7);">
+          <tr style="border-bottom: 1px solid rgba(221, 213, 199, 0.6);">
             <td style="padding: 14px 18px;">
               {% if item.invite_type == 'INVITATION' %}
                 <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; font-size: 10px;">INVITE SENT</span>
@@ -304,7 +304,7 @@
       </table>
     </div>
     {% else %}
-    <div style="background: var(--md-sys-color-surface, #ffffff); border: 2px dashed var(--md-sys-color-outline, #ddd5c7); border-radius: 12px; padding: 36px 20px; text-align: center; color: var(--s30-text-secondary, #57534e);">
+    <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px dashed rgba(221, 213, 199, 0.85); border-radius: 16px; padding: 36px 20px; text-align: center; color: var(--s30-text-secondary, #57534e);">
       <div style="font-size: 32px; margin-bottom: 8px;">📤</div>
       <strong style="color: var(--s30-text-primary, #1c1917); font-size: 16px; display: block; margin-bottom: 4px;">No Outgoing Requests Sent</strong>
       <p style="font-size: 13.5px; max-width: 480px; margin: 0 auto; color: var(--s30-text-secondary, #57534e);">
@@ -332,9 +332,9 @@
         if (content) content.style.display = 'block';
       } else {
         if (btn) {
-          btn.style.background = '#ffffff';
+          btn.style.background = 'rgba(255, 255, 255, 0.6)';
           btn.style.color = 'var(--s30-text-secondary, #57534e)';
-          btn.style.border = '1.5px solid var(--md-sys-color-outline, #ddd5c7)';
+          btn.style.border = '1.5px solid rgba(221, 213, 199, 0.8)';
           btn.style.fontWeight = '600';
         }
         if (content) content.style.display = 'none';
@@ -347,7 +347,7 @@
     const color = (type === 'success') ? '#16a34a' : '#dc2626';
     container.style.display = 'block';
     container.innerHTML = `
-      <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid ${color}; box-shadow: var(--md-elevation-2); border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <div style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid ${color}; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.08); border-radius: 12px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
         <strong style="color: ${color}; font-size: 14px;">${msg}</strong>
         <button onclick="document.getElementById('toast-container').style.display='none'" style="background: none; border: none; color: var(--s30-text-muted, #78716c); cursor: pointer; font-size: 16px;">✕</button>
       </div>

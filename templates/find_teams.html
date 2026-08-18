@@ -12,7 +12,7 @@
   <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;">
     <div>
       <div style="margin-bottom: 8px;">
-        <span class="neo-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; border: 1px solid rgba(37, 99, 235, 0.25);">🔍 SQUAD DISCOVERY</span>
+        <span class="neo-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; border: 1px solid rgba(37, 99, 235, 0.25); backdrop-filter: blur(8px);">🔍 SQUAD DISCOVERY</span>
       </div>
       <h1 style="font-size: 32px; font-weight: 900; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: -0.02em; margin: 0;">
         Find a Squad
@@ -25,7 +25,7 @@
       <a href="{{ url_for('team_create') }}" class="neo-btn" style="background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; padding: 10px 18px !important; font-size: 13px !important; font-weight: 700 !important;">
         + CREATE YOUR OWN SQUAD
       </a>
-      <a href="{{ url_for('mailbox') }}" class="neo-btn" style="background: #ffffff !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important; padding: 10px 18px !important; font-size: 13px !important; display: inline-flex; align-items: center; gap: 6px;">
+      <a href="{{ url_for('mailbox') }}" class="neo-btn" style="background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid rgba(221, 213, 199, 0.8) !important; padding: 10px 18px !important; font-size: 13px !important; display: inline-flex; align-items: center; gap: 6px; backdrop-filter: blur(8px);">
         <span>📬 MAILBOX</span>
         {% if unread_mailbox_count and unread_mailbox_count > 0 %}
           <span class="neo-badge" style="background: rgba(220, 38, 38, 0.14); color: #dc2626; font-size: 10px; padding: 1px 6px;">{{ unread_mailbox_count }} NEW</span>
@@ -36,7 +36,7 @@
 
   <!-- ========== MY CURRENT SQUAD STATUS ========== -->
   {% if my_team %}
-  <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 20px 24px; margin-bottom: 28px;">
+  <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); padding: 20px 24px; margin-bottom: 28px;">
     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
       <div style="display: flex; align-items: center; gap: 14px;">
         <div style="font-size: 28px;">{% if my_team_role == 'LEADER' %}👑{% else %}✅{% endif %}</div>
@@ -60,10 +60,10 @@
           ⚙️ MANAGE SQUAD →
         </a>
         {% else %}
-        <a href="{{ url_for('team_manage') }}" class="neo-btn" style="background: #ffffff !important; color: #16a34a !important; border: 1.5px solid #16a34a !important; font-size: 12px !important; padding: 8px 14px !important; font-weight: 800 !important;">
+        <a href="{{ url_for('team_manage') }}" class="neo-btn" style="background: rgba(255, 255, 255, 0.6) !important; color: #16a34a !important; border: 1.5px solid #16a34a !important; font-size: 12px !important; padding: 8px 14px !important; font-weight: 800 !important; backdrop-filter: blur(8px);">
           👥 VIEW TEAMMATES →
         </a>
-        <button type="button" onclick="leaveCurrentSquad({{ my_team.team_id or my_team.id }}, '{{ my_team.team_name }}')" class="neo-btn" style="background: rgba(220, 38, 38, 0.12) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important; font-size: 12px !important; padding: 8px 14px !important;">
+        <button type="button" onclick="leaveCurrentSquad({{ my_team.team_id or my_team.id }}, '{{ my_team.team_name }}')" class="neo-btn" style="background: rgba(220, 38, 38, 0.12) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important; font-size: 12px !important; padding: 8px 14px !important; backdrop-filter: blur(8px);">
           🚪 LEAVE SQUAD
         </button>
         {% endif %}
@@ -73,7 +73,7 @@
   {% endif %}
 
   <!-- ========== JOIN BY SQUAD CODE ========== -->
-  <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 24px 28px; margin-bottom: 28px;">
+  <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); padding: 24px 28px; margin-bottom: 28px;">
     <div style="margin-bottom: 16px;">
       <div style="margin-bottom: 4px;"><span class="neo-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb;">🔑 JOIN BY SQUAD CODE</span></div>
       <h2 style="font-size: 20px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; margin: 0;">
@@ -90,13 +90,13 @@
         id="squad-code-input"
         placeholder="e.g. SQD-AI99, SQD-WE04..."
         onkeyup="if(event.key==='Enter') submitJoinRequest()"
-        style="flex: 1; min-width: 220px; background: #ffffff; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 700; color: var(--s30-text-primary, #1c1917); outline: none; letter-spacing: 0.06em; text-transform: uppercase;"
+        style="flex: 1; min-width: 220px; background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 700; color: var(--s30-text-primary, #1c1917); outline: none; letter-spacing: 0.06em; text-transform: uppercase;"
       >
       <input
         type="text"
         id="join-message-input"
         placeholder="Optional message to the leader..."
-        style="flex: 2; min-width: 220px; background: #ffffff; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 500; color: var(--s30-text-primary, #1c1917); outline: none;"
+        style="flex: 2; min-width: 220px; background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 500; color: var(--s30-text-primary, #1c1917); outline: none;"
       >
       <button type="button" onclick="submitJoinRequest()" class="neo-btn" style="background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; padding: 12px 24px !important; font-size: 13.5px !important; font-weight: 800 !important;">
         📤 SEND REQUEST
@@ -115,14 +115,14 @@
     </div>
     <!-- Filter bar -->
     <input type="text" id="squad-filter-input" oninput="filterSquads()" placeholder="Filter by name or theme..."
-      style="background: #ffffff; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 9px 14px; font-size: 13px; font-weight: 500; color: var(--s30-text-primary, #1c1917); outline: none; min-width: 220px;">
+      style="background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 9px 14px; font-size: 13px; font-weight: 500; color: var(--s30-text-primary, #1c1917); outline: none; min-width: 220px;">
   </div>
 
   {% if open_squads %}
   <div id="squads-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px;">
     {% for squad in open_squads %}
     <div class="squad-card" data-name="{{ squad.team_name|lower }}" data-theme="{{ squad.theme|lower }}"
-      style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 12px; padding: 20px; box-shadow: var(--md-elevation-1); display: flex; flex-direction: column; gap: 12px;">
+      style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; padding: 20px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); display: flex; flex-direction: column; gap: 12px;">
 
       <!-- Squad Header -->
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px;">
@@ -132,7 +132,7 @@
           <div style="font-size: 12.5px; color: var(--s30-text-secondary, #57534e); margin-top: 2px;">{{ squad.theme }}</div>
         </div>
         <!-- Slots badge -->
-        <div style="text-align: center; background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 6px 12px; flex-shrink: 0;">
+        <div style="text-align: center; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(6px); border: 1.5px solid rgba(221, 213, 199, 0.8); border-radius: 10px; padding: 6px 12px; flex-shrink: 0;">
           <div style="font-size: 9.5px; font-weight: 800; color: var(--s30-text-secondary, #57534e); text-transform: uppercase;">OPEN</div>
           <div style="font-size: 19px; font-weight: 900; font-family: monospace; color: {% if squad.slots_left == 1 %}#d97706{% else %}#16a34a{% endif %};">{{ squad.slots_left }}</div>
           <div style="font-size: 9.5px; color: var(--s30-text-secondary, #57534e);">SLOT{{ 'S' if squad.slots_left != 1 else '' }}</div>
@@ -140,7 +140,7 @@
       </div>
 
       <!-- Leader Info -->
-      <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 10px 12px; display: flex; align-items: center; gap: 10px;">
+      <div style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); border: 1px solid rgba(221, 213, 199, 0.7); border-radius: 10px; padding: 10px 12px; display: flex; align-items: center; gap: 10px;">
         <div style="width: 34px; height: 34px; background: #d97706; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 800; flex-shrink: 0;">
           {{ squad.leader_name[:2].upper() }}
         </div>
@@ -157,19 +157,19 @@
           <span>{{ squad.member_count }}/{{ squad.team_size }} Members</span>
           <span>{{ squad.slots_left }} Open</span>
         </div>
-        <div style="height: 6px; background: var(--md-sys-color-outline, #ddd5c7); border-radius: 3px; overflow: hidden;">
+        <div style="height: 6px; background: rgba(40, 30, 20, 0.1); border-radius: 3px; overflow: hidden;">
           <div style="width: {{ ((squad.member_count / squad.team_size) * 100)|int }}%; height: 100%; background: {% if squad.slots_left == 1 %}#d97706{% else %}#16a34a{% endif %}; border-radius: 3px;"></div>
         </div>
       </div>
 
       <!-- Action Button -->
-      <div style="border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 10px;">
+      <div style="border-top: 1px solid rgba(221, 213, 199, 0.6); padding-top: 10px;">
         {% if squad.team_code in pending_team_codes %}
-        <button disabled class="neo-btn" style="width: 100%; padding: 9px !important; font-size: 12px !important; background: var(--md-sys-color-outline-variant, #eae4d9); color: var(--s30-text-muted, #78716c); border: 1px solid var(--md-sys-color-outline, #ddd5c7); cursor: not-allowed;">
+        <button disabled class="neo-btn" style="width: 100%; padding: 9px !important; font-size: 12px !important; background: rgba(234, 228, 217, 0.6); color: var(--s30-text-muted, #78716c); border: 1px solid rgba(221, 213, 199, 0.7); cursor: not-allowed;">
           ⏳ REQUEST SENT — AWAITING LEADER
         </button>
         {% elif my_team %}
-        <button disabled class="neo-btn" style="width: 100%; padding: 9px !important; font-size: 12px !important; background: var(--md-sys-color-outline-variant, #eae4d9); color: var(--s30-text-muted, #78716c); border: 1px solid var(--md-sys-color-outline, #ddd5c7); cursor: not-allowed;" title="You are already in a squad">
+        <button disabled class="neo-btn" style="width: 100%; padding: 9px !important; font-size: 12px !important; background: rgba(234, 228, 217, 0.6); color: var(--s30-text-muted, #78716c); border: 1px solid rgba(221, 213, 199, 0.7); cursor: not-allowed;" title="You are already in a squad">
           — ALREADY IN A SQUAD —
         </button>
         {% else %}
@@ -186,7 +186,7 @@
   </div>
 
   {% else %}
-  <div style="background: var(--md-sys-color-surface, #ffffff); border: 2px dashed var(--md-sys-color-outline, #ddd5c7); border-radius: 12px; padding: 40px; text-align: center;">
+  <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px dashed rgba(221, 213, 199, 0.85); border-radius: 16px; padding: 40px; text-align: center;">
     <div style="font-size: 36px; margin-bottom: 10px;">🔍</div>
     <strong style="color: var(--s30-text-primary, #1c1917); font-size: 16px; display: block;">No Open Squads Right Now</strong>
     <p style="color: var(--s30-text-secondary, #57534e); font-size: 13.5px; margin: 6px 0 16px 0;">All squads are either full or no one has created one yet. Why not start your own?</p>
@@ -204,7 +204,7 @@
     const color = type === 'success' ? '#16a34a' : type === 'error' ? '#dc2626' : '#d97706';
     container.style.display = 'block';
     container.innerHTML = `
-      <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid ${color}; box-shadow: var(--md-elevation-2); border-radius: 10px; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <div style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid ${color}; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.08); border-radius: 12px; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
         <strong style="color: ${color}; font-size: 14px;">${msg}</strong>
         <button onclick="document.getElementById('toast-container').style.display='none'" style="background: none; border: none; color: var(--s30-text-muted, #78716c); cursor: pointer; font-size: 18px; line-height: 1;">✕</button>
       </div>`;

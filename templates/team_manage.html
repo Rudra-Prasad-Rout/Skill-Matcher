@@ -12,11 +12,11 @@
   <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;">
     <div>
       <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-        <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.25);">🚀 SQUAD ROSTER &amp; TEAMMATES</span>
+        <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.25); backdrop-filter: blur(8px);">🚀 SQUAD ROSTER &amp; TEAMMATES</span>
         {% if is_leader %}
-          <span class="neo-badge" style="background: rgba(217, 119, 6, 0.18); color: #b45309; border: 1px solid rgba(217, 119, 6, 0.35); font-weight: 800;">👑 YOU ARE THE LEADER</span>
+          <span class="neo-badge" style="background: rgba(217, 119, 6, 0.18); color: #b45309; border: 1px solid rgba(217, 119, 6, 0.35); font-weight: 800; backdrop-filter: blur(8px);">👑 YOU ARE THE LEADER</span>
         {% else %}
-          <span class="neo-badge" style="background: rgba(22, 163, 74, 0.14); color: #16a34a; border: 1px solid rgba(22, 163, 74, 0.3);">✓ YOU ARE A MEMBER</span>
+          <span class="neo-badge" style="background: rgba(22, 163, 74, 0.14); color: #16a34a; border: 1px solid rgba(22, 163, 74, 0.3); backdrop-filter: blur(8px);">✓ YOU ARE A MEMBER</span>
         {% endif %}
       </div>
       <h1 style="font-size: 32px; font-weight: 900; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: -0.02em; margin: 0;">
@@ -30,7 +30,7 @@
     <!-- Header Actions -->
     <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
       {% if not is_leader %}
-        <button type="button" onclick="leaveCurrentSquad({{ team.id }}, '{{ team.team_name }}')" class="neo-btn" style="background: rgba(220, 38, 38, 0.12) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.3) !important; padding: 10px 18px !important; font-size: 13px !important; font-weight: 700 !important;">
+        <button type="button" onclick="leaveCurrentSquad({{ team.id }}, '{{ team.team_name }}')" class="neo-btn" style="background: rgba(220, 38, 38, 0.12) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.3) !important; padding: 10px 18px !important; font-size: 13px !important; font-weight: 700 !important; backdrop-filter: blur(8px);">
           🚪 LEAVE SQUAD
         </button>
       {% endif %}
@@ -40,14 +40,14 @@
           <span class="neo-badge" style="background: #ffffff; color: #d97706; font-size: 10.5px; padding: 1px 6px; font-weight: 800;">{{ unread_mailbox_count }} NEW</span>
         {% endif %}
       </a>
-      <a href="{{ url_for('find_teams') }}" class="neo-btn" style="background: #ffffff !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important; padding: 10px 18px !important; font-size: 13px !important;">
+      <a href="{{ url_for('find_teams') }}" class="neo-btn" style="background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid rgba(221, 213, 199, 0.8) !important; padding: 10px 18px !important; font-size: 13px !important; backdrop-filter: blur(8px);">
         🔍 FIND SQUADS
       </a>
     </div>
   </div>
 
   <!-- ========== SQUAD INFO CARD ========== -->
-  <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 24px 28px; margin-bottom: 28px;">
+  <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); padding: 24px 28px; margin-bottom: 28px;">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
 
       <div style="display: flex; align-items: center; gap: 16px;">
@@ -57,8 +57,8 @@
         <div>
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <span style="font-size: 12.5px; font-weight: 800; color: var(--s30-text-secondary, #57534e); text-transform: uppercase; letter-spacing: 0.04em;">Squad Code</span>
-            <code style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1.5px solid var(--md-sys-color-primary, #d97706); color: var(--md-sys-color-primary, #d97706); font-size: 14px; font-weight: 800; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.06em;">{{ team.team_code }}</code>
-            <button type="button" onclick="copySquadCode('{{ team.team_code }}')" class="neo-btn" style="font-size: 11px !important; padding: 4px 10px !important; background: var(--md-sys-color-surface-container-low, #faf8f5) !important; color: var(--s30-text-primary, #1c1917) !important; border: 1px solid var(--md-sys-color-outline, #ddd5c7) !important;">📋 COPY</button>
+            <code style="background: rgba(255, 255, 255, 0.6); border: 1.5px solid var(--md-sys-color-primary, #d97706); color: var(--md-sys-color-primary, #d97706); font-size: 14px; font-weight: 800; padding: 3px 10px; border-radius: 6px; letter-spacing: 0.06em;">{{ team.team_code }}</code>
+            <button type="button" onclick="copySquadCode('{{ team.team_code }}')" class="neo-btn" style="font-size: 11px !important; padding: 4px 10px !important; background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-primary, #1c1917) !important; border: 1px solid rgba(221, 213, 199, 0.8) !important;">📋 COPY</button>
           </div>
           <div style="font-size: 13.5px; color: var(--s30-text-secondary, #57534e); margin-top: 6px;">
             Target Focus: <strong style="color: var(--s30-text-primary, #1c1917);">{{ team.theme }}</strong>
@@ -70,7 +70,7 @@
       </div>
 
       <!-- Capacity Meter -->
-      <div style="text-align: center; background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 10px; padding: 12px 22px; min-width: 150px;">
+      <div style="text-align: center; background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 12px; padding: 12px 22px; min-width: 150px;">
         <div style="font-size: 10.5px; font-weight: 800; color: var(--s30-text-secondary, #57534e); text-transform: uppercase; margin-bottom: 2px;">SQUAD CAPACITY</div>
         <div style="font-size: 26px; font-weight: 900; font-family: monospace; color: {% if member_count >= team.team_size %}#dc2626{% elif member_count >= team.team_size - 1 %}#d97706{% else %}#16a34a{% endif %};">
           {{ member_count }} / {{ team.team_size }}
@@ -78,7 +78,7 @@
         <div style="font-size: 11.5px; color: var(--s30-text-secondary, #57534e); margin-top: 2px; font-weight: 600;">
           {% if slots_remaining > 0 %}{{ slots_remaining }} slot{{ 's' if slots_remaining != 1 else '' }} open{% else %}SQUAD FULL{% endif %}
         </div>
-        <div style="height: 6px; background: var(--md-sys-color-outline, #ddd5c7); border-radius: 3px; overflow: hidden; margin-top: 8px;">
+        <div style="height: 6px; background: rgba(40, 30, 20, 0.1); border-radius: 3px; overflow: hidden; margin-top: 8px;">
           <div style="width: {{ ((member_count / team.team_size) * 100)|int }}%; height: 100%; background: {% if member_count >= team.team_size %}#dc2626{% elif member_count >= team.team_size - 1 %}#d97706{% else %}#16a34a{% endif %}; transition: width 0.3s ease;"></div>
         </div>
       </div>
@@ -87,7 +87,7 @@
   </div>
 
   <!-- ========== SECTION 1: ALL TEAMMATES & CONFIRMED ROSTER ========== -->
-  <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 24px 28px; margin-bottom: 28px;">
+  <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); padding: 24px 28px; margin-bottom: 28px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 8px;">
       <div>
         <div style="margin-bottom: 4px;">
@@ -103,7 +103,7 @@
     <div id="squad-roster-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
 
       <!-- 1. Squad Leader Card -->
-      <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1.5px solid rgba(217, 119, 6, 0.4); border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+      <div style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid rgba(217, 119, 6, 0.45); border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; box-shadow: 0 4px 16px 0 rgba(217, 119, 6, 0.06);">
         <div>
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 10px;">
             <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
@@ -133,7 +133,7 @@
 
           <!-- Leader Verified Skills -->
           {% if leader_user.skills %}
-            <div style="display: flex; flex-wrap: wrap; gap: 4px; border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 8px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 4px; border-top: 1px solid rgba(221, 213, 199, 0.6); padding-top: 8px;">
               {% for sk in leader_user.skills[:5] %}
                 <span class="neo-badge" style="background: rgba(37, 99, 235, 0.1); color: #2563eb; font-size: 10px; padding: 2px 7px;">{{ sk }}</span>
               {% endfor %}
@@ -144,7 +144,7 @@
 
       <!-- 2. Confirmed Fellow Members -->
       {% for m in members %}
-      <div id="member-card-{{ m.user_id }}" style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1.5px solid {% if m.is_current_user %}rgba(37, 99, 235, 0.45){% else %}rgba(22, 163, 74, 0.45){% endif %}; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+      <div id="member-card-{{ m.user_id }}" style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid {% if m.is_current_user %}rgba(37, 99, 235, 0.45){% else %}rgba(22, 163, 74, 0.45){% endif %}; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; box-shadow: 0 4px 16px 0 rgba(40, 30, 20, 0.04);">
         <div>
           <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 10px;">
             <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
@@ -174,7 +174,7 @@
 
           <!-- Member Verified Skills -->
           {% if m.skills %}
-            <div style="display: flex; flex-wrap: wrap; gap: 4px; border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 8px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 4px; border-top: 1px solid rgba(221, 213, 199, 0.6); padding-top: 8px;">
               {% for sk in m.skills[:5] %}
                 <span class="neo-badge" style="background: rgba(37, 99, 235, 0.1); color: #2563eb; font-size: 10px; padding: 2px 7px;">{{ sk }}</span>
               {% endfor %}
@@ -183,13 +183,13 @@
         </div>
 
         {% if is_leader %}
-          <div style="border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 10px;">
+          <div style="border-top: 1px solid rgba(221, 213, 199, 0.6); padding-top: 10px;">
             <button type="button" onclick="removeSquadMember({{ team.id }}, {{ m.user_id }}, '{{ m.full_name }}', '{{ m.user_code }}')" class="neo-btn" style="width: 100%; padding: 8px !important; font-size: 12px !important; font-weight: 700 !important; background: rgba(220, 38, 38, 0.1) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important;">
               🗑️ REMOVE FROM SQUAD
             </button>
           </div>
         {% elif m.is_current_user and not is_leader %}
-          <div style="border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 10px;">
+          <div style="border-top: 1px solid rgba(221, 213, 199, 0.6); padding-top: 10px;">
             <button type="button" onclick="leaveCurrentSquad({{ team.id }}, '{{ team.team_name }}')" class="neo-btn" style="width: 100%; padding: 8px !important; font-size: 12px !important; font-weight: 700 !important; background: rgba(220, 38, 38, 0.1) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important;">
               🚪 LEAVE THIS SQUAD
             </button>
@@ -200,7 +200,7 @@
 
       <!-- 3. Empty Open Slots -->
       {% for i in range(slots_remaining) %}
-      <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 2px dashed var(--md-sys-color-outline, #ddd5c7); border-radius: 10px; padding: 22px 20px; display: flex; align-items: center; justify-content: center; min-height: 110px;">
+      <div style="background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 2px dashed rgba(221, 213, 199, 0.85); border-radius: 12px; padding: 22px 20px; display: flex; align-items: center; justify-content: center; min-height: 110px;">
         <div style="text-align: center;">
           <div style="font-size: 22px; margin-bottom: 4px; opacity: 0.6;">➕</div>
           <div style="font-size: 12.5px; color: var(--s30-text-muted, #78716c); font-weight: 800; text-transform: uppercase;">OPEN SQUAD SLOT</div>
@@ -214,7 +214,7 @@
 
   <!-- ========== SECTION 2 (LEADER ONLY): PENDING INVITATIONS ========== -->
   {% if is_leader and pending_invites %}
-  <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 24px 28px; margin-bottom: 28px;">
+  <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); padding: 24px 28px; margin-bottom: 28px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
       <div>
         <div style="margin-bottom: 4px;">
@@ -228,7 +228,7 @@
 
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px;">
       {% for inv in pending_invites %}
-      <div id="invite-card-{{ inv.id }}" style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+      <div id="invite-card-{{ inv.id }}" style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(221, 213, 199, 0.7); border-radius: 10px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 10px;">
         <div style="display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1;">
           <div style="width: 38px; height: 38px; background: #d97706; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 800; flex-shrink: 0;">
             {{ inv.full_name[:2].upper() }}
@@ -251,7 +251,7 @@
   <!-- ========== SECTION 3 (LEADER ONLY): SEARCH & INVITE BY CANDIDATE ID ========== -->
   {% if is_leader %}
     {% if slots_remaining > 0 %}
-    <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 24px 28px; margin-bottom: 28px;">
+    <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); padding: 24px 28px; margin-bottom: 28px;">
       <div style="margin-bottom: 16px;">
         <div style="margin-bottom: 4px;">
           <span class="neo-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; border: 1px solid rgba(37, 99, 235, 0.25);">🔍 DIRECT CANDIDATE SEARCH</span>
@@ -270,7 +270,7 @@
           id="search-candidate-input"
           placeholder="Enter 5-character Candidate ID or Name..."
           onkeyup="if(event.key==='Enter') executeCandidateSearch()"
-          style="flex: 1; min-width: 240px; background: #ffffff; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 600; color: var(--s30-text-primary, #1c1917); outline: none; text-transform: uppercase;"
+          style="flex: 1; min-width: 240px; background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 12px 16px; font-size: 14px; font-weight: 600; color: var(--s30-text-primary, #1c1917); outline: none; text-transform: uppercase;"
         >
         <button type="button" onclick="executeCandidateSearch()" class="neo-btn" style="background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; padding: 12px 24px !important; font-size: 13.5px !important; font-weight: 800 !important;">
           🔍 SEARCH
@@ -280,7 +280,7 @@
       <div id="search-results-box" style="display: none;"></div>
     </div>
     {% else %}
-    <div style="background: var(--md-sys-color-surface, #ffffff); border: 2px dashed #16a34a; border-radius: 12px; padding: 22px 28px; margin-bottom: 28px; text-align: center;">
+    <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 2px dashed #16a34a; border-radius: 14px; padding: 22px 28px; margin-bottom: 28px; text-align: center;">
       <div style="font-size: 28px; margin-bottom: 6px;">🎉</div>
       <strong style="color: #16a34a; font-size: 16px; font-weight: 800; display: block; text-transform: uppercase;">Squad is Full!</strong>
       <p style="font-size: 13.5px; color: var(--s30-text-secondary, #57534e); margin: 4px 0 0 0;">All {{ team.team_size }} squad slots are filled. Your team is complete and ready to build!</p>
@@ -289,7 +289,7 @@
 
     <!-- ========== SECTION 4 (LEADER ONLY): AI RECOMMENDED PEER BUILDERS ========== -->
     {% if recommended_peers and slots_remaining > 0 %}
-    <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 24px 28px;">
+    <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); padding: 24px 28px;">
       <div style="margin-bottom: 18px;">
         <div style="margin-bottom: 4px;">
           <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.25);">⚡ AI SYNERGY ENGINE</span>
@@ -304,7 +304,7 @@
 
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px;">
         {% for peer in recommended_peers %}
-        <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 10px; padding: 18px 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
+        <div style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(221, 213, 199, 0.7); border-radius: 12px; padding: 18px 16px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px;">
           <div>
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 8px;">
               <div style="display: flex; align-items: center; gap: 10px;">
@@ -332,7 +332,7 @@
             </div>
           </div>
 
-          <div style="border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 10px;">
+          <div style="border-top: 1px solid rgba(221, 213, 199, 0.6); padding-top: 10px;">
             <button
               type="button"
               id="btn-invite-{{ peer.id }}"
@@ -350,14 +350,14 @@
     {% endif %}
   {% else %}
     <!-- MEMBER PERSPECTIVE INFO CARD -->
-    <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 22px 26px; margin-bottom: 24px;">
+    <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); padding: 22px 26px; margin-bottom: 24px;">
       <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
         <div>
           <span class="neo-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; margin-bottom: 4px;">💡 SQUAD MEMBER ACTIONS</span>
           <h3 style="font-size: 17px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; margin: 4px 0 2px 0;">Need to change or leave this squad?</h3>
           <p style="font-size: 13.5px; color: var(--s30-text-secondary, #57534e); margin: 0;">You can leave at any time to join another team or create your own squad.</p>
         </div>
-        <button type="button" onclick="leaveCurrentSquad({{ team.id }}, '{{ team.team_name }}')" class="neo-btn" style="background: rgba(220, 38, 38, 0.12) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.3) !important; padding: 10px 20px !important; font-size: 12.5px !important; font-weight: 800 !important;">
+        <button type="button" onclick="leaveCurrentSquad({{ team.id }}, '{{ team.team_name }}')" class="neo-btn" style="background: rgba(220, 38, 38, 0.12) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.3) !important; padding: 10px 20px !important; font-size: 12.5px !important; font-weight: 800 !important; backdrop-filter: blur(8px);">
           🚪 LEAVE SQUAD
         </button>
       </div>
@@ -380,10 +380,9 @@
   function showToast(msg, type = 'success') {
     const container = document.getElementById('toast-container');
     const color = (type === 'success') ? '#16a34a' : '#dc2626';
-    const bg = (type === 'success') ? 'rgba(22, 163, 74, 0.12)' : 'rgba(220, 38, 38, 0.12)';
     container.style.display = 'block';
     container.innerHTML = `
-      <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid ${color}; box-shadow: var(--md-elevation-2); border-radius: 10px; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <div style="background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid ${color}; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.08); border-radius: 12px; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
         <strong style="color: ${color}; font-size: 14px;">${msg}</strong>
         <button onclick="document.getElementById('toast-container').style.display='none'" style="background: none; border: none; color: var(--s30-text-muted, #78716c); cursor: pointer; font-size: 18px; line-height: 1;">✕</button>
       </div>
@@ -467,7 +466,7 @@
         data.candidates.forEach(c => {
           const alreadyInvited = {{ invited_ids | tojson }}.includes(c.id);
           html += `
-            <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
+            <div style="background: rgba(255, 255, 255, 0.55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px;">
               <div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
                   <strong style="color: var(--s30-text-primary, #1c1917); font-size: 14.5px;">${c.full_name}</strong>
@@ -479,7 +478,7 @@
                 </div>
               </div>
               ${alreadyInvited
-                ? `<button disabled class="neo-btn" style="width: 100%; padding: 7px !important; font-size: 11.5px !important; background: var(--md-sys-color-outline-variant, #eae4d9); color: var(--s30-text-muted, #78716c); border: 1px solid var(--md-sys-color-outline, #ddd5c7); cursor: not-allowed;">✓ ALREADY INVITED / IN SQUAD</button>`
+                ? `<button disabled class="neo-btn" style="width: 100%; padding: 7px !important; font-size: 11.5px !important; background: rgba(234, 228, 217, 0.6); color: var(--s30-text-muted, #78716c); border: 1px solid rgba(221, 213, 199, 0.7); cursor: not-allowed;">✓ ALREADY INVITED / IN SQUAD</button>`
                 : `<button type="button" onclick="sendInviteToCandidate(${c.id}, '${c.user_code}', '${c.full_name}')" class="neo-btn" style="width: 100%; padding: 7px !important; font-size: 11.5px !important; font-weight: 800 !important; background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important;">✉️ INVITE ${c.user_code} →</button>`
               }
             </div>
@@ -489,7 +488,7 @@
         resultsBox.innerHTML = html;
       } else {
         resultsBox.innerHTML = `
-          <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1.5px dashed #dc2626; border-radius: 8px; padding: 14px; color: var(--s30-text-secondary, #57534e); font-size: 13px; margin-top: 8px;">
+          <div style="background: rgba(255, 255, 255, 0.55); border: 1.5px dashed #dc2626; border-radius: 10px; padding: 14px; color: var(--s30-text-secondary, #57534e); font-size: 13px; margin-top: 8px;">
             ⚠️ No verified candidates found matching <strong>"${query}"</strong>. Try a 5-character candidate ID.
           </div>
         `;
@@ -520,9 +519,9 @@
         if (btn) {
           btn.disabled = true;
           btn.className = 'neo-btn';
-          btn.style.background = 'var(--md-sys-color-outline-variant, #eae4d9)';
+          btn.style.background = 'rgba(234, 228, 217, 0.6)';
           btn.style.color = 'var(--s30-text-muted, #78716c)';
-          btn.style.border = '1px solid var(--md-sys-color-outline, #ddd5c7)';
+          btn.style.border = '1px solid rgba(221, 213, 199, 0.7)';
           btn.style.cursor = 'not-allowed';
           btn.innerText = '✓ INVITATION SENT';
         }
