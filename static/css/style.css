@@ -521,9 +521,9 @@ body {
 
 .s30-auth-grid {
   display: block;
-  width: 100% !important;
-  max-width: 620px !important;
-  margin: 0 auto;
+  width: 80% !important;
+  max-width: 560px !important;
+  margin: 0 auto !important;
   background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
@@ -1388,9 +1388,9 @@ html, body {
     box-shadow: none !important;
     background: transparent !important;
     border: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto;
+    width: 80% !important;
+    max-width: 80% !important;
+    margin: 0 auto !important;
     overflow: visible;
     box-sizing: border-box;
   }
@@ -1533,9 +1533,9 @@ html, body {
     padding: 10px 0;
   }
   .s30-auth-grid {
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto;
+    width: 80% !important;
+    max-width: 80% !important;
+    margin: 0 auto !important;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
