@@ -22,15 +22,23 @@
       color: #ffffff;
       display: flex;
       flex-direction: column;
+      overflow-x: hidden;
+      width: 100%;
     }
 
     .s30-admin-main {
       flex: 1;
-      max-width: 1380px;
       padding: 28px 32px;
       max-width: 1440px;
       margin: 0 auto;
       width: 100%;
+      box-sizing: border-box;
+    }
+
+    @media (max-width: 768px) {
+      .s30-admin-main {
+        padding: 16px 14px;
+      }
     }
 
     /* Top Action Bar with Neo-Brutalist Finish */
@@ -46,6 +54,8 @@
       box-shadow: 5px 5px 0px #FFE600;
       flex-wrap: wrap;
       gap: 16px;
+      box-sizing: border-box;
+      max-width: 100%;
     }
 
     /* 3 Horizontal Lines (Hamburger Icon) */
@@ -174,6 +184,8 @@
       box-shadow: 6px 6px 0px #00f0ff;
       transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
+      box-sizing: border-box;
+      max-width: 100%;
     }
     .neo-card:hover {
       transform: translate(-3px, -3px);
@@ -185,6 +197,10 @@
       border: 2.5px solid #FFE600;
       border-radius: 10px;
       box-shadow: 6px 6px 0px #FFE600;
+      box-sizing: border-box;
+      max-width: 100%;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
     .neo-card-yellow:hover {
       transform: translate(-3px, -3px);
@@ -196,6 +212,10 @@
       border: 2.5px solid #ff2a85;
       border-radius: 10px;
       box-shadow: 6px 6px 0px #ff2a85;
+      box-sizing: border-box;
+      max-width: 100%;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
     .neo-card-pink:hover {
       transform: translate(-3px, -3px);
@@ -207,16 +227,55 @@
       border: 2.5px solid #22c55e;
       border-radius: 10px;
       box-shadow: 6px 6px 0px #22c55e;
+      box-sizing: border-box;
+      max-width: 100%;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
     }
     .neo-card-green:hover {
       transform: translate(-3px, -3px);
       box-shadow: 9px 9px 0px #22c55e;
     }
 
-    .candidate-card-row {
+    .s30-scoreboards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 22px;
+      margin-bottom: 28px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .s30-two-col-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .neo-card, .neo-card-yellow, .neo-card-pink, .neo-card-green, .candidate-card-row {
       max-width: 100%;
       box-sizing: border-box;
-      overflow: hidden;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    @media (max-width: 900px) {
+      .s30-two-col-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .s30-scoreboards-grid {
+        grid-template-columns: 1fr !important;
+        gap: 18px !important;
+      }
+      .neo-card, .neo-card-yellow, .neo-card-pink, .neo-card-green {
+        padding: 18px 14px !important;
+      }
     }
 
     @media (max-width: 1200px) {
@@ -893,14 +952,14 @@
         </div>
 
         <!-- 3-Column Executive Score Board Grid (Neo-Brutalism Overhaul) -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 22px; margin-bottom: 28px;">
+        <div class="s30-scoreboards-grid">
           
           <!-- SCORE BOARD 1: CANDIDATE APPROVALS & ID PASSPORTS -->
-          <div class="neo-card" style="border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px #00f0ff; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; background: #0c1322;">
+          <div class="neo-card" style="border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px #00f0ff; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; background: #0c1322; box-sizing: border-box; width: 100%;">
             <div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid rgba(255,255,255,0.15); padding-bottom: 14px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                  <div style="width: 40px; height: 40px; border-radius: 6px; background: #00f0ff; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 2px 2px 0px #000;">
+                  <div style="width: 40px; height: 40px; border-radius: 6px; background: #00f0ff; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 2px 2px 0px #000; flex-shrink: 0;">
                     👥
                   </div>
                   <div>
@@ -912,27 +971,27 @@
               </div>
 
               <!-- Score Metrics Grid -->
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
-                <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #00f0ff;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+                <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #00f0ff; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #00f0ff; text-transform: uppercase;">Total Registered</div>
                   <div style="font-size: 24px; font-weight: 900; color: #fff; margin-top: 2px;">{{ stats.total }}</div>
                 </div>
-                <div style="background: #090f1d; border: 2px solid #FFE600; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #FFE600;">
+                <div style="background: #090f1d; border: 2px solid #FFE600; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #FFE600; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #FFE600; text-transform: uppercase;">Pending Review</div>
                   <div style="font-size: 24px; font-weight: 900; color: #FFE600; margin-top: 2px;">{{ stats.pending }}</div>
                 </div>
-                <div style="background: #090f1d; border: 2px solid #22c55e; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #22c55e;">
+                <div style="background: #090f1d; border: 2px solid #22c55e; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #22c55e; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #22c55e; text-transform: uppercase;">Approved Today</div>
                   <div style="font-size: 24px; font-weight: 900; color: #22c55e; margin-top: 2px;">{{ stats.approved_today }}</div>
                 </div>
-                <div style="background: #090f1d; border: 2px solid #c084fc; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #c084fc;">
+                <div style="background: #090f1d; border: 2px solid #c084fc; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #c084fc; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #c084fc; text-transform: uppercase;">Verified Active</div>
                   <div style="font-size: 24px; font-weight: 900; color: #c084fc; margin-top: 2px;">{{ stats.approved }}</div>
                 </div>
               </div>
 
               <!-- Verification Rate Progress -->
-              <div style="background: #090f1d; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 14px; margin-bottom: 18px; box-shadow: 3px 3px 0px #000;">
+              <div style="background: #090f1d; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 14px; margin-bottom: 18px; box-shadow: 3px 3px 0px #000; box-sizing: border-box; width: 100%;">
                 <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 900; color: #ffffff; margin-bottom: 6px;">
                   <span>VERIFICATION PASS RATE</span>
                   <span style="color: #22c55e; font-weight: 900;">{% if stats.total > 0 %}{{ (stats.approved / stats.total * 100)|round|int }}%{% else %}100%{% endif %}</span>
@@ -947,17 +1006,17 @@
               </div>
             </div>
 
-            <a href="{{ url_for('admin_dashboard', section='approvals') }}" class="neo-btn neo-btn-cyan" style="width: 100%; text-align: center; text-decoration: none; padding: 10px; font-size: 12px;">
+            <a href="{{ url_for('admin_dashboard', section='approvals') }}" class="neo-btn neo-btn-cyan" style="width: 100%; text-align: center; text-decoration: none; padding: 10px; font-size: 12px; box-sizing: border-box; white-space: normal;">
               REVIEW CANDIDATE QUEUE ({{ stats.pending }}) &rarr;
             </a>
           </div>
 
           <!-- SCORE BOARD 2: CORPORATE INTERNSHIPS & MATCHING DESK -->
-          <div class="neo-card" style="border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px #22c55e; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; background: #0c1322;">
+          <div class="neo-card" style="border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px #22c55e; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; background: #0c1322; box-sizing: border-box; width: 100%;">
             <div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid rgba(255,255,255,0.15); padding-bottom: 14px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                  <div style="width: 40px; height: 40px; border-radius: 6px; background: #22c55e; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 2px 2px 0px #000;">
+                  <div style="width: 40px; height: 40px; border-radius: 6px; background: #22c55e; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 2px 2px 0px #000; flex-shrink: 0;">
                     🏢
                   </div>
                   <div>
@@ -969,27 +1028,27 @@
               </div>
 
               <!-- Score Metrics Grid -->
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
-                <div style="background: #090f1d; border: 2px solid #22c55e; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #22c55e;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+                <div style="background: #090f1d; border: 2px solid #22c55e; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #22c55e; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #22c55e; text-transform: uppercase;">Active Openings</div>
                   <div style="font-size: 24px; font-weight: 900; color: #fff; margin-top: 2px;">{{ stats.internships_count }}</div>
                 </div>
-                <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #00f0ff;">
+                <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #00f0ff; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #00f0ff; text-transform: uppercase;">Tier-1 Partners</div>
                   <div style="font-size: 24px; font-weight: 900; color: #00f0ff; margin-top: 2px;">18 Orgs</div>
                 </div>
-                <div style="background: #090f1d; border: 2px solid #FFE600; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #FFE600;">
+                <div style="background: #090f1d; border: 2px solid #FFE600; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #FFE600; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #FFE600; text-transform: uppercase;">Matches Approved</div>
                   <div style="font-size: 24px; font-weight: 900; color: #FFE600; margin-top: 2px;">{{ stats.approved_today }}</div>
                 </div>
-                <div style="background: #090f1d; border: 2px solid #ff2a85; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #ff2a85;">
+                <div style="background: #090f1d; border: 2px solid #ff2a85; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #ff2a85; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #ff2a85; text-transform: uppercase;">Max Stipend</div>
                   <div style="font-size: 24px; font-weight: 900; color: #ff2a85; margin-top: 2px;">₹140K</div>
                 </div>
               </div>
 
               <!-- Matching Compatibility Progress -->
-              <div style="background: #090f1d; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 14px; margin-bottom: 18px; box-shadow: 3px 3px 0px #000;">
+              <div style="background: #090f1d; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 14px; margin-bottom: 18px; box-shadow: 3px 3px 0px #000; box-sizing: border-box; width: 100%;">
                 <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 900; color: #ffffff; margin-bottom: 6px;">
                   <span>ALGORITHM STACK MATCH RATE</span>
                   <span style="color: #22c55e; font-weight: 900;">95.2%</span>
@@ -1004,17 +1063,17 @@
               </div>
             </div>
 
-            <a href="{{ url_for('admin_dashboard', section='internships') }}" class="neo-btn neo-btn-green" style="width: 100%; text-align: center; text-decoration: none; padding: 10px; font-size: 12px;">
+            <a href="{{ url_for('admin_dashboard', section='internships') }}" class="neo-btn neo-btn-green" style="width: 100%; text-align: center; text-decoration: none; padding: 10px; font-size: 12px; box-sizing: border-box; white-space: normal;">
               OPEN CORPORATE MATCH DESK &rarr;
             </a>
           </div>
 
           <!-- SCORE BOARD 3: AI DISCOVERED INTERNSHIPS & LIVE AUDIT -->
-          <div class="neo-card-yellow" style="border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px #FFE600; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; background: #0c1322;">
+          <div class="neo-card-yellow" style="border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px #FFE600; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; background: #0c1322; box-sizing: border-box; width: 100%;">
             <div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 2px solid #FFE600; padding-bottom: 14px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
-                  <div style="width: 40px; height: 40px; border-radius: 6px; background: #FFE600; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 2px 2px 0px #000;">
+                  <div style="width: 40px; height: 40px; border-radius: 6px; background: #FFE600; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 2px 2px 0px #000; flex-shrink: 0;">
                     🤖
                   </div>
                   <div>
@@ -1026,27 +1085,27 @@
               </div>
 
               <!-- Score Metrics Grid -->
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
-                <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #00f0ff;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; width: 100%; box-sizing: border-box;">
+                <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #00f0ff; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #00f0ff; text-transform: uppercase;">Discovered Listings</div>
                   <div style="font-size: 24px; font-weight: 900; color: #fff; margin-top: 2px;">{{ stats.discovered_count }}</div>
                 </div>
-                <div style="background: #090f1d; border: 2px solid #FFE600; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #FFE600;">
+                <div style="background: #090f1d; border: 2px solid #FFE600; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #FFE600; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #FFE600; text-transform: uppercase;">Pending Review</div>
                   <div style="font-size: 24px; font-weight: 900; color: #FFE600; margin-top: 2px;">{{ stats.pending_internships_count }}</div>
                 </div>
-                <div style="background: #090f1d; border: 2px solid #22c55e; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #22c55e;">
+                <div style="background: #090f1d; border: 2px solid #22c55e; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #22c55e; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #22c55e; text-transform: uppercase;">Live Published</div>
                   <div style="font-size: 24px; font-weight: 900; color: #22c55e; margin-top: 2px;">{{ stats.approved_internships_count }}</div>
                 </div>
-                <div style="background: #090f1d; border: 2px solid #ff2a85; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #ff2a85;">
+                <div style="background: #090f1d; border: 2px solid #ff2a85; border-radius: 6px; padding: 12px 14px; box-shadow: 2.5px 2.5px 0px #ff2a85; min-width: 0; box-sizing: border-box;">
                   <div style="font-size: 10px; font-weight: 900; color: #ff2a85; text-transform: uppercase;">Scams Blocked</div>
                   <div style="font-size: 24px; font-weight: 900; color: #ff2a85; margin-top: 2px;">{{ rejected_discovered|length }}</div>
                 </div>
               </div>
 
               <!-- Browsing AI Live Audit Status -->
-              <div style="background: #090f1d; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 14px; margin-bottom: 18px; box-shadow: 3px 3px 0px #000;">
+              <div style="background: #090f1d; border: 2px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 14px; margin-bottom: 18px; box-shadow: 3px 3px 0px #000; box-sizing: border-box; width: 100%;">
                 <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 900; color: #ffffff; margin-bottom: 6px;">
                   <span>AUTONOMOUS AI AUDIT INTEGRITY</span>
                   <span style="color: #22c55e; font-weight: 900;">100% Live URLs</span>
@@ -1061,7 +1120,7 @@
               </div>
             </div>
 
-            <a href="{{ url_for('admin_dashboard', section='ai_internship') }}" class="neo-btn neo-btn-yellow" style="width: 100%; text-align: center; text-decoration: none; padding: 10px; font-size: 12px;">
+            <a href="{{ url_for('admin_dashboard', section='ai_internship') }}" class="neo-btn neo-btn-yellow" style="width: 100%; text-align: center; text-decoration: none; padding: 10px; font-size: 12px; box-sizing: border-box; white-space: normal;">
               OPEN AI DISCOVERY PORTAL ({{ stats.pending_internships_count }} PENDING) &rarr;
             </a>
           </div>
@@ -1152,9 +1211,9 @@
           {% if pending_discovered %}
           <div style="display: flex; flex-direction: column; gap: 14px;">
             {% for disc in pending_discovered %}
-            <div id="disc-row-{{ disc.id }}" class="neo-card" style="background: #090f1d; border: 2.5px solid #FFE600; box-shadow: 5px 5px 0px #FFE600; padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
-              <div style="flex: 1; min-width: 280px;">
-                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+            <div id="disc-row-{{ disc.id }}" class="neo-card" style="background: #090f1d; border: 2.5px solid #00f0ff; box-shadow: 5px 5px 0px #00f0ff; padding: 18px 20px; display: flex; justify-content: space-between; align-items: flex-start; flex-direction: column; gap: 16px; width: 100%; box-sizing: border-box; overflow: hidden;">
+              <div style="width: 100%; min-width: 0; box-sizing: border-box;">
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap;">
                   <span class="neo-badge neo-badge-purple" style="font-size: 10.5px; padding: 2px 7px;">
                     🌐 {{ disc.source_site }}
                   </span>
@@ -1166,29 +1225,29 @@
                   </span>
                 </div>
 
-                <div style="font-size: 18px; font-weight: 900; color: #ffffff;">
+                <div style="font-size: 18px; font-weight: 900; color: #ffffff; line-height: 1.35; overflow-wrap: anywhere; word-break: break-word; width: 100%;">
                   {{ disc.title }}
                 </div>
-                <div style="font-size: 13.5px; color: #00f0ff; font-weight: 800; margin-top: 3px;">
+                <div style="font-size: 13.5px; color: #00f0ff; font-weight: 800; margin-top: 6px; line-height: 1.45; overflow-wrap: anywhere; word-break: break-word; width: 100%;">
                   🏢 {{ disc.company }} • 📍 {{ disc.location }} • 💰 <strong style="color: #FFE600;">{{ disc.stipend }}</strong>
                 </div>
-                <div style="font-size: 11.5px; color: #cbd5e1; margin-top: 4px; font-family: monospace;">
+                <div style="font-size: 11.5px; color: #cbd5e1; margin-top: 6px; font-family: monospace; overflow-wrap: anywhere; word-break: break-word; width: 100%;">
                   🗓️ {{ disc.start_date }} &rarr; {{ disc.end_date }} ({{ disc.duration }})
                 </div>
               </div>
 
-              <!-- Neo-Brutalist Big Action Buttons -->
-              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <a href="{{ disc.application_link }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 11.5px; padding: 7px 14px;">
+              <!-- Neo-Brutalist Action Buttons -->
+              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+                <a href="{{ disc.application_link }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 11.5px; padding: 7px 14px; box-sizing: border-box;">
                   🔗 TEST LINK ↗
                 </a>
-                <button type="button" class="neo-btn neo-btn-yellow" style="font-size: 11.5px; padding: 7px 14px;" onclick="inspectLiveUrl('{{ disc.application_link }}', '{{ disc.title }}', '{{ disc.company }}', {{ disc.id }})">
+                <button type="button" class="neo-btn neo-btn-yellow" style="font-size: 11.5px; padding: 7px 14px; box-sizing: border-box;" onclick="inspectLiveUrl('{{ disc.application_link }}', '{{ disc.title }}', '{{ disc.company }}', {{ disc.id }})">
                   🤖 AUDIT
                 </button>
-                <button type="button" class="neo-btn neo-btn-green" style="font-size: 12px; padding: 8px 18px; background: #22c55e !important; color: #000 !important;" onclick="curateListing({{ disc.id }}, 'approve')">
+                <button type="button" class="neo-btn neo-btn-green" style="font-size: 12px; padding: 8px 18px; background: #22c55e !important; color: #000 !important; box-sizing: border-box;" onclick="curateListing({{ disc.id }}, 'approve')">
                   ✅ APPROVE & PUBLISH
                 </button>
-                <button type="button" class="neo-btn neo-btn-pink" style="font-size: 11.5px; padding: 7px 12px;" onclick="curateListing({{ disc.id }}, 'reject')">
+                <button type="button" class="neo-btn neo-btn-pink" style="font-size: 11.5px; padding: 7px 12px; box-sizing: border-box;" onclick="curateListing({{ disc.id }}, 'reject')">
                   ✕ REJECT
                 </button>
               </div>
@@ -1225,11 +1284,11 @@
           </div>
 
           {% if approved_discovered %}
-          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;">
+          <div class="s30-two-col-grid">
             {% for disc in approved_discovered %}
-            <div id="disc-row-{{ disc.id }}" class="neo-card" style="background: #090f1d; border: 2.5px solid #ffffff; box-shadow: 5px 5px 0px #00f0ff; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
-              <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div id="disc-row-{{ disc.id }}" class="neo-card" style="background: #090f1d; border: 2.5px solid #ffffff; box-shadow: 5px 5px 0px #00f0ff; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; width: 100%; box-sizing: border-box; overflow: hidden;">
+              <div style="width: 100%; box-sizing: border-box; min-width: 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px;">
                   <span class="neo-badge neo-badge-purple" style="font-size: 10.5px; padding: 3px 8px;">
                     🌐 {{ disc.source_site }}
                   </span>
@@ -1238,25 +1297,25 @@
                   </span>
                 </div>
 
-                <div style="font-size: 18px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.01em;">
+                <div style="font-size: 18px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.35; overflow-wrap: anywhere; word-break: break-word;">
                   {{ disc.title }}
                 </div>
-                <div style="font-size: 14px; color: #00f0ff; margin-top: 4px; font-weight: 800;">
+                <div style="font-size: 14px; color: #00f0ff; margin-top: 4px; font-weight: 800; line-height: 1.4; overflow-wrap: anywhere; word-break: break-word;">
                   🏢 {{ disc.company }} • 📍 {{ disc.location }}
                 </div>
 
-                <div style="font-size: 12px; color: #ffffff; margin-top: 8px; background: #0c1322; border: 1.5px solid rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 6px;">
+                <div style="font-size: 12px; color: #ffffff; margin-top: 8px; background: #0c1322; border: 1.5px solid rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 6px; overflow-wrap: anywhere; word-break: break-word;">
                   🗓️ <strong>Dates:</strong> {{ disc.start_date }} &rarr; {{ disc.end_date }} ({{ disc.duration }}) • 💰 <strong style="color: #FFE600;">{{ disc.stipend }}</strong>
                 </div>
 
-                <p style="font-size: 12.5px; color: #cbd5e1; margin-top: 10px; line-height: 1.5; font-weight: 500;">
+                <p style="font-size: 12.5px; color: #cbd5e1; margin-top: 10px; line-height: 1.5; font-weight: 500; overflow-wrap: anywhere; word-break: break-word;">
                   {{ disc.description|truncate(120) }}
                 </p>
               </div>
 
               <!-- Action Controls with explicit Green Approve / Live status button -->
-              <div style="border-top: 2px solid rgba(255, 255, 255, 0.15); padding-top: 14px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <div style="display: flex; gap: 8px; align-items: center;">
+              <div style="border-top: 2px solid rgba(255, 255, 255, 0.15); padding-top: 14px; margin-top: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; width: 100%; box-sizing: border-box;">
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                   <a href="{{ disc.application_link }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 11px; padding: 6px 14px;">
                     🔗 TEST LINK ↗
                   </a>
@@ -1283,7 +1342,7 @@
           <span>🏢</span> S30 CORPORATE PARTNER ROLES & MATCH MODERATION DESK
         </div>
 
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 30px;">
+        <div class="s30-two-col-grid" style="margin-bottom: 30px;">
           {% for int in internships %}
           <div class="neo-card-yellow" style="background: #090f1d; border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px #FFE600; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
@@ -1535,7 +1594,7 @@
         <span>🔬</span> S30 Frontier AI Research Lab Requisitions
       </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 22px; margin-bottom: 30px;">
+      <div class="s30-scoreboards-grid" style="margin-bottom: 30px;">
         {% for ai in ai_internships %}
         <div class="neo-card" style="border-color: #c084fc; box-shadow: 6px 6px 0px #c084fc; padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
           
