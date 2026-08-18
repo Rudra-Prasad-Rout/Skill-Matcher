@@ -1207,6 +1207,75 @@
     })();
   </script>
 
+  <!-- Universal 4-Second Auto-Refresh & Real-Time Sync Engine for Main Website & User Interface -->
+  <script>
+    (function() {
+      const AUTO_REFRESH_INTERVAL_MS = 4000;
+      let lastActivityTime = Date.now();
+
+      // Track recent user interaction (keystrokes, mouse moves, scrolls, touch)
+      ['keydown', 'input', 'mousedown', 'touchstart'].forEach(eventType => {
+        document.addEventListener(eventType, () => {
+          lastActivityTime = Date.now();
+        }, { passive: true });
+      });
+
+      // 1. Live State & Mailbox Badge Poller (every 4 seconds)
+      async function pollLiveUserState() {
+        try {
+          const res = await fetch('/api/user-state');
+          if (res.ok) {
+            const data = await res.json();
+            if (data.logged_in) {
+              const navMailboxBadge = document.querySelector('#s30-profile-menu-btn span[style*="background: #dc2626"]');
+              const drawerBadge = document.getElementById('s30-drawer-mailbox-badge');
+              
+              if (data.unread_mailbox_count > 0) {
+                if (navMailboxBadge) {
+                  navMailboxBadge.style.display = 'flex';
+                  navMailboxBadge.textContent = data.unread_mailbox_count;
+                }
+                if (drawerBadge) {
+                  drawerBadge.style.display = 'inline-block';
+                  drawerBadge.textContent = `${data.unread_mailbox_count} NEW`;
+                }
+              } else {
+                if (navMailboxBadge) navMailboxBadge.style.display = 'none';
+                if (drawerBadge) drawerBadge.style.display = 'none';
+              }
+            }
+          }
+        } catch (e) {
+          // Ignore network blips during polling
+        }
+      }
+
+      setInterval(pollLiveUserState, AUTO_REFRESH_INTERVAL_MS);
+
+      // 2. Auto-Refresh Engine (every 4 seconds) for Main Website & User Interface
+      setInterval(() => {
+        const activeElement = document.activeElement;
+        const isInputFocused = activeElement && (
+          activeElement.tagName === 'INPUT' || 
+          activeElement.tagName === 'TEXTAREA' || 
+          activeElement.tagName === 'SELECT' || 
+          activeElement.isContentEditable
+        );
+
+        const isModalOpen = document.querySelector(
+          '.modal.open, [role="dialog"][aria-hidden="false"], .s30-nav-drawer.active, #edit-squad-modal[style*="flex"]'
+        );
+
+        // Auto-refresh if user is not actively typing into a form field or interacting inside a modal
+        const idleForAtLeast2Sec = (Date.now() - lastActivityTime) >= 2000;
+
+        if (!isInputFocused && !isModalOpen && idleForAtLeast2Sec) {
+          window.location.reload();
+        }
+      }, AUTO_REFRESH_INTERVAL_MS);
+    })();
+  </script>
+
   {% block scripts %}{% endblock %}
 </body>
 </html>

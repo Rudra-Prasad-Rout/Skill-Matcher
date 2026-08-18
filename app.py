@@ -2470,6 +2470,36 @@ def api_verification_status():
         })
     return jsonify({"error": "User not found"}), 404
 
+# Universal Live User State Synchronizer API (4-second polling)
+@app.route("/api/user-state")
+def api_user_state():
+    user = get_current_user()
+    if not user:
+        return jsonify({"logged_in": False, "unread_mailbox_count": 0})
+        
+    conn = database.get_db_connection()
+    # Unread invites & requests
+    unread = conn.execute("""
+    SELECT COUNT(*) as c FROM team_invites
+    WHERE (
+        (receiver_id = ? AND invite_type = 'INVITATION' AND status = 'PENDING') OR
+        (team_id IN (SELECT id FROM teams WHERE leader_id = ?) AND invite_type = 'JOIN_REQUEST' AND status = 'PENDING')
+    )
+    """, (user["id"], user["id"])).fetchone()
+    
+    unread_count = unread["c"] if unread else 0
+    is_approved = user_is_approved_by_admin(user["id"])
+    
+    conn.close()
+    
+    return jsonify({
+        "logged_in": True,
+        "user_id": user["id"],
+        "user_code": user.get("user_code"),
+        "is_approved": is_approved,
+        "unread_mailbox_count": unread_count
+    })
+
 # ================= DOCUMENT VIEWING & SERVING =================
 @app.route("/documents/view/<filename>")
 def view_document(filename):
