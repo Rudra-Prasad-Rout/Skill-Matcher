@@ -320,7 +320,10 @@ def init_db(force_reset=False):
                     ("Flutter", "Peer tutoring portal", "https://github.com/priyasharma/peer-tutor-app", "VERIFIED"),
                     ("Node.js", "High-throughput API gateway", "https://github.com/priyasharma/cloud-gateway", "VERIFIED")
                 ],
-                "documents": []
+                "documents": [
+                    ("id_front", "id_front_priya.pdf", "ID_Front_Card.pdf", 10240, "application/pdf"),
+                    ("id_back", "id_back_priya.pdf", "ID_Back_Card.pdf", 10240, "application/pdf")
+                ]
             },
             {
                 "user_code": "M8V1Y",
