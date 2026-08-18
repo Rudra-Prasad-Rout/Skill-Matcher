@@ -556,15 +556,10 @@
       <div class="s30-nav-actions" style="display: flex; align-items: center; gap: 12px;">
         {% if logged_user and logged_user.user_code %}
           <div style="display: flex; align-items: center; gap: 10px;">
-            <button id="s30-id-badge-btn" class="s30-profile-trigger-btn" style="position: relative; padding: 6px 14px !important; gap: 6px !important; background: rgba(255, 255, 255, 0.6) !important; backdrop-filter: blur(8px) !important; cursor: pointer !important; border: 1.5px solid rgba(221, 213, 199, 0.85) !important; border-radius: 8px !important; box-shadow: 0 2px 8px rgba(40, 30, 20, 0.04) !important;" title="Click to view candidate passport menu">
+            <div id="s30-id-badge-chip" style="display: inline-flex; align-items: center; padding: 6px 14px; gap: 6px; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(8px); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; box-shadow: 0 2px 8px rgba(40, 30, 20, 0.04); cursor: default; user-select: text;" title="Candidate ID">
               <span style="font-size: 11px; font-weight: 800; color: #d97706; text-transform: uppercase; letter-spacing: 0.05em;">ID:</span>
               <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: var(--s30-text-primary, #1c1917); letter-spacing: 0.05em;">{{ logged_user.user_code }}</span>
-              {% if unread_mailbox_count and unread_mailbox_count > 0 %}
-                <span style="position: absolute; top: -5px; right: -5px; background: #dc2626; color: #ffffff; font-size: 9.5px; font-weight: 900; min-width: 17px; height: 17px; border-radius: 9px; padding: 0 3px; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.5);">
-                  {{ unread_mailbox_count }}
-                </span>
-              {% endif %}
-            </button>
+            </div>
             <a href="{{ url_for('user_logout') }}" class="neo-btn" style="padding: 7px 14px !important; font-size: 11.5px !important; font-weight: 800 !important; background: rgba(220, 38, 38, 0.12) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important; backdrop-filter: blur(8px);">
               LOGOUT
             </a>
@@ -781,7 +776,6 @@
   <script>
     (function initS30NavDrawer() {
       const profileBtn = document.getElementById('s30-profile-menu-btn');
-      const idBadgeBtn = document.getElementById('s30-id-badge-btn');
       const navDrawer = document.getElementById('s30-nav-drawer');
       const drawerBackdrop = document.getElementById('s30-drawer-backdrop');
       const drawerClose = document.getElementById('s30-drawer-close');
@@ -806,13 +800,6 @@
 
       if (profileBtn) {
         profileBtn.addEventListener('click', function(e) {
-          e.preventDefault();
-          openDrawer();
-        });
-      }
-
-      if (idBadgeBtn) {
-        idBadgeBtn.addEventListener('click', function(e) {
           e.preventDefault();
           openDrawer();
         });
