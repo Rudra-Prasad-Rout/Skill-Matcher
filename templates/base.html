@@ -11,7 +11,7 @@
   
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.0">
   <style>
-    /* Global Neo-Brutalism Overrides & 80% Screen Width Container */
+    /* Material Design 3 Global Styles & 80% Screen Width Container */
     .s30-auth-wrapper {
       width: 100% !important;
       display: flex !important;
@@ -25,6 +25,10 @@
       width: 80% !important;
       max-width: 80vw !important;
       margin: 0 auto !important;
+      background: var(--md-sys-color-surface-container-low) !important;
+      border: 1px solid var(--md-sys-color-outline) !important;
+      border-radius: var(--md-shape-xl) !important;
+      box-shadow: var(--md-elevation-3) !important;
       box-sizing: border-box !important;
     }
 
@@ -33,138 +37,135 @@
       align-items: center !important;
       justify-content: center !important;
       gap: 8px !important;
-      font-size: 13px !important;
-      font-weight: 900 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.05em !important;
-      padding: 10px 20px !important;
-      border-radius: 6px !important;
-      border: 2.5px solid #000000 !important;
-      box-shadow: 4px 4px 0px #000000 !important;
+      font-size: 13.5px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.03em !important;
+      padding: 10px 22px !important;
+      border-radius: var(--md-shape-md) !important;
+      border: none !important;
+      box-shadow: var(--md-elevation-1) !important;
       cursor: pointer !important;
       text-decoration: none !important;
-      transition: all 0.15s ease !important;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
       white-space: nowrap !important;
     }
     .neo-btn:hover {
-      transform: translate(2px, 2px) !important;
-      box-shadow: 2px 2px 0px #000000 !important;
+      transform: translateY(-1px) !important;
+      box-shadow: var(--md-elevation-2) !important;
     }
     .neo-btn:active {
-      transform: translate(4px, 4px) !important;
-      box-shadow: 0px 0px 0px #000000 !important;
+      transform: translateY(1px) !important;
+      box-shadow: var(--md-elevation-0) !important;
     }
 
-    .neo-btn-yellow { background: #FFE600 !important; color: #000000 !important; border-color: #000000 !important; }
-    .neo-btn-cyan { background: #00f0ff !important; color: #000000 !important; border-color: #000000 !important; }
-    .neo-btn-green { background: #22c55e !important; color: #000000 !important; border-color: #000000 !important; }
-    .neo-btn-pink { background: #ff2a85 !important; color: #ffffff !important; border-color: #000000 !important; }
-    .neo-btn-white { background: #ffffff !important; color: #000000 !important; border-color: #000000 !important; }
-    .neo-btn-dark { background: #0f172a !important; color: #ffffff !important; border-color: #ffffff !important; box-shadow: 4px 4px 0px #ffffff !important; }
+    .neo-btn-yellow { background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; }
+    .neo-btn-yellow:hover { background: var(--md-sys-color-primary-hover) !important; }
+    .neo-btn-cyan { background: var(--md-sys-color-secondary) !important; color: #000000 !important; }
+    .neo-btn-green { background: var(--md-sys-color-tertiary) !important; color: #000000 !important; }
+    .neo-btn-pink { background: var(--md-sys-color-error) !important; color: #ffffff !important; }
+    .neo-btn-white { background: #ffffff !important; color: #000000 !important; }
+    .neo-btn-dark { background: var(--md-sys-color-surface-container-highest) !important; color: #ffffff !important; }
 
     .neo-badge {
       display: inline-flex !important;
       align-items: center !important;
-      gap: 5px !important;
-      font-size: 11px !important;
-      font-weight: 900 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.06em !important;
+      gap: 6px !important;
+      font-size: 11.5px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.04em !important;
       padding: 4px 10px !important;
-      border-radius: 4px !important;
-      border: 2px solid #000000 !important;
-      box-shadow: 2.5px 2.5px 0px #000000 !important;
+      border-radius: var(--md-shape-sm) !important;
       line-height: 1.2 !important;
     }
-    .neo-badge-yellow { background: #FFE600 !important; color: #000000 !important; }
-    .neo-badge-cyan { background: #00f0ff !important; color: #000000 !important; }
-    .neo-badge-pink { background: #ff2a85 !important; color: #ffffff !important; }
-    .neo-badge-green { background: #22c55e !important; color: #000000 !important; }
-    .neo-badge-purple { background: #c084fc !important; color: #000000 !important; }
-    .neo-badge-white { background: #ffffff !important; color: #000000 !important; }
+    .neo-badge-yellow { background: var(--md-sys-color-primary-container) !important; color: var(--md-sys-color-primary) !important; border: 1px solid rgba(251, 191, 36, 0.3) !important; }
+    .neo-badge-cyan { background: var(--md-sys-color-secondary-container) !important; color: var(--md-sys-color-secondary) !important; border: 1px solid rgba(56, 189, 248, 0.3) !important; }
+    .neo-badge-pink { background: var(--md-sys-color-error-container) !important; color: var(--md-sys-color-error) !important; border: 1px solid rgba(244, 63, 94, 0.3) !important; }
+    .neo-badge-green { background: var(--md-sys-color-tertiary-container) !important; color: var(--md-sys-color-tertiary) !important; border: 1px solid rgba(52, 211, 153, 0.3) !important; }
+    .neo-badge-purple { background: var(--md-sys-color-purple-container) !important; color: var(--md-sys-color-purple) !important; border: 1px solid rgba(168, 85, 247, 0.3) !important; }
+    .neo-badge-white { background: rgba(255, 255, 255, 0.1) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; }
 
-    /* Universal Neo-Brutalist Button Fallbacks */
+    /* Material Outlined Buttons */
     .s30-btn-outline, a.s30-btn-outline {
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-      padding: 7px 16px !important;
-      border-radius: 5px !important;
-      border: 2px solid #ffffff !important;
-      background: #0f172a !important;
-      color: #ffffff !important;
-      font-size: 12.5px !important;
-      font-weight: 900 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.05em !important;
+      padding: 8px 18px !important;
+      border-radius: var(--md-shape-md) !important;
+      border: 1px solid var(--md-sys-color-outline) !important;
+      background: transparent !important;
+      color: var(--s30-text-primary) !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.03em !important;
       text-decoration: none !important;
-      box-shadow: 3px 3px 0px #ffffff !important;
-      transition: all 0.15s ease !important;
+      box-shadow: var(--md-elevation-0) !important;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
       cursor: pointer !important;
     }
     .s30-btn-outline:hover, a.s30-btn-outline:hover {
-      background: #1e293b !important;
-      transform: translate(1px, 1px) !important;
-      box-shadow: 2px 2px 0px #ffffff !important;
+      background: var(--md-sys-color-surface-container-high) !important;
+      border-color: var(--md-sys-color-secondary) !important;
+      color: var(--md-sys-color-secondary) !important;
+    }
+    .s30-btn-outline:active, a.s30-btn-outline:active {
+      background: var(--md-sys-color-surface-container-highest) !important;
     }
 
     .s30-btn-primary, a.s30-btn-primary {
       display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
-      padding: 8px 18px !important;
-      border-radius: 5px !important;
-      background: #FFE600 !important;
-      color: #000000 !important;
-      font-size: 12.5px !important;
-      font-weight: 900 !important;
-      text-transform: uppercase !important;
-      letter-spacing: 0.05em !important;
+      padding: 9px 20px !important;
+      border-radius: var(--md-shape-md) !important;
+      background: var(--md-sys-color-primary) !important;
+      color: var(--md-sys-color-on-primary) !important;
+      font-size: 13px !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.03em !important;
       text-decoration: none !important;
-      border: 2px solid #000000 !important;
-      box-shadow: 3px 3px 0px #FFE600 !important;
-      transition: all 0.15s ease !important;
+      border: none !important;
+      box-shadow: var(--md-elevation-1) !important;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
       cursor: pointer !important;
     }
     .s30-btn-primary:hover, a.s30-btn-primary:hover {
-      transform: translate(1px, 1px) !important;
-      box-shadow: 2px 2px 0px #FFE600 !important;
-      background: #fff033 !important;
+      background: var(--md-sys-color-primary-hover) !important;
+      transform: translateY(-1px) !important;
+      box-shadow: var(--md-elevation-2) !important;
+    }
+    .s30-btn-primary:active, a.s30-btn-primary:active {
+      transform: translateY(1px) !important;
+      box-shadow: var(--md-elevation-0) !important;
     }
 
-    /* Profile Trigger Button in Navbar (Positioned at Green Dot) */
+    /* Profile Trigger Button in Navbar */
     .s30-profile-trigger-btn {
       display: inline-flex !important;
       align-items: center !important;
       gap: 7px !important;
       padding: 7px 14px !important;
-      background: #0f172a !important;
-      border: 2px solid #FFE600 !important;
-      border-radius: 6px !important;
-      color: #ffffff !important;
+      background: var(--md-sys-color-surface-container) !important;
+      border: 1px solid var(--md-sys-color-outline) !important;
+      border-radius: var(--md-shape-sm) !important;
+      color: var(--s30-text-primary) !important;
       font-size: 12px !important;
-      font-weight: 900 !important;
+      font-weight: 700 !important;
       text-transform: uppercase !important;
-      letter-spacing: 0.06em !important;
+      letter-spacing: 0.04em !important;
       cursor: pointer !important;
-      box-shadow: 3px 3px 0px #FFE600 !important;
-      transition: all 0.15s ease !important;
+      box-shadow: var(--md-elevation-1) !important;
+      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1) !important;
       user-select: none !important;
       text-decoration: none !important;
     }
     .s30-profile-trigger-btn:hover {
-      background: #FFE600 !important;
-      color: #000000 !important;
-      box-shadow: 2px 2px 0px #00f0ff !important;
-      border-color: #000000 !important;
-      transform: translate(1px, 1px) !important;
-    }
-    .s30-profile-trigger-btn:hover .s30-profile-trigger-icon svg {
-      stroke: #000000 !important;
+      background: var(--md-sys-color-primary-container) !important;
+      color: var(--md-sys-color-primary) !important;
+      border-color: var(--md-sys-color-primary) !important;
     }
     .s30-profile-trigger-btn:active {
-      transform: translate(3px, 3px) !important;
-      box-shadow: 0px 0px 0px #000000 !important;
+      transform: translateY(1px) !important;
+      box-shadow: var(--md-elevation-0) !important;
     }
     .s30-profile-trigger-icon {
       display: flex;
@@ -179,9 +180,9 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(4, 8, 18, 0.82);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(11, 15, 25, 0.7);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
       z-index: 9998;
       opacity: 0;
       visibility: hidden;
@@ -199,14 +200,14 @@
       width: 360px;
       max-width: 90vw;
       height: 100vh;
-      background: #080d1a;
-      border-right: 3.5px solid #FFE600;
-      box-shadow: 10px 0px 0px #000000, 20px 0px 40px rgba(0, 0, 0, 0.85);
+      background: var(--md-sys-color-surface);
+      border-right: 1px solid var(--md-sys-color-outline);
+      box-shadow: var(--md-elevation-4);
       z-index: 9999;
       display: flex;
       flex-direction: column;
       transform: translateX(-105%);
-      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.28s cubic-bezier(0.2, 0, 0, 1);
       overflow: hidden;
     }
     .s30-nav-drawer.active {
@@ -215,11 +216,11 @@
 
     .s30-drawer-header {
       padding: 18px 20px;
-      border-bottom: 2.5px solid #1e293b;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #050811;
+      background: var(--md-sys-color-surface-container-low);
     }
 
     .s30-drawer-brand {
