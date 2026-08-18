@@ -5,139 +5,8 @@
 {% block content_wrapper %}
 <main style="max-width: 1200px; width: 100%; margin: 32px auto 60px auto; padding: 0 20px; position: relative; z-index: 2;">
   
-  <!-- ================= 1. PRE-SCAN OBJECTIVE SELECTION SCREEN (Choose 3 Options) ================= -->
-  <div id="intent-selection-screen" class="neo-card-cyan" style="padding: 36px 30px; margin-bottom: 30px; background: #0c1322; border: 3px solid #38BDF8; box-shadow: 8px 8px 0px #38BDF8;">
-    
-    <div style="text-align: center; max-width: 780px; margin: 0 auto 30px auto;">
-      <div style="margin-bottom: 12px;">
-        <span class="neo-badge neo-badge-cyan">🎯 STEP 1 OF 2: CHOOSE YOUR CAREER OBJECTIVE</span>
-      </div>
-      <h1 style="font-size: 27px; font-weight: 900; color: #ffffff; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 8px;">
-        Select Your Matchmaking Purpose
-      </h1>
-      <p style="font-size: 14px; color: #cbd5e1; line-height: 1.6; font-weight: 500;">
-        Tell our Semantic AI Engine how you want to advance your career. We will optimize your matchmaking against legal portal opportunities and complementary verified peer squads.
-      </p>
-    </div>
-
-    <!-- 3 Interactive Selectable Options Grid -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; margin-bottom: 32px;">
-      
-      <!-- Option 1: Internship Purpose -->
-      <div 
-        id="intent-card-internship" 
-        class="neo-intent-card" 
-        onclick="selectCareerIntent('internship')"
-        style="padding: 24px; background: #090f1d; border: 2.5px solid #ffffff; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 4px 4px 0px #ffffff; position: relative;"
-      >
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <div style="width: 44px; height: 44px; background: #38BDF8; border: 2px solid #000; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 2px 2px 0px #000;">
-              💼
-            </div>
-            <span id="check-internship" class="intent-check-badge neo-badge" style="background: transparent; border: 1.5px solid #64748b; color: #64748b; font-size: 11px;">
-              CLICK TO SELECT
-            </span>
-          </div>
-
-          <h3 style="font-size: 18px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin-bottom: 6px; letter-spacing: -0.01em;">
-            1. Internship Purpose
-          </h3>
-          <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5; font-weight: 500; margin-bottom: 14px;">
-            Target legal government portals (ISRO, AICTE, PM Scheme, MEA) and Tier-1 corporate partners for verified stipend internships.
-          </p>
-        </div>
-
-        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-          <span class="neo-badge neo-badge-cyan" style="font-size: 10px; padding: 2px 6px;">🏛️ GOVT PORTALS</span>
-          <span class="neo-badge neo-badge-green" style="font-size: 10px; padding: 2px 6px;">💰 STIPEND TRACK</span>
-          <span class="neo-badge neo-badge-purple" style="font-size: 10px; padding: 2px 6px;">✓ SCAM-FREE</span>
-        </div>
-      </div>
-
-      <!-- Option 2: Team Formation Purpose -->
-      <div 
-        id="intent-card-team_formation" 
-        class="neo-intent-card" 
-        onclick="selectCareerIntent('team_formation')"
-        style="padding: 24px; background: #090f1d; border: 2.5px solid #ffffff; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 4px 4px 0px #ffffff; position: relative;"
-      >
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <div style="width: 44px; height: 44px; background: #E0536C; border: 2px solid #000; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 2px 2px 0px #000;">
-              👥
-            </div>
-            <span id="check-team_formation" class="intent-check-badge neo-badge" style="background: transparent; border: 1.5px solid #64748b; color: #64748b; font-size: 11px;">
-              CLICK TO SELECT
-            </span>
-          </div>
-
-          <h3 style="font-size: 18px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin-bottom: 6px; letter-spacing: -0.01em;">
-            2. Team Formation Purpose
-          </h3>
-          <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5; font-weight: 500; margin-bottom: 14px;">
-            Find verified peer developers, AI researchers, and project builders with high synergy scores to build hackathons & startups.
-          </p>
-        </div>
-
-        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-          <span class="neo-badge neo-badge-pink" style="font-size: 10px; padding: 2px 6px;">🚀 HACKATHON SQUADS</span>
-          <span class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 6px;">👥 PEER SYNERGY</span>
-          <span class="neo-badge neo-badge-cyan" style="font-size: 10px; padding: 2px 6px;">🧩 SKILL MATRIX</span>
-        </div>
-      </div>
-
-      <!-- Option 3: Internship + Team Formation Purpose (Recommended) -->
-      <div 
-        id="intent-card-both" 
-        class="neo-intent-card active-intent-card" 
-        onclick="selectCareerIntent('both')"
-        style="padding: 24px; background: #090f1d; border: 2.5px solid #D9A726; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 6px 6px 0px #D9A726; position: relative;"
-      >
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-            <div style="width: 44px; height: 44px; background: #D9A726; border: 2px solid #000; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 2px 2px 0px #000;">
-              ⚡
-            </div>
-            <span id="check-both" class="intent-check-badge neo-badge neo-badge-yellow" style="font-size: 11px;">
-              ✓ SELECTED (RECOMMENDED)
-            </span>
-          </div>
-
-          <h3 style="font-size: 18px; font-weight: 900; color: #D9A726; text-transform: uppercase; margin-bottom: 6px; letter-spacing: -0.01em;">
-            3. Internship + Team Formation
-          </h3>
-          <p style="font-size: 13px; color: #cbd5e1; line-height: 1.5; font-weight: 500; margin-bottom: 14px;">
-            Full spectrum matching: unlock verified corporate & govt internships AND connect with top peer teammates in one unified stream.
-          </p>
-        </div>
-
-        <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-          <span class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 6px;">⚡ DUAL ACCESS</span>
-          <span class="neo-badge neo-badge-cyan" style="font-size: 10px; padding: 2px 6px;">💼 INTERNSHIPS</span>
-          <span class="neo-badge neo-badge-green" style="font-size: 10px; padding: 2px 6px;">👥 SQUAD POOL</span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Confirm & Start AI Scan Action Button -->
-    <div style="text-align: center;">
-      <button 
-        type="button" 
-        id="btn-launch-analysis" 
-        onclick="launchAiAnalysisWithIntent()" 
-        class="neo-btn neo-btn-yellow" 
-        style="padding: 14px 36px; font-size: 14.5px; letter-spacing: 0.04em;"
-      >
-        <span>⚡ CONFIRM OBJECTIVE & LAUNCH AI ANALYSIS &rarr;</span>
-      </button>
-    </div>
-
-  </div>
-
-  <!-- ================= 2. LIVE RADAR SCANNING SCREEN ================= -->
-  <div id="scanning-screen" class="neo-card-yellow" style="display: none; text-align: center; padding: 48px 30px; margin-bottom: 30px; background: #0c1322;">
+  <!-- ================= 1. LIVE RADAR SCANNING SCREEN ================= -->
+  <div id="scanning-screen" class="neo-card-yellow" style="display: block; text-align: center; padding: 48px 30px; margin-bottom: 30px; background: #0c1322;">
     
     <!-- Scanner Radar Graphic -->
     <div style="width: 80px; height: 80px; margin: 0 auto 20px auto; border-radius: 8px; background: #D9A726; border: 2.5px solid #000000; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0px #000000;">
@@ -159,13 +28,13 @@
       Analyzing Profile & Calculating Matches
     </h2>
     <p id="scan-sub-title" style="font-size: 14px; color: #cbd5e1; max-width: 620px; margin: 0 auto 24px auto; line-height: 1.6; font-weight: 500;">
-      Cross-referencing verified credentials and codebases against partner matrices and peer collaboration squads.
+      Cross-referencing verified credentials, academic background, and technical GitHub repositories against live internship listings and peer squads.
     </p>
 
     <!-- Progress Bar with Live % -->
     <div style="max-width: 520px; margin: 0 auto;">
       <div style="display: flex; justify-content: space-between; font-size: 13px; color: #cbd5e1; margin-bottom: 8px; font-weight: 800;">
-        <span id="scan-step-text" style="color: #38BDF8;">INITIALIZING PROFILE SCAN...</span>
+        <span id="scan-step-text" style="color: #38BDF8;">INITIALIZING AI PROFILE SCAN...</span>
         <strong id="scan-pct-text" style="color: #D9A726; font-family: monospace; font-size: 16px;">0%</strong>
       </div>
       <div style="height: 12px; background: #060a14; border-radius: 4px; overflow: hidden; border: 2px solid #000000; box-shadow: 2px 2px 0px #000000;">
@@ -174,7 +43,7 @@
     </div>
   </div>
 
-  <!-- ================= 3. COMPREHENSIVE MATCH RESULTS (Revealed) ================= -->
+  <!-- ================= 2. COMPREHENSIVE MATCH RESULTS (Revealed) ================= -->
   <div id="analysis-results-section" style="display: none; animation: fadeIn 0.4s ease; width: 100%; box-sizing: border-box;">
     
     <!-- Candidate Overview Metrics Banner -->
@@ -216,24 +85,16 @@
         </div>
       </div>
 
-      <!-- Card 3: Selected Objective Badge & Switcher -->
+      <!-- Card 3: AI Analysis Status Banner -->
       <div class="neo-card-cyan" style="padding: 18px 20px; display: flex; flex-direction: column; justify-content: center; min-width: 0; box-sizing: border-box; overflow: hidden;">
         <div style="font-size: 10.5px; font-weight: 900; text-transform: uppercase; color: #38BDF8; letter-spacing: 0.08em;">
-          ACTIVE OBJECTIVE
+          AI ANALYSIS STATUS
         </div>
-        <div id="results-intent-label" style="font-size: 16px; font-weight: 900; color: #ffffff; margin-top: 3px; line-height: 1.2;">
-          {% if career_intent == 'internship' %}
-            💼 INTERNSHIP PURPOSE
-          {% elif career_intent == 'team_formation' %}
-            👥 TEAM FORMATION
-          {% else %}
-            ⚡ INTERNSHIP + TEAM
-          {% endif %}
+        <div style="font-size: 16px; font-weight: 900; color: #ffffff; margin-top: 3px; line-height: 1.2;">
+          ⚡ DUAL MATCH COMPLETED
         </div>
-        <div style="margin-top: 4px;">
-          <button type="button" onclick="showIntentSelectionScreen()" style="background: none; border: none; color: #38BDF8; font-size: 11px; font-weight: 800; text-decoration: underline; cursor: pointer; padding: 0;">
-            Change Objective &rarr;
-          </button>
+        <div style="font-size: 11px; color: #cbd5e1; margin-top: 2px; font-weight: 600;">
+          {{ matches|length }} Verified Roles • {{ team_matches|length }} Peer Squads
         </div>
       </div>
 
@@ -573,151 +434,51 @@
 </style>
 
 <script>
-  let selectedIntent = '{{ career_intent or "both" }}';
-
-  function selectCareerIntent(intent) {
-    selectedIntent = intent;
-    const cards = ['internship', 'team_formation', 'both'];
-    
-    cards.forEach(c => {
-      const cardEl = document.getElementById(`intent-card-${c}`);
-      const checkEl = document.getElementById(`check-${c}`);
-      if (cardEl && checkEl) {
-        if (c === intent) {
-          cardEl.classList.add('active-intent-card');
-          cardEl.style.borderColor = (c === 'internship') ? '#38BDF8' : (c === 'team_formation' ? '#E0536C' : '#D9A726');
-          cardEl.style.boxShadow = `6px 6px 0px ${c === 'internship' ? '#38BDF8' : (c === 'team_formation' ? '#E0536C' : '#D9A726')}`;
-          checkEl.className = 'intent-check-badge neo-badge ' + (c === 'internship' ? 'neo-badge-cyan' : (c === 'team_formation' ? 'neo-badge-pink' : 'neo-badge-yellow'));
-          checkEl.innerText = '✓ SELECTED';
-        } else {
-          cardEl.classList.remove('active-intent-card');
-          cardEl.style.borderColor = '#ffffff';
-          cardEl.style.boxShadow = '4px 4px 0px #ffffff';
-          checkEl.className = 'intent-check-badge neo-badge';
-          checkEl.style.background = 'transparent';
-          checkEl.style.border = '1.5px solid #64748b';
-          checkEl.style.color = '#64748b';
-          checkEl.innerText = 'CLICK TO SELECT';
-        }
-      }
-    });
-  }
-
-  function showIntentSelectionScreen() {
-    document.getElementById('intent-selection-screen').style.display = 'block';
-    document.getElementById('scanning-screen').style.display = 'none';
-    document.getElementById('analysis-results-section').style.display = 'none';
-    sessionStorage.removeItem('s30_ai_analyzed_done');
-  }
-
-  async function launchAiAnalysisWithIntent() {
-    // 1. Save intent in backend
-    try {
-      await fetch('/api/set-career-intent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ intent: selectedIntent })
-      });
-    } catch (e) {
-      console.warn('Could not save intent to backend:', e);
-    }
-
-    // 2. Hide selection screen and show scanning screen
-    document.getElementById('intent-selection-screen').style.display = 'none';
+  function runAutoScan() {
     const scanScreen = document.getElementById('scanning-screen');
-    scanScreen.style.display = 'block';
-
+    const resultsSection = document.getElementById('analysis-results-section');
     const stepText = document.getElementById('scan-step-text');
     const pctText = document.getElementById('scan-pct-text');
     const fill = document.getElementById('scan-progress-fill');
 
-    let steps = [];
-    if (selectedIntent === 'internship') {
-      steps = [
-        { pct: 25, text: "🔍 Scanning verified coursework & academic transcripts..." },
-        { pct: 55, text: "🧠 Crawling ISRO, AICTE, and PM Scheme legal portals..." },
-        { pct: 85, text: "⚡ Matching against 8+ corporate partner internship matrices..." },
-        { pct: 100, text: "✓ Internship matchmaking complete!" }
-      ];
-    } else if (selectedIntent === 'team_formation') {
-      steps = [
-        { pct: 25, text: "🔍 Analyzing technical skillset & verified repositories..." },
-        { pct: 55, text: "👥 Evaluating peer complementarity and skill synergies..." },
-        { pct: 85, text: "🧩 Calculating hackathon squad balance & compatibility..." },
-        { pct: 100, text: "✓ Team formation matches computed!" }
-      ];
-    } else {
-      steps = [
-        { pct: 20, text: "🔍 Analyzing verified credentials & GitHub proofs..." },
-        { pct: 50, text: "💼 Matching against legal government portals & corporate listings..." },
-        { pct: 80, text: "👥 Cross-referencing peer candidate skills for team synergy..." },
-        { pct: 100, text: "✓ Dual Matchmaking calculation complete!" }
-      ];
-    }
+    const steps = [
+      { pct: 25, text: "🔍 Analyzing verified college credentials & GitHub repositories..." },
+      { pct: 55, text: "🏛️ Crawling legal government portals & corporate partner matrices..." },
+      { pct: 85, text: "👥 Cross-referencing peer candidate skills for team formation..." },
+      { pct: 100, text: "✓ Dual AI Matchmaking calculation complete!" }
+    ];
 
     let currentStep = 0;
-    function runScanStep() {
+    function runStep() {
       if (currentStep < steps.length) {
         const s = steps[currentStep];
-        pctText.textContent = `${s.pct}%`;
-        fill.style.width = `${s.pct}%`;
-        stepText.textContent = s.text;
+        if (pctText) pctText.textContent = `${s.pct}%`;
+        if (fill) fill.style.width = `${s.pct}%`;
+        if (stepText) stepText.textContent = s.text;
         currentStep++;
-        setTimeout(runScanStep, 450);
+        setTimeout(runStep, 350);
       } else {
         setTimeout(() => {
           sessionStorage.setItem('s30_ai_analyzed_done', 'true');
-          scanScreen.style.display = 'none';
-          revealResultsWithIntent(selectedIntent);
-        }, 350);
+          if (scanScreen) scanScreen.style.display = 'none';
+          if (resultsSection) resultsSection.style.display = 'block';
+        }, 250);
       }
     }
 
-    runScanStep();
-  }
-
-  function revealResultsWithIntent(intent) {
-    const resultsSection = document.getElementById('analysis-results-section');
-    const internshipBlock = document.getElementById('internship-section-block');
-    const teamBlock = document.getElementById('team-section-block');
-    const labelEl = document.getElementById('results-intent-label');
-
-    if (labelEl) {
-      if (intent === 'internship') {
-        labelEl.innerText = '💼 INTERNSHIP PURPOSE';
-      } else if (intent === 'team_formation') {
-        labelEl.innerText = '👥 TEAM FORMATION';
-      } else {
-        labelEl.innerText = '⚡ INTERNSHIP + TEAM';
-      }
-    }
-
-    if (internshipBlock && teamBlock) {
-      if (intent === 'internship') {
-        internshipBlock.style.display = 'block';
-        teamBlock.style.display = 'none';
-      } else if (intent === 'team_formation') {
-        internshipBlock.style.display = 'none';
-        teamBlock.style.display = 'block';
-      } else {
-        internshipBlock.style.display = 'block';
-        teamBlock.style.display = 'block';
-      }
-    }
-
-    resultsSection.style.display = 'block';
+    runStep();
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    // Check initial intent selection
-    selectCareerIntent(selectedIntent);
-
-    // If returning user already completed analysis in current session
     const alreadyAnalyzed = sessionStorage.getItem('s30_ai_analyzed_done');
+    const scanScreen = document.getElementById('scanning-screen');
+    const resultsSection = document.getElementById('analysis-results-section');
+
     if (alreadyAnalyzed) {
-      document.getElementById('intent-selection-screen').style.display = 'none';
-      document.getElementById('scanning-screen').style.display = 'none';
-      revealResultsWithIntent(selectedIntent);
+      if (scanScreen) scanScreen.style.display = 'none';
+      if (resultsSection) resultsSection.style.display = 'block';
+    } else {
+      runAutoScan();
     }
   });
 
