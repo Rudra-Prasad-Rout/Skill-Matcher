@@ -28,7 +28,7 @@
 </div>
 
 {% if error %}
-<div style="background: #000000; border: 2px solid #ff2a85; color: #ff2a85; padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 800; box-shadow: 3px 3px 0px #ff2a85;">
+<div style="background: #000000; border: 2px solid #E0536C; color: #E0536C; padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 800; box-shadow: 3px 3px 0px #E0536C;">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 18px; height: 18px; flex-shrink: 0;">
     <circle cx="12" cy="12" r="10"></circle>
     <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -41,13 +41,13 @@
 <div id="skills-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
   {% if skills and skills|length > 0 %}
     {% for skill in skills %}
-    <div style="background: #090f1d; border: 2px solid #00f0ff; border-radius: 6px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; box-shadow: 3.5px 3.5px 0px #00f0ff; box-sizing: border-box; overflow: hidden;">
+    <div style="background: #090f1d; border: 2px solid #38BDF8; border-radius: 6px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; box-shadow: 3.5px 3.5px 0px #38BDF8; box-sizing: border-box; overflow: hidden;">
       <div style="min-width: 0; flex: 1 1 auto; word-break: break-word; overflow-wrap: break-word;">
         <div style="font-size: 14px; font-weight: 800; color: #ffffff; line-height: 1.35; word-break: break-word; overflow-wrap: break-word;">
-          {{ skill.skill_name }} <span style="font-weight: 600; color: #FFE600;">— {{ skill.project_name }}</span>
+          {{ skill.skill_name }} <span style="font-weight: 600; color: #D9A726;">— {{ skill.project_name }}</span>
         </div>
         {% if skill.project_url %}
-        <a href="{{ skill.project_url }}" target="_blank" style="font-size: 12px; color: #00f0ff; font-weight: 700; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; word-break: break-all; overflow-wrap: anywhere;">
+        <a href="{{ skill.project_url }}" target="_blank" style="font-size: 12px; color: #38BDF8; font-weight: 700; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; word-break: break-all; overflow-wrap: anywhere;">
           🔗 {{ skill.project_url }}
         </a>
         {% endif %}
@@ -57,24 +57,24 @@
         <span class="badge-status {% if skill.status == 'VERIFIED' %}badge-verified{% elif skill.status == 'REJECTED' %}badge-rejected{% else %}badge-checking{% endif %}">
           {{ skill.status }}
         </span>
-        <button type="button" onclick="deleteSkill({{ skill.id }})" title="Remove skill" style="background: #000; border: 1.5px solid #ff2a85; color: #ff2a85; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 13px; padding: 2px 7px; box-shadow: 2px 2px 0px #ff2a85;">✕</button>
+        <button type="button" onclick="deleteSkill({{ skill.id }})" title="Remove skill" style="background: #000; border: 1.5px solid #E0536C; color: #E0536C; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 13px; padding: 2px 7px; box-shadow: 2px 2px 0px #E0536C;">✕</button>
       </div>
     </div>
     {% endfor %}
   {% else %}
-    <div style="background: #090f1d; border: 2px dashed #ff2a85; border-radius: 6px; padding: 20px; text-align: center; color: #cbd5e1; font-size: 13px; font-weight: 600;">
+    <div style="background: #090f1d; border: 2px dashed #E0536C; border-radius: 6px; padding: 20px; text-align: center; color: #cbd5e1; font-size: 13px; font-weight: 600;">
       <div style="font-size: 24px; margin-bottom: 6px;">⚡</div>
-      <strong style="color: #FFE600; text-transform: uppercase;">No technical skills added yet</strong><br>
+      <strong style="color: #D9A726; text-transform: uppercase;">No technical skills added yet</strong><br>
       <span style="font-size: 12px; color: #94a3b8; display: inline-block; margin-top: 4px;">
-        You must add at least <span style="color: #ff2a85; font-weight: 800;">1 skill & project proof</span> below to unlock Step 3.
+        You must add at least <span style="color: #E0536C; font-weight: 800;">1 skill & project proof</span> below to unlock Step 3.
       </span>
     </div>
   {% endif %}
 </div>
 
 <!-- Add Skill Form Box with Neo-Brutalist Finish -->
-<div style="background: #0c1322; border: 2.5px dashed #FFE600; border-radius: 6px; padding: 22px; margin-bottom: 24px; box-shadow: 4px 4px 0px #FFE600;">
-  <div style="font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #FFE600; margin-bottom: 14px;">+ ADD TECHNICAL SKILL & PROJECT PROOF</div>
+<div style="background: #0c1322; border: 2.5px dashed #D9A726; border-radius: 6px; padding: 22px; margin-bottom: 24px; box-shadow: 4px 4px 0px #D9A726;">
+  <div style="font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #D9A726; margin-bottom: 14px;">+ ADD TECHNICAL SKILL & PROJECT PROOF</div>
   
   <div class="s30-form-grid-2">
     <div class="s30-form-group">

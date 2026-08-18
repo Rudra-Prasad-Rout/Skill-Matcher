@@ -1,0 +1,665 @@
+{% extends "base.html" %}
+
+{% block title %}Candidate Dashboard — S30 Verified Candidate Portal{% endblock %}
+
+{% block content_wrapper %}
+<style>
+  /* Candidate Dashboard Neo-Brutalist Styles */
+  .candidate-dashboard-container {
+    max-width: 1280px;
+    width: 100%;
+    margin: 28px auto 70px auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Candidate Hero Dossier Banner */
+  .candidate-hero-banner {
+    background: #090f1d;
+    border: 3px solid #ffffff;
+    border-radius: 12px;
+    box-shadow: 8px 8px 0px #FFE600;
+    padding: 32px 36px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .candidate-hero-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .candidate-profile-meta {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .candidate-avatar-large {
+    width: 72px;
+    height: 72px;
+    border-radius: 12px;
+    background: #FFE600;
+    color: #000000;
+    border: 3px solid #000000;
+    box-shadow: 4px 4px 0px #00f0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  .candidate-info-block h1 {
+    font-size: 28px;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .candidate-meta-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #cbd5e1;
+    font-size: 14px;
+    font-weight: 600;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+
+  /* Stat Matrix Cards */
+  .candidate-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-bottom: 34px;
+  }
+
+  .candidate-stat-card {
+    background: #090f1d;
+    border-radius: 10px;
+    padding: 22px 24px;
+    position: relative;
+    transition: all 0.18s ease;
+  }
+  .candidate-stat-card:hover {
+    transform: translate(-3px, -3px);
+  }
+
+  .stat-val-huge {
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  /* Two Column Main Dashboard Layout */
+  .dashboard-main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 26px;
+    margin-bottom: 34px;
+  }
+
+  @media (max-width: 1024px) {
+    .dashboard-main-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Opportunity Deck */
+  .opportunity-card-neo {
+    background: #090f1d;
+    border: 2.5px solid #ffffff;
+    border-radius: 10px;
+    padding: 24px;
+    box-shadow: 6px 6px 0px #00f0ff;
+    margin-bottom: 20px;
+    transition: all 0.18s ease;
+  }
+  .opportunity-card-neo:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px #00f0ff;
+  }
+
+  /* Skills Pills Grid */
+  .skill-pill-card {
+    background: #0c1322;
+    border: 2px solid #1e293b;
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.15s ease;
+  }
+  .skill-pill-card:hover {
+    border-color: #FFE600;
+    box-shadow: 3px 3px 0px #FFE600;
+    background: #101a2f;
+  }
+
+  /* Stepper Bar */
+  .stepper-mini-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .stepper-segment-mini {
+    height: 6px;
+    border-radius: 3px;
+    background: #1e293b;
+  }
+  .stepper-segment-mini.completed {
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+  }
+  .stepper-segment-mini.current {
+    background: #FFE600;
+    box-shadow: 0 0 8px rgba(255, 230, 0, 0.5);
+  }
+</style>
+
+<div class="candidate-dashboard-container">
+
+  <!-- ================= CANDIDATE HERO DOSSIER ================= -->
+  <div class="candidate-hero-banner">
+    <div class="candidate-hero-grid">
+      <div class="candidate-profile-meta">
+        <div class="candidate-avatar-large">
+          {{ user.full_name[:2].upper() if user and user.full_name else 'ST' }}
+        </div>
+        <div class="candidate-info-block">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap;">
+            <span class="neo-badge neo-badge-yellow" style="font-size: 12px; padding: 4px 10px;">
+              ID: {{ user.user_code if user and user.user_code else 'A7X9K' }}
+            </span>
+            {% if is_approved %}
+              <span class="neo-badge neo-badge-green" style="font-size: 12px; padding: 4px 10px;">
+                ✓ 100% VERIFIED CANDIDATE
+              </span>
+            {% elif user.is_banned %}
+              <span class="neo-badge neo-badge-pink" style="font-size: 12px; padding: 4px 10px;">
+                ⚠️ SUSPENDED
+              </span>
+            {% else %}
+              <span class="neo-badge neo-badge-cyan" style="font-size: 12px; padding: 4px 10px;">
+                ⏳ VERIFICATION IN PROGRESS
+              </span>
+            {% endif %}
+            <span class="neo-badge neo-badge-purple" style="font-size: 11px;">
+              STEP {{ user.step or 4 }}/5 ACTIVE
+            </span>
+          </div>
+
+          <h1>
+            {{ user.full_name if user and user.full_name else 'Alex Rivera' }}
+          </h1>
+
+          <div class="candidate-meta-line">
+            <span>🏛️ {{ user.school if user and user.school else 'Delhi University' }}</span>
+            <span>•</span>
+            <span>📚 {{ user.coursework if user and user.coursework else 'B.Tech Computer Science' }}</span>
+            <span>•</span>
+            <span>🎂 Age: {{ user.age or 21 }} ({{ user.gender or 'Male' }})</span>
+            <span>•</span>
+            <span>✉️ {{ user.email }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <a href="{{ url_for('mailbox') }}" class="neo-btn neo-btn-pink" style="font-size: 12px !important; padding: 9px 16px !important; display: inline-flex; align-items: center; gap: 6px;">
+          <span>📬 MAILBOX</span>
+          {% if unread_mailbox_count and unread_mailbox_count > 0 %}
+            <span class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 1px 6px; color: #000000;">{{ unread_mailbox_count }} NEW</span>
+          {% endif %}
+        </a>
+        <a href="{{ url_for('signup_profile') }}" class="neo-btn neo-btn-cyan" style="font-size: 12px !important; padding: 9px 16px !important;">
+          ✏️ EDIT PROFILE
+        </a>
+        <a href="{{ url_for('signup_skills') }}" class="neo-btn neo-btn-yellow" style="font-size: 12px !important; padding: 9px 16px !important;">
+          ⚡ MANAGE SKILLS
+        </a>
+        <a href="{{ url_for('signup_verification') }}" class="neo-btn neo-btn-white" style="font-size: 12px !important; padding: 9px 16px !important;">
+          🛡️ PASSPORT STATUS
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Unread Mailbox Alert Banner -->
+  {% if unread_mailbox_count and unread_mailbox_count > 0 %}
+  <div style="background: rgba(255, 42, 133, 0.15); border: 2.5px solid #ff2a85; box-shadow: 4px 4px 0px #ff2a85; border-radius: 8px; padding: 14px 20px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <span style="font-size: 24px;">📬</span>
+      <div>
+        <strong style="color: #ffffff; font-size: 15px; display: block;">You have {{ unread_mailbox_count }} new squad invitation{{ 's' if unread_mailbox_count != 1 else '' }} or join request{{ 's' if unread_mailbox_count != 1 else '' }}!</strong>
+        <span style="font-size: 12px; color: #cbd5e1;">Review and respond in your Mailbox to build your hackathon team.</span>
+      </div>
+    </div>
+    <a href="{{ url_for('mailbox') }}" class="neo-btn neo-btn-yellow" style="padding: 8px 18px !important; font-size: 12px !important; font-weight: 900 !important;">
+      OPEN MAILBOX ({{ unread_mailbox_count }}) &rarr;
+    </a>
+  </div>
+  {% endif %}
+
+  <!-- ================= 4 NEO-BRUTALIST KPI STATS ================= -->
+  <div class="candidate-stats-grid">
+    <!-- Stat 1: Top Match Score -->
+    <div class="candidate-stat-card" style="border: 2.5px solid #00f0ff; box-shadow: 6px 6px 0px #00f0ff;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span class="neo-badge neo-badge-cyan">AI MATCH SCORE</span>
+        <span style="font-size: 20px;">🎯</span>
+      </div>
+      <div class="stat-val-huge" style="color: #00f0ff;">
+        {{ overall_score or 94 }}%
+        <span style="font-size: 14px; color: #cbd5e1; font-weight: 700;">Top Compatibility</span>
+      </div>
+      <p style="font-size: 12px; color: #94a3b8; font-weight: 600;">
+        Calculated across whitelisted government & corporate internship criteria.
+      </p>
+    </div>
+
+    <!-- Stat 2: Document Verification Health -->
+    <div class="candidate-stat-card" style="border: 2.5px solid #22c55e; box-shadow: 6px 6px 0px #22c55e;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span class="neo-badge neo-badge-green">OCR & CREDENTIALS</span>
+        <span style="font-size: 20px;">🪪</span>
+      </div>
+      <div class="stat-val-huge" style="color: #22c55e;">
+        {% if user.pdf_status == 'DONE' %}100%{% else %}PENDING{% endif %}
+        <span style="font-size: 14px; color: #cbd5e1; font-weight: 700;">ID Card OCR</span>
+      </div>
+      <p style="font-size: 12px; color: #94a3b8; font-weight: 600;">
+        Front & Back institutional student card validated.
+      </p>
+    </div>
+
+    <!-- Stat 3: Active Matched Opportunities -->
+    <div class="candidate-stat-card" style="border: 2.5px solid #FFE600; box-shadow: 6px 6px 0px #FFE600;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span class="neo-badge neo-badge-yellow">ACTIVE PORTALS</span>
+        <span style="font-size: 20px;">💼</span>
+      </div>
+      <div class="stat-val-huge" style="color: #FFE600;">
+        {{ matches|length if matches else 12 }}+
+        <span style="font-size: 14px; color: #cbd5e1; font-weight: 700;">Verified Roles</span>
+      </div>
+      <p style="font-size: 12px; color: #94a3b8; font-weight: 600;">
+        Direct access on AICTE, ISRO, NITI Aayog, MEA & Partner portals.
+      </p>
+    </div>
+
+    <!-- Stat 4: Interview & Referral Readiness -->
+    <div class="candidate-stat-card" style="border: 2.5px solid #ff2a85; box-shadow: 6px 6px 0px #ff2a85;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <span class="neo-badge neo-badge-pink">FAST-TRACK STATUS</span>
+        <span style="font-size: 20px;">⚡</span>
+      </div>
+      <div class="stat-val-huge" style="color: #ff2a85; font-size: 26px;">
+        {% if is_approved %}INTERVIEW READY{% else %}QUEUE REVIEW{% endif %}
+      </div>
+      <p style="font-size: 12px; color: #94a3b8; font-weight: 600;">
+        Fast-track candidate passport for immediate employer dispatch.
+      </p>
+    </div>
+  </div>
+
+  <!-- ================= TWO-COLUMN MAIN DASHBOARD ================= -->
+  <div class="dashboard-main-grid">
+
+    <!-- LEFT COLUMN: Matched Opportunities & Verified Skills -->
+    <div>
+
+      <!-- SECTION: Verified Skills & Project Codebase -->
+      <div style="background: #090f1d; border: 2.5px solid #ffffff; border-radius: 10px; padding: 26px; box-shadow: 6px 6px 0px #FFE600; margin-bottom: 26px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <span class="neo-badge neo-badge-yellow" style="margin-bottom: 4px;">SKILL PASSPORT EVIDENCE</span>
+            <h2 style="font-size: 20px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin-top: 4px;">
+              Verified Skills & Live GitHub Proofs
+            </h2>
+          </div>
+          <a href="{{ url_for('signup_skills') }}" class="neo-btn neo-btn-yellow" style="font-size: 11px !important; padding: 6px 12px !important;">
+            + ADD SKILL
+          </a>
+        </div>
+
+        {% if skills %}
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+            {% for s in skills %}
+              <div class="skill-pill-card">
+                <div style="min-width: 0;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                    <strong style="font-size: 14px; color: #ffffff; text-transform: uppercase;">{{ s.skill_name }}</strong>
+                    {% if s.status == 'VERIFIED' %}
+                      <span class="neo-badge neo-badge-green" style="font-size: 9px; padding: 1px 5px;">✓ VERIFIED</span>
+                    {% else %}
+                      <span class="neo-badge neo-badge-yellow" style="font-size: 9px; padding: 1px 5px;">⏳ CHECKING</span>
+                    {% endif %}
+                  </div>
+                  <div style="font-size: 12px; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    📁 {{ s.project_name }}
+                  </div>
+                </div>
+
+                {% if s.project_url %}
+                  <a href="{{ s.project_url }}" target="_blank" rel="noopener noreferrer" class="neo-btn neo-btn-cyan" style="font-size: 11px !important; padding: 5px 10px !important;" title="Inspect GitHub Repository">
+                    GITHUB ↗
+                  </a>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div style="text-align: center; padding: 24px; color: #94a3b8;">
+            <p style="margin-bottom: 12px;">No skills added yet.</p>
+            <a href="{{ url_for('signup_skills') }}" class="neo-btn neo-btn-yellow">Add Your Skills & Projects</a>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- SECTION: Matched Legal Opportunities Deck -->
+      <div style="margin-bottom: 26px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <span class="neo-badge neo-badge-cyan">AI MATCHMAKING ENGINE</span>
+            <h2 style="font-size: 22px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin-top: 4px;">
+              Top Matched Legal Opportunities
+            </h2>
+          </div>
+          <a href="{{ url_for('signup_analysis') }}" class="neo-btn neo-btn-cyan" style="font-size: 11px !important; padding: 6px 12px !important;">
+            FULL RADAR ANALYSIS →
+          </a>
+        </div>
+
+        {% if matches %}
+          {% for match in matches[:4] %}
+            <div class="opportunity-card-neo">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 14px; flex-wrap: wrap;">
+                <div>
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                    <span class="neo-badge neo-badge-white" style="font-size: 10px;">
+                      {{ match.company }}
+                    </span>
+                    <span class="neo-badge neo-badge-cyan" style="font-size: 10px;">
+                      {{ match.category }}
+                    </span>
+                    {% if match.source_site %}
+                      <span class="neo-badge neo-badge-green" style="font-size: 10px;">
+                        🏛️ {{ match.source_site }}
+                      </span>
+                    {% endif %}
+                  </div>
+                  <h3 style="font-size: 19px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin-bottom: 4px;">
+                    {{ match.role }}
+                  </h3>
+                  <div style="font-size: 13px; color: #cbd5e1; font-weight: 600;">
+                    📍 {{ match.location }} • 💰 {{ match.stipend }} • ⏳ {{ match.duration or '3 Months' }}
+                  </div>
+                </div>
+
+                <div style="text-align: right;">
+                  <div class="neo-badge neo-badge-yellow" style="font-size: 14px; padding: 6px 12px; margin-bottom: 4px;">
+                    {{ match.match_percentage }}% MATCH
+                  </div>
+                  <div style="font-size: 11px; font-weight: 800; color: {{ match.compat_color or '#22c55e' }}; text-transform: uppercase;">
+                    {{ match.compatibility or 'HIGH FIT' }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Match Rationale -->
+              <div style="background: #050811; border: 1.5px solid #1e293b; border-radius: 6px; padding: 12px 14px; margin-bottom: 14px;">
+                <div style="font-size: 11px; font-weight: 900; color: #00f0ff; text-transform: uppercase; margin-bottom: 4px;">
+                  ⚡ AI Match Rationale:
+                </div>
+                <div style="font-size: 13px; color: #cbd5e1; line-height: 1.5; font-weight: 500;">
+                  {{ match.rationale }}
+                </div>
+              </div>
+
+              <!-- Skills Badges & Action -->
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                  {% for sk in match.matched_skills %}
+                    <span class="neo-badge neo-badge-green" style="font-size: 10px;">✓ {{ sk }}</span>
+                  {% endfor %}
+                  {% for sk in match.missing_skills[:2] %}
+                    <span class="neo-badge" style="background: #0f172a; border-color: #64748b; color: #94a3b8; font-size: 10px;">+ {{ sk }}</span>
+                  {% endfor %}
+                </div>
+
+                {% if match.application_link %}
+                  <a href="{{ match.application_link }}" target="_blank" rel="noopener noreferrer" class="neo-btn neo-btn-yellow" style="font-size: 11.5px !important; padding: 7px 14px !important;">
+                    APPLY ON PORTAL ↗
+                  </a>
+                {% else %}
+                  <a href="{{ url_for('signup_analysis') }}" class="neo-btn neo-btn-cyan" style="font-size: 11.5px !important; padding: 7px 14px !important;">
+                    VIEW MATCH DOSSIER →
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Verification Pipeline & Peer Squads -->
+    <div>
+
+      <!-- SECTION: 5-Stage Onboarding Progress Tracker -->
+      <div style="background: #090f1d; border: 2.5px solid #ffffff; border-radius: 10px; padding: 24px; box-shadow: 6px 6px 0px #00f0ff; margin-bottom: 24px;">
+        <span class="neo-badge neo-badge-cyan" style="margin-bottom: 6px;">ONBOARDING LIFECYCLE</span>
+        <h3 style="font-size: 18px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin-top: 4px; margin-bottom: 14px;">
+          Verification Roadmap
+        </h3>
+
+        <!-- Mini Stepper Segments -->
+        <div class="stepper-mini-bar">
+          <div class="stepper-segment-mini completed" title="Step 1: Profile"></div>
+          <div class="stepper-segment-mini {% if user.step >= 2 %}completed{% else %}current{% endif %}" title="Step 2: Skills"></div>
+          <div class="stepper-segment-mini {% if user.step >= 3 %}completed{% elif user.step == 2 %}current{% endif %}" title="Step 3: Documents"></div>
+          <div class="stepper-segment-mini {% if user.step >= 4 %}completed{% elif user.step == 3 %}current{% endif %}" title="Step 4: AI Analysis"></div>
+          <div class="stepper-segment-mini {% if is_approved %}completed{% else %}current{% endif %}" title="Step 5: Verification"></div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <a href="{{ url_for('signup_profile') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="neo-badge neo-badge-yellow" style="font-size: 10px;">1</span>
+              <strong style="font-size: 13px;">Profile Information</strong>
+            </div>
+            <span class="neo-badge neo-badge-green" style="font-size: 9px;">DONE</span>
+          </a>
+
+          <a href="{{ url_for('signup_skills') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="neo-badge neo-badge-cyan" style="font-size: 10px;">2</span>
+              <strong style="font-size: 13px;">Skills & GitHub Proofs</strong>
+            </div>
+            <span class="neo-badge {% if skills %}neo-badge-green{% else %}neo-badge-yellow{% endif %}" style="font-size: 9px;">
+              {{ skills|length }} SKILLS
+            </span>
+          </a>
+
+          <a href="{{ url_for('signup_documents') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="neo-badge neo-badge-green" style="font-size: 10px;">3</span>
+              <strong style="font-size: 13px;">College ID & Docs</strong>
+            </div>
+            <span class="neo-badge {% if user.pdf_status == 'DONE' %}neo-badge-green{% else %}neo-badge-yellow{% endif %}" style="font-size: 9px;">
+              {{ user.pdf_status or 'DONE' }}
+            </span>
+          </a>
+
+          <a href="{{ url_for('signup_analysis') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="neo-badge neo-badge-purple" style="font-size: 10px;">4</span>
+              <strong style="font-size: 13px;">AI Analysis & Radar</strong>
+            </div>
+            <span class="neo-badge neo-badge-cyan" style="font-size: 9px;">{{ overall_score or 94 }}% FIT</span>
+          </a>
+
+          <a href="{{ url_for('signup_verification') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="neo-badge neo-badge-pink" style="font-size: 10px;">5</span>
+              <strong style="font-size: 13px;">Passport & Status</strong>
+            </div>
+            <span class="neo-badge {% if is_approved %}neo-badge-green{% else %}neo-badge-yellow{% endif %}" style="font-size: 9px;">
+              {% if is_approved %}VERIFIED{% else %}REVIEW{% endif %}
+            </span>
+          </a>
+        </div>
+      </div>
+
+      <!-- SECTION: My Squad Status -->
+      <div style="background: #090f1d; border: 2.5px solid {% if my_team %}{% if my_team_role == 'LEADER' %}#FFE600{% else %}#22c55e{% endif %}{% else %}#334155{% endif %}; border-radius: 10px; padding: 22px; box-shadow: 6px 6px 0px {% if my_team %}{% if my_team_role == 'LEADER' %}#FFE600{% else %}#22c55e{% endif %}{% else %}#1e293b{% endif %}; margin-bottom: 24px;">
+        <span class="neo-badge {% if my_team %}{% if my_team_role == 'LEADER' %}neo-badge-yellow{% else %}neo-badge-green{% endif %}{% else %}neo-badge-pink{% endif %}" style="margin-bottom: 6px;">👥 MY SQUAD STATUS</span>
+        <h3 style="font-size: 18px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin: 4px 0 14px 0;">
+          {% if my_team %}{{ my_team.team_name }}{% else %}Not In a Squad Yet{% endif %}
+        </h3>
+
+        {% if my_team %}
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+              <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">YOUR ROLE</span>
+              <span class="neo-badge {% if my_team_role == 'LEADER' %}neo-badge-yellow{% else %}neo-badge-green{% endif %}" style="font-size: 10px;">
+                {% if my_team_role == 'LEADER' %}👑 SQUAD LEADER{% else %}✓ SQUAD MEMBER{% endif %}
+              </span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+              <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">SQUAD CODE</span>
+              <code style="color: #FFE600; font-size: 13px; font-weight: 900;">{{ my_team.team_code }}</code>
+            </div>
+            {% if my_team.theme %}
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+              <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">FOCUS</span>
+              <span style="font-size: 12px; color: #cbd5e1; font-weight: 700; text-align: right; max-width: 150px;">{{ my_team.theme }}</span>
+            </div>
+            {% endif %}
+            {% if my_team.member_count is defined %}
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+              <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">MEMBERS</span>
+              <span style="font-size: 13px; font-weight: 900; font-family: monospace; color: #22c55e;">{{ my_team.member_count }} / {{ my_team.team_size }}</span>
+            </div>
+            {% endif %}
+            {% if my_team_role != 'LEADER' and my_team.leader_name %}
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+              <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">LEADER</span>
+              <span style="font-size: 12px; color: #ffffff; font-weight: 800;">{{ my_team.leader_name }} <code style="color: #FFE600; font-size: 10px;">({{ my_team.leader_code }})</code></span>
+            </div>
+            {% endif %}
+          </div>
+          {% if my_team_role == 'LEADER' %}
+          <a href="{{ url_for('team_manage') }}" class="neo-btn neo-btn-yellow" style="width: 100%; text-align: center; padding: 9px !important; font-size: 12.5px !important; box-sizing: border-box;">
+            ⚙️ MANAGE SQUAD & INVITE →
+          </a>
+          {% else %}
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="{{ url_for('team_manage') }}" class="neo-btn neo-btn-green" style="flex: 1; text-align: center; padding: 9px !important; font-size: 12px !important; background: #22c55e !important; color: #000 !important; border-color: #000 !important; box-shadow: 3px 3px 0px #000 !important; font-weight: 900 !important;">
+              👥 VIEW TEAMMATES →
+            </a>
+            <button type="button" onclick="leaveCurrentSquad({{ my_team.team_id or my_team.id }}, '{{ my_team.team_name }}')" class="neo-btn neo-btn-pink" style="padding: 9px 12px !important; font-size: 11.5px !important; font-weight: 900 !important;">
+              🚪 LEAVE
+            </button>
+          </div>
+          {% endif %}
+        {% else %}
+          <p style="font-size: 13px; color: #94a3b8; line-height: 1.5; margin-bottom: 14px;">
+            You haven't joined or created a squad yet. Create your own squad and invite candidates, or find an open squad to join.
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="{{ url_for('find_teams') }}" class="neo-btn neo-btn-green" style="flex: 1; text-align: center; padding: 9px !important; font-size: 12px !important; background: #22c55e !important; color: #000 !important; border-color: #000 !important; box-shadow: 3px 3px 0px #000 !important; font-weight: 900 !important;">
+              🔍 FIND A SQUAD
+            </a>
+            <a href="{{ url_for('team_create') }}" class="neo-btn neo-btn-pink" style="flex: 1; text-align: center; padding: 9px !important; font-size: 12px !important;">
+              + CREATE SQUAD
+            </a>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- SECTION: Peer Squad Synergy (Hackathon & Project Matching) -->
+      {% if team_matches %}
+        <div style="background: #090f1d; border: 2.5px solid #ffffff; border-radius: 10px; padding: 24px; box-shadow: 6px 6px 0px #ff2a85;">
+          <span class="neo-badge neo-badge-pink" style="margin-bottom: 6px;">COLLABORATION MATRIX</span>
+          <h3 style="font-size: 18px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin-top: 4px; margin-bottom: 14px;">
+            Peer Squad Synergy
+          </h3>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            {% for peer in team_matches[:3] %}
+              <div style="background: #0c1322; border: 1.5px solid #1e293b; border-radius: 8px; padding: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <strong style="font-size: 14px; color: #ffffff;">{{ peer.full_name }}</strong>
+                  <span class="neo-badge neo-badge-yellow" style="font-size: 11px;">
+                    {{ peer.synergy_percentage }}% SYNERGY
+                  </span>
+                </div>
+                <div style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">
+                  {{ peer.role_label }} • {{ peer.school }}
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                  {% for sk in peer.verified_skills %}
+                    <span class="neo-badge neo-badge-cyan" style="font-size: 9px; padding: 1px 5px;">{{ sk }}</span>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  async function leaveCurrentSquad(squadId, squadName) {
+    const confirmed = confirm(`Are you sure you want to leave squad "${squadName}"?\n\nYou will be removed from the team roster and will be free to join or create other squads.`);
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch('/api/team/leave', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ team_id: squadId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(`✓ ${data.message}`);
+        window.location.reload();
+      } else {
+        alert(data.message || 'Error leaving squad.');
+      }
+    } catch (e) {
+      alert('Connection error. Please try again.');
+    }
+  }
+</script>
+{% endblock %}

@@ -66,13 +66,13 @@
         padding: 5px 8px !important;
         font-size: 11px !important;
         border-width: 2px !important;
-        box-shadow: 2px 2px 0px #00f0ff !important;
+        box-shadow: 2px 2px 0px #38BDF8 !important;
       }
       .s30-btn-primary, a.s30-btn-primary {
         padding: 5px 8px !important;
         font-size: 11px !important;
         border-width: 2px !important;
-        box-shadow: 2px 2px 0px #00f0ff !important;
+        box-shadow: 2px 2px 0px #38BDF8 !important;
       }
     }
     .neo-btn:hover {
@@ -84,10 +84,10 @@
       box-shadow: 0px 0px 0px #000000 !important;
     }
 
-    .neo-btn-yellow { background: #FFE600 !important; color: #000000 !important; border-color: #000000 !important; }
-    .neo-btn-cyan { background: #00f0ff !important; color: #000000 !important; border-color: #000000 !important; }
-    .neo-btn-green { background: #22c55e !important; color: #000000 !important; border-color: #000000 !important; }
-    .neo-btn-pink { background: #ff2a85 !important; color: #ffffff !important; border-color: #000000 !important; }
+    .neo-btn-yellow { background: #D9A726 !important; color: #000000 !important; border-color: #000000 !important; }
+    .neo-btn-cyan { background: #38BDF8 !important; color: #000000 !important; border-color: #000000 !important; }
+    .neo-btn-green { background: #34A853 !important; color: #000000 !important; border-color: #000000 !important; }
+    .neo-btn-pink { background: #E0536C !important; color: #ffffff !important; border-color: #000000 !important; }
     .neo-btn-white { background: #ffffff !important; color: #000000 !important; border-color: #000000 !important; }
     .neo-btn-dark { background: #0f172a !important; color: #ffffff !important; border-color: #ffffff !important; box-shadow: 4px 4px 0px #ffffff !important; }
 
@@ -106,11 +106,11 @@
       line-height: 1.2 !important;
       box-sizing: border-box !important;
     }
-    .neo-badge-yellow { background: #FFE600 !important; color: #000000 !important; }
-    .neo-badge-cyan { background: #00f0ff !important; color: #000000 !important; }
-    .neo-badge-pink { background: #ff2a85 !important; color: #ffffff !important; }
-    .neo-badge-green { background: #22c55e !important; color: #000000 !important; }
-    .neo-badge-purple { background: #c084fc !important; color: #000000 !important; }
+    .neo-badge-yellow { background: #D9A726 !important; color: #000000 !important; }
+    .neo-badge-cyan { background: #38BDF8 !important; color: #000000 !important; }
+    .neo-badge-pink { background: #E0536C !important; color: #ffffff !important; }
+    .neo-badge-green { background: #34A853 !important; color: #000000 !important; }
+    .neo-badge-purple { background: #9D7CE2 !important; color: #000000 !important; }
     .neo-badge-white { background: #ffffff !important; color: #000000 !important; }
 
     /* Universal Neo-Brutalist Button Fallbacks */
@@ -145,7 +145,7 @@
       justify-content: center !important;
       padding: 8px 18px !important;
       border-radius: 5px !important;
-      background: #FFE600 !important;
+      background: #D9A726 !important;
       color: #000000 !important;
       font-size: 12.5px !important;
       font-weight: 900 !important;
@@ -153,15 +153,15 @@
       letter-spacing: 0.05em !important;
       text-decoration: none !important;
       border: 2px solid #000000 !important;
-      box-shadow: 3px 3px 0px #FFE600 !important;
+      box-shadow: 3px 3px 0px #D9A726 !important;
       transition: all 0.15s ease !important;
       cursor: pointer !important;
       box-sizing: border-box !important;
     }
     .s30-btn-primary:hover, a.s30-btn-primary:hover {
       transform: translate(1px, 1px) !important;
-      box-shadow: 2px 2px 0px #FFE600 !important;
-      background: #fff033 !important;
+      box-shadow: 2px 2px 0px #D9A726 !important;
+      background: #E2B338 !important;
     }
 
     main, .s30-auth-wrapper, .neo-hero-wrapper, .s30-admin-shell {
@@ -192,8 +192,8 @@
         {% set logged_user = user if user else current_user %}
         {% if logged_user and logged_user.user_code %}
           <div style="display: flex; align-items: center; gap: 8px;">
-            <div style="background: #090f1d; border: 2px solid #FFE600; box-shadow: 2.5px 2.5px 0px #FFE600; padding: 5px 10px; border-radius: 4px; display: flex; align-items: center; gap: 4px;">
-              <span style="font-size: 11px; font-weight: 900; color: #FFE600; text-transform: uppercase; letter-spacing: 0.05em;">ID:</span>
+            <div style="background: #090f1d; border: 2px solid #D9A726; box-shadow: 2.5px 2.5px 0px #D9A726; padding: 5px 10px; border-radius: 4px; display: flex; align-items: center; gap: 4px;">
+              <span style="font-size: 11px; font-weight: 900; color: #D9A726; text-transform: uppercase; letter-spacing: 0.05em;">ID:</span>
               <span style="font-family: monospace; font-size: 12.5px; font-weight: 900; color: #ffffff; letter-spacing: 0.08em;">{{ logged_user.user_code }}</span>
             </div>
             <a href="{{ url_for('user_logout') }}" class="neo-btn neo-btn-pink" style="padding: 6px 12px !important; font-size: 11px !important;">
@@ -201,8 +201,8 @@
             </a>
           </div>
         {% else %}
-          <a href="{{ url_for('login_page') }}" class="s30-btn-outline" style="border: 2.5px solid #ffffff !important; background: #0f172a !important; color: #ffffff !important; box-shadow: 3px 3px 0px #00f0ff !important; font-weight: 900 !important;">LOGIN</a>
-          <a href="{{ url_for('signup_new') }}" class="s30-btn-primary" style="background: #FFE600 !important; color: #000000 !important; border: 2.5px solid #000000 !important; box-shadow: 3px 3px 0px #00f0ff !important; font-weight: 900 !important;">GET STARTED</a>
+          <a href="{{ url_for('login_page') }}" class="s30-btn-outline" style="border: 2.5px solid #ffffff !important; background: #0f172a !important; color: #ffffff !important; box-shadow: 3px 3px 0px #38BDF8 !important; font-weight: 900 !important;">LOGIN</a>
+          <a href="{{ url_for('signup_new') }}" class="s30-btn-primary" style="background: #D9A726 !important; color: #000000 !important; border: 2.5px solid #000000 !important; box-shadow: 3px 3px 0px #38BDF8 !important; font-weight: 900 !important;">GET STARTED</a>
         {% endif %}
       </div>
     </div>
@@ -293,49 +293,49 @@
       top: 12%;
       left: 6%;
       font-size: 38px;
-      color: #FFE600;
+      color: #D9A726;
       animation: floatRotate1 14s infinite ease-in-out;
-      opacity: 0.65;
+      opacity: 0.45;
     }
     .shape-2 {
       top: 25%;
       right: 8%;
       font-size: 46px;
-      color: #00f0ff;
+      color: #38BDF8;
       animation: floatRotate2 18s infinite ease-in-out;
-      opacity: 0.55;
+      opacity: 0.4;
     }
     .shape-3 {
       bottom: 22%;
       left: 10%;
       font-size: 42px;
-      color: #ff2a85;
+      color: #E0536C;
       animation: floatRotate3 16s infinite ease-in-out;
-      opacity: 0.6;
+      opacity: 0.4;
     }
     .shape-4 {
       top: 60%;
       right: 12%;
       font-size: 34px;
-      color: #FFE600;
+      color: #D9A726;
       animation: floatRotate1 12s infinite ease-in-out;
-      opacity: 0.7;
+      opacity: 0.45;
     }
     .shape-5 {
       bottom: 10%;
       right: 25%;
       font-size: 36px;
-      color: #22c55e;
+      color: #34A853;
       animation: floatRotate2 15s infinite ease-in-out;
-      opacity: 0.6;
+      opacity: 0.4;
     }
     .shape-6 {
       top: 80%;
       left: 20%;
       font-size: 32px;
-      color: #c084fc;
+      color: #9D7CE2;
       animation: floatRotate3 20s infinite ease-in-out;
-      opacity: 0.5;
+      opacity: 0.35;
     }
     .shape-7 {
       top: 8%;
@@ -343,7 +343,7 @@
       font-size: 30px;
       color: #ffffff;
       animation: floatRotate1 17s infinite ease-in-out;
-      opacity: 0.45;
+      opacity: 0.35;
     }
 
     @keyframes floatRotate1 {
@@ -384,7 +384,7 @@
       });
       resize();
 
-      const colors = ['#FFE600', '#00f0ff', '#ff2a85', '#22c55e', '#ffffff'];
+      const colors = ['#D9A726', '#38BDF8', '#E0536C', '#34A853', '#9D7CE2'];
       const shapes = ['star', 'plus', 'square', 'ring', 'triangle'];
 
       class NeoParticle {

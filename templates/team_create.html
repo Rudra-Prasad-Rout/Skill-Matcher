@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}Create Hackathon Squad — S30{% endblock %}
+
+{% block content_wrapper %}
+<main style="max-width: 860px; width: 100%; margin: 40px auto 80px auto; padding: 0 20px; position: relative; z-index: 2;">
+
+  <!-- Header & Back Action -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 14px;">
+    <div>
+      <div style="margin-bottom: 6px;">
+        <span class="neo-badge neo-badge-pink">👥 SQUAD MATRIX &amp; TEAM FORMATION</span>
+      </div>
+      <h1 style="font-size: 28px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.02em; margin: 0;">
+        Create Your Hackathon Squad
+      </h1>
+      <p style="font-size: 14px; color: #cbd5e1; margin-top: 4px; font-weight: 500;">
+        Configure your team parameters, set squad size, and recruit verified peer developers.
+      </p>
+    </div>
+
+    <div>
+      <a href="{{ url_for('candidate_home') }}" class="neo-btn neo-btn-cyan" style="padding: 10px 18px !important; font-size: 12.5px !important;">
+        <span>&larr; BACK TO DASHBOARD</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" style="margin-bottom: 20px; display: none;"></div>
+
+  <!-- Error Alert -->
+  {% if error %}
+  <div style="background: rgba(255, 42, 133, 0.15); border: 2.5px solid #ff2a85; box-shadow: 4px 4px 0px #ff2a85; border-radius: 8px; padding: 14px 18px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+    <span style="font-size: 20px;">⚠️</span>
+    <strong style="color: #ff2a85; font-size: 14px;">{{ error }}</strong>
+  </div>
+  {% endif %}
+
+  <!-- CASE 1: User Already Leads an Active Squad -->
+  {% if existing_team %}
+  <div style="background: #090f1d; border: 3px solid #FFE600; box-shadow: 6px 6px 0px #FFE600; border-radius: 8px; padding: 24px 26px; margin-bottom: 28px;">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+      <div style="display: flex; align-items: flex-start; gap: 14px;">
+        <div style="font-size: 32px;">👑</div>
+        <div>
+          <span class="neo-badge neo-badge-yellow" style="margin-bottom: 4px;">ACTIVE SQUAD LIMIT REACHED (1/1)</span>
+          <h2 style="font-size: 22px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin: 4px 0;">
+            You Already Lead: {{ existing_team.team_name }}
+          </h2>
+          <p style="font-size: 13.5px; color: #cbd5e1; margin: 4px 0 10px 0; line-height: 1.5;">
+            Each candidate can lead or belong to <strong>only 1 squad at a time</strong>. You are currently the active leader of <strong style="color: #FFE600;">{{ existing_team.team_name }}</strong> (Code: <code>{{ existing_team.team_code }}</code>).
+          </p>
+          <div style="font-size: 12px; color: #94a3b8;">
+            Target Focus: {{ existing_team.theme }} • Size: {{ existing_team.team_size }} Members
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+        <a href="{{ url_for('team_manage', team_id=existing_team.id) }}" class="neo-btn neo-btn-yellow" style="font-size: 13px !important; padding: 10px 20px !important;">
+          ⚙️ MANAGE SQUAD →
+        </a>
+        <button type="button" onclick="disbandSquad({{ existing_team.id }}, '{{ existing_team.team_name }}')" class="neo-btn neo-btn-pink" style="font-size: 12px !important; padding: 10px 16px !important;">
+          🗑️ DISBAND SQUAD
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 2: User is Currently a Member in Another Squad -->
+  {% elif joined_team %}
+  <div style="background: #090f1d; border: 3px solid #22c55e; box-shadow: 6px 6px 0px #22c55e; border-radius: 8px; padding: 24px 26px; margin-bottom: 28px;">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+      <div style="display: flex; align-items: flex-start; gap: 14px;">
+        <div style="font-size: 32px;">👥</div>
+        <div>
+          <span class="neo-badge neo-badge-green" style="margin-bottom: 4px;">ACTIVE SQUAD MEMBERSHIP (1/1)</span>
+          <h2 style="font-size: 22px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin: 4px 0;">
+            You Are in: {{ joined_team.team_name }}
+          </h2>
+          <p style="font-size: 13.5px; color: #cbd5e1; margin: 4px 0 10px 0; line-height: 1.5;">
+            You are currently a member of <strong style="color: #22c55e;">{{ joined_team.team_name }}</strong> led by <strong>{{ joined_team.leader_name }}</strong> (<code>{{ joined_team.leader_code }}</code>). To create your own squad, please leave your current team first.
+          </p>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+        <a href="{{ url_for('team_manage') }}" class="neo-btn neo-btn-green" style="font-size: 13px !important; padding: 10px 20px !important; background: #22c55e !important; color: #000 !important; border-color: #000 !important; font-weight: 900 !important;">
+          👥 VIEW TEAMMATES →
+        </a>
+        <button type="button" onclick="leaveSquad({{ joined_team.id }}, '{{ joined_team.team_name }}')" class="neo-btn neo-btn-pink" style="font-size: 12px !important; padding: 10px 16px !important;">
+          🚪 LEAVE SQUAD
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASE 3: User is Free to Create a Squad -->
+  {% else %}
+  <div class="neo-card" style="padding: 32px 28px; background: #090f1d; border: 3.5px solid #ffffff; box-shadow: 8px 8px 0px #ff2a85;">
+    
+    <div style="margin-bottom: 24px; border-bottom: 2px solid #1e293b; padding-bottom: 16px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 42px; height: 42px; background: #ff2a85; border: 2px solid #000; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 2px 2px 0px #000;">
+          🚀
+        </div>
+        <div>
+          <h2 style="font-size: 20px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin: 0;">Squad Setup Details</h2>
+          <span style="font-size: 12.5px; color: #94a3b8;">Step 1 of 2: Define team name &amp; capacity before inviting candidates</span>
+        </div>
+      </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('team_create') }}">
+      
+      <!-- Field 1: Team Name -->
+      <div style="margin-bottom: 22px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">
+          Team / Squad Name <span style="color: #ff2a85;">*</span>
+        </label>
+        <input 
+          type="text" 
+          name="team_name" 
+          placeholder="e.g. CyberVikings, NeuralNexus, Quantum Coders" 
+          required
+          autofocus
+          style="width: 100%; box-sizing: border-box; background: #0c1322; border: 2.5px solid #ffffff; border-radius: 6px; padding: 13px 16px; font-size: 15px; font-weight: 800; color: #ffffff; box-shadow: 4px 4px 0px #ffffff; outline: none;"
+        >
+        <span style="font-size: 12px; color: #94a3b8; margin-top: 5px; display: block;">
+          Give your squad an inspiring name for hackathon registries and partner evaluations.
+        </span>
+      </div>
+
+      <!-- Field 2: Team Size Selection -->
+      <div style="margin-bottom: 22px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">
+          Target Team Size (Total Members) <span style="color: #ff2a85;">*</span>
+        </label>
+        <select 
+          name="team_size" 
+          style="width: 100%; box-sizing: border-box; background: #0c1322; border: 2.5px solid #ffffff; border-radius: 6px; padding: 13px 16px; font-size: 15px; font-weight: 800; color: #FFE600; box-shadow: 4px 4px 0px #ffffff; outline: none; cursor: pointer;"
+        >
+          <option value="2">2 Members (Duo)</option>
+          <option value="3">3 Members (Trio)</option>
+          <option value="4" selected>4 Members (Standard Hackathon Squad)</option>
+          <option value="5">5 Members (Extended Squad)</option>
+          <option value="6">6 Members (Full Engineering Team)</option>
+        </select>
+        <span style="font-size: 12px; color: #94a3b8; margin-top: 5px; display: block;">
+          Includes you (Leader) + invited peer candidates.
+        </span>
+      </div>
+
+      <!-- Field 3: Hackathon / Project Theme -->
+      <div style="margin-bottom: 28px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">
+          Target Hackathon / Project Focus
+        </label>
+        <input 
+          type="text" 
+          name="theme" 
+          value="Smart India Hackathon 2026"
+          placeholder="e.g. Smart India Hackathon, AI Agents Buildathon, Web3 FinTech" 
+          style="width: 100%; box-sizing: border-box; background: #0c1322; border: 2px solid #334155; border-radius: 6px; padding: 13px 16px; font-size: 14.5px; font-weight: 700; color: #ffffff; outline: none;"
+        >
+      </div>
+
+      <!-- Submit Action -->
+      <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+        <button 
+          type="submit" 
+          class="neo-btn neo-btn-pink" 
+          style="padding: 15px 36px !important; font-size: 15px !important; border: 2.5px solid #000000 !important; box-shadow: 4px 4px 0px #FFE600 !important; font-weight: 900 !important;"
+        >
+          <span>🚀 CREATE SQUAD &amp; PROCEED TO INVITE &rarr;</span>
+        </button>
+
+        <a 
+          href="{{ url_for('candidate_home') }}" 
+          class="neo-btn neo-btn-cyan" 
+          style="padding: 15px 22px !important; font-size: 14px !important; border: 2.5px solid #000000 !important; box-shadow: 4px 4px 0px #ffffff !important;"
+        >
+          <span>CANCEL</span>
+        </a>
+      </div>
+
+    </form>
+
+  </div>
+  {% endif %}
+
+</main>
+
+<script>
+  function showToast(msg, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const color = (type === 'success') ? '#22c55e' : '#ff2a85';
+    container.style.display = 'block';
+    container.innerHTML = `
+      <div style="background: rgba(9,15,29,0.97); border: 2.5px solid ${color}; box-shadow: 4px 4px 0px ${color}; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+        <strong style="color: ${color}; font-size: 14px;">${msg}</strong>
+        <button onclick="document.getElementById('toast-container').style.display='none'" style="background: none; border: none; color: #ffffff; cursor: pointer; font-size: 18px; line-height: 1;">✕</button>
+      </div>
+    `;
+    setTimeout(() => { container.style.display = 'none'; }, 4500);
+  }
+
+  async function disbandSquad(squadId, squadName) {
+    const confirmed = confirm(`Are you sure you want to DISBAND squad "${squadName}"?\n\nThis will delete the squad, release all invited/accepted members, and allow you to create a new squad.`);
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch('/api/team/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ team_id: squadId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message, 'success');
+        setTimeout(() => { window.location.reload(); }, 1200);
+      } else {
+        showToast(data.message || 'Error disbanding squad.', 'error');
+      }
+    } catch (e) {
+      showToast('Connection error. Please try again.', 'error');
+    }
+  }
+
+  async function leaveSquad(squadId, squadName) {
+    const confirmed = confirm(`Are you sure you want to leave squad "${squadName}"?`);
+    if (!confirmed) return;
+
+    try {
+      const res = await fetch('/api/team/leave', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ team_id: squadId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message, 'success');
+        setTimeout(() => { window.location.reload(); }, 1200);
+      } else {
+        showToast(data.message || 'Error leaving squad.', 'error');
+      }
+    } catch (e) {
+      showToast('Connection error. Please try again.', 'error');
+    }
+  }
+</script>
+{% endblock %}

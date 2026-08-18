@@ -23,7 +23,7 @@
 </div>
 
 {% if error %}
-<div style="background: #000000; border: 2px solid #ff2a85; color: #ff2a85; padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 800; box-shadow: 3px 3px 0px #ff2a85;">
+<div style="background: #000000; border: 2px solid #E0536C; color: #E0536C; padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 800; box-shadow: 3px 3px 0px #E0536C;">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 18px; height: 18px; flex-shrink: 0;">
     <circle cx="12" cy="12" r="10"></circle>
     <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -86,7 +86,7 @@
         value="{{ user.email if user else (form_data.email if form_data else '') }}" 
         required
         oninput="handleEmailInput()"
-        {% if user and user.email_verified %}readonly style="background: #0f1a30; border-color: #22c55e;"{% endif %}
+        {% if user and user.email_verified %}readonly style="background: #0f1a30; border-color: #34A853;"{% endif %}
       >
     </div>
 
@@ -111,9 +111,9 @@
     </div>
 
     <!-- Live OTP Verification Card (Down Below) -->
-    <div id="otp-verification-box" style="display: none; margin-top: 12px; background: #0c1322; border: 2px solid #00f0ff; border-radius: 8px; padding: 18px; box-shadow: 4px 4px 0px #00f0ff;">
+    <div id="otp-verification-box" style="display: none; margin-top: 12px; background: #0c1322; border: 2px solid #38BDF8; border-radius: 8px; padding: 18px; box-shadow: 4px 4px 0px #38BDF8;">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
-        <span style="font-size: 12px; font-weight: 800; color: #00f0ff; text-transform: uppercase;">
+        <span style="font-size: 12px; font-weight: 800; color: #38BDF8; text-transform: uppercase;">
           📩 ENTER 6-DIGIT VERIFICATION CODE FROM GMAIL
         </span>
         <span id="otp-status-badge" class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 6px;">
@@ -122,7 +122,7 @@
       </div>
       
       <p style="font-size: 12.5px; color: #cbd5e1; margin-bottom: 14px; line-height: 1.5;">
-        A 6-digit security verification code has been dispatched to <strong id="otp-target-email" style="color: #FFE600;">your email</strong>. Please open your <strong>Google Gmail</strong> inbox (or Spam/Promotions folder) and enter the code below:
+        A 6-digit security verification code has been dispatched to <strong id="otp-target-email" style="color: #D9A726;">your email</strong>. Please open your <strong>Google Gmail</strong> inbox (or Spam/Promotions folder) and enter the code below:
       </p>
 
       <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
@@ -133,7 +133,7 @@
           maxlength="6" 
           placeholder="000000" 
           class="s30-input" 
-          style="letter-spacing: 6px; font-size: 18px; font-weight: 900; font-family: monospace; text-align: center; max-width: 160px; border: 2px solid #FFE600;"
+          style="letter-spacing: 6px; font-size: 18px; font-weight: 900; font-family: monospace; text-align: center; max-width: 160px; border: 2px solid #D9A726;"
         >
         <button 
           type="button" 
@@ -403,7 +403,7 @@
         
         if (feedback) {
           feedback.style.display = 'block';
-          feedback.style.color = '#22c55e';
+          feedback.style.color = '#34A853';
           feedback.textContent = '✓ 6-Digit verification code dispatched to your Google Gmail inbox! Please check your email.';
         }
 
@@ -431,7 +431,7 @@
     if (!otpVal || otpVal.length < 4) {
       if (feedback) {
         feedback.style.display = 'block';
-        feedback.style.color = '#ff2a85';
+        feedback.style.color = '#E0536C';
         feedback.textContent = '⚠️ Please enter the 6-digit code sent to your email.';
       }
       otpInput.focus();
@@ -458,7 +458,7 @@
         const otpBox = document.getElementById('otp-verification-box');
 
         emailInput.readOnly = true;
-        emailInput.style.borderColor = '#22c55e';
+        emailInput.style.borderColor = '#34A853';
         emailInput.style.background = '#0f1a30';
         
         if (sendBtn) sendBtn.style.display = 'none';
@@ -470,7 +470,7 @@
         
         if (feedback) {
           feedback.style.display = 'block';
-          feedback.style.color = '#22c55e';
+          feedback.style.color = '#34A853';
           feedback.textContent = '✓ ' + data.message;
         }
 
@@ -485,7 +485,7 @@
         }
         if (feedback) {
           feedback.style.display = 'block';
-          feedback.style.color = '#ff2a85';
+          feedback.style.color = '#E0536C';
           feedback.textContent = '✕ ' + (data.error || 'Invalid code.');
         }
       }
@@ -493,7 +493,7 @@
       console.error(err);
       if (feedback) {
         feedback.style.display = 'block';
-        feedback.style.color = '#ff2a85';
+        feedback.style.color = '#E0536C';
         feedback.textContent = '✕ Error verifying code. Please try again.';
       }
     } finally {

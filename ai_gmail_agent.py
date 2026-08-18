@@ -62,15 +62,15 @@ class AIGmailAgent:
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
       <td align="center">
-        <table width="560" border="0" cellspacing="0" cellpadding="0" style="background-color: #0c1322; border: 3px solid #00f0ff; border-radius: 10px; padding: 32px 28px; box-shadow: 8px 8px 0px #FFE600; max-width: 560px; width: 100%;">
+        <table width="560" border="0" cellspacing="0" cellpadding="0" style="background-color: #0c1322; border: 3px solid #38BDF8; border-radius: 10px; padding: 32px 28px; box-shadow: 8px 8px 0px #D9A726; max-width: 560px; width: 100%;">
           
           <!-- Header Badges -->
           <tr>
             <td align="left" style="padding-bottom: 16px;">
-              <span style="background-color: #FFE600; color: #000000; font-weight: 900; font-size: 11px; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em; display: inline-block; border: 1.5px solid #000;">
+              <span style="background-color: #D9A726; color: #000000; font-weight: 900; font-size: 11px; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em; display: inline-block; border: 1.5px solid #000;">
                 🤖 TeamX AI Security Agent
               </span>
-              <span style="background-color: #00f0ff; color: #000000; font-weight: 900; font-size: 11px; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em; display: inline-block; margin-left: 6px; border: 1.5px solid #000;">
+              <span style="background-color: #38BDF8; color: #000000; font-weight: 900; font-size: 11px; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em; display: inline-block; margin-left: 6px; border: 1.5px solid #000;">
                 ✓ Official Verification
               </span>
             </td>
@@ -92,13 +92,13 @@ class AIGmailAgent:
           <!-- OTP Box -->
           <tr>
             <td align="center" style="padding: 10px 0 24px 0;">
-              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #000000; border: 2.5px dashed #FFE600; border-radius: 8px; padding: 22px 14px; text-align: center;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #000000; border: 2.5px dashed #D9A726; border-radius: 8px; padding: 22px 14px; text-align: center;">
                 <tr>
                   <td align="center">
-                    <div style="font-size: 11px; font-weight: 900; color: #00f0ff; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px;">
+                    <div style="font-size: 11px; font-weight: 900; color: #38BDF8; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px;">
                       ⚡ YOUR 6-DIGIT VERIFICATION CODE
                     </div>
-                    <div style="font-size: 40px; font-weight: 900; letter-spacing: 10px; color: #FFE600; font-family: 'Courier New', Courier, monospace; line-height: 1.2;">
+                    <div style="font-size: 40px; font-weight: 900; letter-spacing: 10px; color: #D9A726; font-family: 'Courier New', Courier, monospace; line-height: 1.2;">
                       {otp_code}
                     </div>
                     <div style="font-size: 11.5px; color: #94a3b8; margin-top: 8px; font-weight: 600;">

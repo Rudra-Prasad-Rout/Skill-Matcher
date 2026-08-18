@@ -12,7 +12,7 @@
 </div>
 
 {% if error %}
-<div style="background: #000000; border: 2px solid #ff2a85; color: #ff2a85; padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 800; box-shadow: 3px 3px 0px #ff2a85;">
+<div style="background: #000000; border: 2px solid #E0536C; color: #E0536C; padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; font-weight: 800; box-shadow: 3px 3px 0px #E0536C;">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 18px; height: 18px; flex-shrink: 0;">
     <circle cx="12" cy="12" r="10"></circle>
     <line x1="12" y1="8" x2="12" y2="12"></line>
@@ -72,7 +72,7 @@
   <div class="s30-form-group" style="margin-bottom: 18px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
       <label class="s30-form-label" for="login_password" style="margin-bottom: 0;">Password</label>
-      <button type="button" onclick="toggleUserPasswordVisibility()" style="background: none; border: none; color: #00f0ff; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; text-transform: uppercase; letter-spacing: 0.05em;">
+      <button type="button" onclick="toggleUserPasswordVisibility()" style="background: none; border: none; color: #38BDF8; font-size: 11.5px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; padding: 0; text-transform: uppercase; letter-spacing: 0.05em;">
         <span id="userEyeIconHeader">👁️</span>
         <span id="userToggleTextHeader">SHOW</span>
       </button>
@@ -99,14 +99,14 @@
         onclick="toggleUserPasswordVisibility()" 
         title="Show / Hide Password" 
         style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #94a3b8; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 6px; border-radius: 4px; transition: all 0.15s ease;"
-        onmouseover="this.style.color='#00f0ff'; this.style.background='rgba(0, 240, 255, 0.1)';"
+        onmouseover="this.style.color='#38BDF8'; this.style.background='rgba(0, 240, 255, 0.1)';"
         onmouseout="this.style.color='#94a3b8'; this.style.background='none';"
       >
         <svg id="userEyeOpenSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
           <circle cx="12" cy="12" r="3"></circle>
         </svg>
-        <svg id="userEyeClosedSvg" viewBox="0 0 24 24" fill="none" stroke="#ff2a85" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; display: none;">
+        <svg id="userEyeClosedSvg" viewBox="0 0 24 24" fill="none" stroke="#E0536C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px; display: none;">
           <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
           <line x1="1" y1="1" x2="23" y2="23"></line>
         </svg>
@@ -116,7 +116,7 @@
 
   <!-- Remember Me Checkbox -->
   <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 22px; font-size: 13px; color: #cbd5e1; font-weight: 600;">
-    <input type="checkbox" id="remember_me" name="remember_me" style="accent-color: #FFE600; cursor: pointer; width: 16px; height: 16px;" checked>
+    <input type="checkbox" id="remember_me" name="remember_me" style="accent-color: #D9A726; cursor: pointer; width: 16px; height: 16px;" checked>
     <label for="remember_me" style="cursor: pointer;">Remember me on this device</label>
   </div>
 
@@ -162,9 +162,9 @@
   </div>
 
   <!-- OTP Verification Card (Expands when Code is Sent) -->
-  <div id="otp-login-box" style="display: none; background: #0c1322; border: 2.5px solid #00f0ff; border-radius: 8px; padding: 18px; box-shadow: 4px 4px 0px #00f0ff; margin-bottom: 20px;">
+  <div id="otp-login-box" style="display: none; background: #0c1322; border: 2.5px solid #38BDF8; border-radius: 8px; padding: 18px; box-shadow: 4px 4px 0px #38BDF8; margin-bottom: 20px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
-      <span style="font-size: 12px; font-weight: 900; color: #00f0ff; text-transform: uppercase;">
+      <span style="font-size: 12px; font-weight: 900; color: #38BDF8; text-transform: uppercase;">
         📩 ENTER 6-DIGIT VERIFICATION CODE
       </span>
       <span class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 6px;">
@@ -173,7 +173,7 @@
     </div>
 
     <p style="font-size: 12.5px; color: #cbd5e1; margin-bottom: 14px; line-height: 1.5;">
-      A 6-digit security login code has been sent to <strong id="otp-login-target-email" style="color: #FFE600;">your email</strong>. Please open your <strong>Google Gmail</strong> inbox and enter the code:
+      A 6-digit security login code has been sent to <strong id="otp-login-target-email" style="color: #D9A726;">your email</strong>. Please open your <strong>Google Gmail</strong> inbox and enter the code:
     </p>
 
     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
@@ -183,7 +183,7 @@
         maxlength="6" 
         placeholder="000000" 
         class="s30-input" 
-        style="letter-spacing: 6px; font-size: 18px; font-weight: 900; font-family: monospace; text-align: center; max-width: 150px; border: 2px solid #FFE600;"
+        style="letter-spacing: 6px; font-size: 18px; font-weight: 900; font-family: monospace; text-align: center; max-width: 150px; border: 2px solid #D9A726;"
       >
       <button 
         type="button" 
@@ -213,7 +213,7 @@
 <!-- Bottom Switch link -->
 <div style="text-align: center; font-size: 13.5px; color: #cbd5e1; font-weight: 600; border-top: 2px dashed rgba(255,255,255,0.15); padding-top: 18px; margin-top: 14px;">
   Don't have an account? 
-  <a href="{{ url_for('signup_profile') }}" style="color: #00f0ff; font-weight: 800; text-decoration: underline; margin-left: 4px;">
+  <a href="{{ url_for('signup_profile') }}" style="color: #38BDF8; font-weight: 800; text-decoration: underline; margin-left: 4px;">
     Create an account &rarr;
   </a>
 </div>
@@ -278,7 +278,7 @@
         document.getElementById('otp-login-target-email').textContent = emailVal;
         
         if (msg) {
-          msg.style.color = '#22c55e';
+          msg.style.color = '#34A853';
           msg.textContent = '✓ 6-Digit security code dispatched to your Gmail inbox! Please check your email.';
         }
         document.getElementById('otp_login_code').focus();
@@ -303,7 +303,7 @@
 
     if (!otpVal || otpVal.length < 4) {
       if (msg) {
-        msg.style.color = '#ff2a85';
+        msg.style.color = '#E0536C';
         msg.textContent = '⚠️ Please enter the 6-digit code from your email.';
       }
       otpInput.focus();
@@ -323,7 +323,7 @@
 
       if (data.success) {
         if (msg) {
-          msg.style.color = '#22c55e';
+          msg.style.color = '#34A853';
           msg.textContent = '✓ ' + data.message;
         }
         setTimeout(() => {
@@ -331,14 +331,14 @@
         }, 600);
       } else {
         if (msg) {
-          msg.style.color = '#ff2a85';
+          msg.style.color = '#E0536C';
           msg.textContent = '✕ ' + (data.error || 'Invalid or expired code.');
         }
       }
     } catch (err) {
       console.error(err);
       if (msg) {
-        msg.style.color = '#ff2a85';
+        msg.style.color = '#E0536C';
         msg.textContent = '✕ Error verifying code.';
       }
     } finally {
