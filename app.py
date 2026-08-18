@@ -524,14 +524,29 @@ def signup_profile():
         except ValueError:
             return render_template("profile.html", error="Please enter a valid number for age.", active_step=1, form_data=request.form)
             
-        if password or re_password:
-            if password != re_password:
-                return render_template(
-                    "profile.html", 
-                    error="Passwords do not match. Please ensure 'Password' and 'Confirm Password' are identical.", 
-                    active_step=1, 
-                    form_data=request.form
-                )
+        if not password:
+            return render_template(
+                "profile.html", 
+                error="Please enter a password (minimum 8 characters).", 
+                active_step=1, 
+                form_data=request.form
+            )
+            
+        if len(password) < 8:
+            return render_template(
+                "profile.html", 
+                error="Password must be at least 8 characters long.", 
+                active_step=1, 
+                form_data=request.form
+            )
+            
+        if password != re_password:
+            return render_template(
+                "profile.html", 
+                error="Passwords do not match. Please ensure 'Password' and 'Confirm Password' are identical.", 
+                active_step=1, 
+                form_data=request.form
+            )
         
         # Enforce email verification (must be verified within last 30 minutes in session or DB)
         verified_email = session.get("verified_signup_email")

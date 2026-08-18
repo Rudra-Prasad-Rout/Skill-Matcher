@@ -223,10 +223,13 @@
     </div>
   </div>
 
-  <!-- Row 3: Password & Confirm Password -->
+  <!-- Row 3: Password & Confirm Password (Min 8 Characters) -->
   <div class="s30-form-grid-2">
     <div class="s30-form-group">
-      <label class="s30-form-label" for="password">Password</label>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <label class="s30-form-label" for="password" style="margin-bottom: 0;">Password</label>
+        <span style="font-size: 11px; color: var(--s30-text-secondary, #94a3b8); font-weight: 600;">(Min. 8 characters)</span>
+      </div>
       <div class="s30-input-wrap" id="password-container">
         <span class="s30-input-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -239,7 +242,8 @@
           id="password" 
           name="password" 
           class="s30-input" 
-          placeholder="Create a password"
+          placeholder="Min. 8 characters"
+          minlength="8"
           required
           oninput="validatePasswordsMatch()"
         >
@@ -260,7 +264,8 @@
           id="re_password" 
           name="re_password" 
           class="s30-input" 
-          placeholder="Confirm your password"
+          placeholder="Confirm password"
+          minlength="8"
           required
           oninput="validatePasswordsMatch()"
         >
@@ -635,26 +640,43 @@
   function validatePasswordsMatch() {
     const p1 = document.getElementById('password').value;
     const p2 = document.getElementById('re_password').value;
-    const container = document.getElementById('re-password-container');
+    const p1Container = document.getElementById('password-container');
+    const p2Container = document.getElementById('re-password-container');
     const msg = document.getElementById('password-match-msg');
 
+    if (p1.length > 0 && p1.length < 8) {
+      if (p1Container) p1Container.style.borderColor = '#f87171';
+    } else if (p1.length >= 8) {
+      if (p1Container) p1Container.style.borderColor = '#34d399';
+    } else {
+      if (p1Container) p1Container.style.borderColor = '';
+    }
+
     if (p2.length === 0) {
-      container.style.borderColor = '';
+      p2Container.style.borderColor = '';
       msg.style.display = 'none';
-      return true;
+      return p1.length >= 8;
+    }
+
+    if (p1.length < 8) {
+      p2Container.style.borderColor = '#f87171';
+      msg.style.display = 'block';
+      msg.style.color = '#f87171';
+      msg.textContent = '✕ Password must be at least 8 characters long';
+      return false;
     }
 
     if (p1 !== p2) {
-      container.style.borderColor = '#f87171';
+      p2Container.style.borderColor = '#f87171';
       msg.style.display = 'block';
       msg.style.color = '#f87171';
       msg.textContent = '✕ Passwords do not match';
       return false;
     } else {
-      container.style.borderColor = '#34d399';
+      p2Container.style.borderColor = '#34d399';
       msg.style.display = 'block';
       msg.style.color = '#34d399';
-      msg.textContent = '✓ Passwords match';
+      msg.textContent = '✓ Passwords match (8+ characters)';
       return true;
     }
   }
@@ -683,6 +705,15 @@
 
     const p1 = document.getElementById('password').value;
     const p2 = document.getElementById('re_password').value;
+
+    if (!p1 || p1.length < 8) {
+      e.preventDefault();
+      alert("⚠️ Password too short: Password must be at least 8 characters long.");
+      const pInput = document.getElementById('password');
+      if (pInput) pInput.focus();
+      return false;
+    }
+
     if (p1 !== p2) {
       e.preventDefault();
       alert("Passwords do not match. Please ensure both passwords match.");
