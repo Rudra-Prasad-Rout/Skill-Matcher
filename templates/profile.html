@@ -666,15 +666,17 @@
       return false;
     }
 
-    // If flag is false, perform one final fast check against 30-min cache
+    // If flag is false, check 30-min cache or block navigation
     if (!isEmailVerified) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
       const emailVal = document.getElementById('email').value.trim();
       const verifiedNow = await checkAndApplyEmailVerification(emailVal);
       if (!verifiedNow) {
-        e.preventDefault();
         document.getElementById('otp-verification-box').style.display = 'block';
-        sendVerificationOtp();
-        alert("Please verify your Gmail address with the 6-digit verification code before continuing.");
+        alert("⚠️ Email Verification Compulsory:\n\nPlease click 'Send Verification Code to Gmail' and enter the 6-digit OTP code before proceeding to the next page.");
+        const otpInput = document.getElementById('otp_input');
+        if (otpInput) otpInput.focus();
         return false;
       }
     }

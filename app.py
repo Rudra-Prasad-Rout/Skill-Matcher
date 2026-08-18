@@ -533,6 +533,31 @@ def signup_profile():
                     form_data=request.form
                 )
         
+        # Enforce email verification (must be verified within last 30 minutes in session or DB)
+        verified_email = session.get("verified_signup_email")
+        verified_time = session.get("verified_signup_time", 0)
+        session_verified = (verified_email == email and (time.time() - verified_time < 1800))
+        
+        db_verified = False
+        conn_check = database.get_db_connection()
+        otp_row = conn_check.execute("""
+        SELECT id FROM email_otps
+        WHERE email = ? AND is_used = 1
+        AND datetime(created_at, '+30 minutes') >= datetime('now')
+        ORDER BY id DESC LIMIT 1
+        """, (email,)).fetchone()
+        if otp_row:
+            db_verified = True
+        conn_check.close()
+        
+        if not (session_verified or db_verified):
+            return render_template(
+                "profile.html",
+                error="Email verification is compulsory: Please click 'Send Verification Code to Gmail' and enter the 6-digit OTP code before proceeding.",
+                active_step=1,
+                form_data=request.form
+            )
+        
         conn = database.get_db_connection()
         cursor = conn.cursor()
         
