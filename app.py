@@ -955,122 +955,6 @@ def api_delete_certificate(cert_id=None):
     conn.close()
     return jsonify({"success": True})
 
-# Comprehensive Internship Datasets with Skill Profiles & Timelines
-ALL_INTERNSHIPS = [
-    {
-        "id": "INT-01",
-        "company": "Google",
-        "role": "Software Engineering (SDE) Intern",
-        "category": "Software Engineering",
-        "location": "Bangalore / Hybrid",
-        "stipend": "₹110K / month",
-        "start_date": "01 Oct 2026",
-        "end_date": "31 Mar 2027",
-        "duration": "6 Months",
-        "skills_required": ["Python", "React", "C++", "Data Structures", "Algorithms", "System Design", "JavaScript"],
-        "min_skills_for_100": 3,
-        "description": "Build high-scale distributed backend systems and frontend client architectures."
-    },
-    {
-        "id": "INT-02",
-        "company": "Amazon",
-        "role": "Data Science & Analytics Intern",
-        "category": "Data Science",
-        "location": "Bangalore / Hyderabad",
-        "stipend": "₹95K / month",
-        "start_date": "15 Oct 2026",
-        "end_date": "15 Jan 2027",
-        "duration": "3 Months",
-        "skills_required": ["Python", "SQL", "Data Analysis", "Machine Learning", "Pandas", "Tableau", "Statistics"],
-        "min_skills_for_100": 3,
-        "description": "Develop predictive analytics models and customer purchase trend dashboards."
-    },
-    {
-        "id": "INT-03",
-        "company": "Swiggy",
-        "role": "Frontend Developer Intern",
-        "category": "Frontend Engineering",
-        "location": "Remote / Bangalore",
-        "stipend": "₹75K / month",
-        "start_date": "01 Nov 2026",
-        "end_date": "31 Jan 2027",
-        "duration": "3 Months",
-        "skills_required": ["React", "JavaScript", "TypeScript", "HTML/CSS", "Next.js", "Tailwind", "Redux"],
-        "min_skills_for_100": 3,
-        "description": "Craft hyper-fast food delivery UI components and interactive mobile-first web views."
-    },
-    {
-        "id": "INT-04",
-        "company": "Zomato",
-        "role": "Product & UI/UX Design Intern",
-        "category": "Product Design",
-        "location": "Gurgaon / Hybrid",
-        "stipend": "₹60K / month",
-        "start_date": "15 Sep 2026",
-        "end_date": "15 Dec 2026",
-        "duration": "3 Months",
-        "skills_required": ["Figma", "UI/UX", "Prototyping", "User Research", "Wireframing", "Product Design"],
-        "min_skills_for_100": 2,
-        "description": "Design modern glassmorphic interfaces and frictionless consumer checkout flows."
-    },
-    {
-        "id": "AI-01",
-        "company": "Microsoft Research",
-        "role": "AI / ML Research Intern",
-        "category": "Artificial Intelligence",
-        "location": "Hyderabad / Remote",
-        "stipend": "₹125K / month",
-        "start_date": "01 Oct 2026",
-        "end_date": "31 Mar 2027",
-        "duration": "6 Months",
-        "skills_required": ["Python", "PyTorch", "Transformers", "Machine Learning", "Deep Learning", "NLP"],
-        "min_skills_for_100": 3,
-        "description": "Conduct frontier research on LLM alignment, multimodal vision, and agent reasoning."
-    },
-    {
-        "id": "AI-02",
-        "company": "OpenAI Partner Lab",
-        "role": "Autonomous Drone Vision Intern",
-        "category": "Artificial Intelligence",
-        "location": "Bangalore / Hybrid",
-        "stipend": "₹140K / month",
-        "start_date": "15 Oct 2026",
-        "end_date": "15 Apr 2027",
-        "duration": "6 Months",
-        "skills_required": ["Python", "Computer Vision", "OpenCV", "PyTorch", "Robotics ROS", "Deep Learning"],
-        "min_skills_for_100": 3,
-        "description": "Train spatial 3D vision models and edge AI perception on autonomous drones."
-    },
-    {
-        "id": "AI-03",
-        "company": "Adobe Sensei",
-        "role": "Generative AI Systems Intern",
-        "category": "Artificial Intelligence",
-        "location": "Noida / Bangalore",
-        "stipend": "₹115K / month",
-        "start_date": "01 Nov 2026",
-        "end_date": "30 Apr 2027",
-        "duration": "6 Months",
-        "skills_required": ["Python", "Deep Learning", "Diffusion Models", "PyTorch", "CUDA", "Computer Vision"],
-        "min_skills_for_100": 3,
-        "description": "Optimize diffusion architectures and generative image/video synthesis pipelines."
-    },
-    {
-        "id": "AI-04",
-        "company": "Anthropic Partner Lab",
-        "role": "AI Safety & Evaluation Intern",
-        "category": "Artificial Intelligence",
-        "location": "Remote",
-        "stipend": "₹130K / month",
-        "start_date": "01 Oct 2026",
-        "end_date": "31 Dec 2026",
-        "duration": "3 Months",
-        "skills_required": ["Python", "NLP", "Evaluation Metrics", "Machine Learning", "Transformers", "AI Safety"],
-        "min_skills_for_100": 3,
-        "description": "Benchmark frontier language models on constitutional alignment and red-teaming datasets."
-    }
-]
-
 import internship_agent
 
 def calculate_internship_matches(user, user_skills, admin_mode=False):
@@ -1091,35 +975,6 @@ def calculate_internship_matches(user, user_skills, admin_mode=False):
             pass
             
     results = []
-    
-    # 1. Partner Corporate & AI Internships (Human Verified Institutional Partnerships)
-    for item in ALL_INTERNSHIPS:
-        score_data = internship_agent.score_internship_against_passport(item, user_skills, user.get("coursework"))
-        results.append({
-            "id": item["id"],
-            "company": item["company"],
-            "role": item["role"],
-            "category": item["category"],
-            "location": item["location"],
-            "stipend": item["stipend"],
-            "start_date": item.get("start_date", "01 Oct 2026"),
-            "end_date": item.get("end_date", "31 Dec 2026"),
-            "duration": item.get("duration", "3 Months"),
-            "description": item["description"],
-            "source_site": "S30 Verified Partner",
-            "application_link": None,
-            "match_percentage": score_data["match_percentage"],
-            "compatibility": score_data["compatibility"],
-            "compat_color": score_data["compat_color"],
-            "matched_skills": score_data["matched_skills"],
-            "missing_skills": score_data["missing_skills"],
-            "rationale": score_data["rationale"],
-            "skills_required": item["skills_required"],
-            "is_discovered": False,
-            "is_verified_by_admin": 1,
-            "is_scam_flagged": 0,
-            "approval_status": user_approvals.get(item["id"], "PENDING")
-        })
         
     # 2. Live Discovered Legal Platform Internships (AICTE, PM Scheme, NITI Aayog, MEA, Unstop, etc.)
     # STAGE 3 RULE: Only internships personally approved by Admin (is_verified_by_admin = 1) appear for students
@@ -2713,129 +2568,6 @@ def admin_internships_redirect():
 def admin_ai_internships_redirect():
     return redirect(url_for("admin_dashboard", section="ai_internship"))
 
-# Sample Data for General Internships & AI Internships
-INTERNSHIPS_DATA = [
-    {
-        "id": "INT-01",
-        "company": "Google",
-        "role": "SDE Intern",
-        "location": "Bangalore / Hybrid",
-        "stipend": "₹110K / month",
-        "start_date": "01 Oct 2026",
-        "end_date": "31 Mar 2027",
-        "duration": "6 Months",
-        "match": "95%",
-        "applicants": 42,
-        "skills_required": ["Python", "React", "C++", "Data Structures", "Algorithms", "System Design", "JavaScript"],
-        "status": "Active"
-    },
-    {
-        "id": "INT-02",
-        "company": "Amazon",
-        "role": "Data Science Intern",
-        "location": "Bangalore",
-        "stipend": "₹95K / month",
-        "start_date": "15 Oct 2026",
-        "end_date": "15 Jan 2027",
-        "duration": "3 Months",
-        "match": "92%",
-        "applicants": 38,
-        "skills_required": ["Python", "SQL", "Data Analysis", "Machine Learning", "Pandas", "Tableau", "Statistics"],
-        "status": "Active"
-    },
-    {
-        "id": "INT-03",
-        "company": "Swiggy",
-        "role": "Frontend Developer Intern",
-        "location": "Remote",
-        "stipend": "₹75K / month",
-        "start_date": "01 Nov 2026",
-        "end_date": "31 Jan 2027",
-        "duration": "3 Months",
-        "match": "90%",
-        "applicants": 27,
-        "skills_required": ["React", "JavaScript", "TypeScript", "HTML/CSS", "Next.js", "Tailwind", "Redux"],
-        "status": "Active"
-    },
-    {
-        "id": "INT-04",
-        "company": "Zomato",
-        "role": "Product Design Intern",
-        "location": "Gurgaon",
-        "stipend": "₹60K / month",
-        "start_date": "15 Sep 2026",
-        "end_date": "15 Dec 2026",
-        "duration": "3 Months",
-        "match": "88%",
-        "applicants": 19,
-        "skills_required": ["Figma", "UI/UX Design", "Prototyping", "User Research", "Wireframing", "Product Design"],
-        "status": "Active"
-    }
-]
-
-AI_INTERNSHIPS_DATA = [
-    {
-        "id": "AI-01",
-        "company": "Microsoft Research",
-        "role": "AI / ML Research Intern",
-        "focus": "LLM Alignment, Multimodal Vision",
-        "location": "Hyderabad / Remote",
-        "stipend": "₹125K / month",
-        "start_date": "01 Oct 2026",
-        "end_date": "31 Mar 2027",
-        "duration": "6 Months",
-        "match": "98%",
-        "top_candidate": "Jordan Lee (ID: R4T2P)",
-        "skills_required": "PyTorch, Transformers, Computer Vision",
-        "status": "Shortlisting"
-    },
-    {
-        "id": "AI-02",
-        "company": "OpenAI Partner Lab",
-        "role": "Autonomous Drone Vision Intern",
-        "focus": "3D Point Cloud, Edge AI",
-        "location": "Bangalore / Hybrid",
-        "stipend": "₹140K / month",
-        "start_date": "15 Oct 2026",
-        "end_date": "15 Apr 2027",
-        "duration": "6 Months",
-        "match": "94%",
-        "top_candidate": "Alex Rivera (ID: A7X9K)",
-        "skills_required": "PyTorch, OpenCV, Robotics ROS",
-        "status": "Interview Scheduled"
-    },
-    {
-        "id": "AI-03",
-        "company": "Adobe Sensei",
-        "role": "Generative AI Systems Intern",
-        "focus": "Diffusion Models, Video Generation",
-        "location": "Noida / Bangalore",
-        "stipend": "₹115K / month",
-        "start_date": "01 Nov 2026",
-        "end_date": "30 Apr 2027",
-        "duration": "6 Months",
-        "match": "91%",
-        "top_candidate": "Priya Sharma (ID: K3L8W)",
-        "skills_required": "Deep Learning, CUDA, Python",
-        "status": "Active Review"
-    },
-    {
-        "id": "AI-04",
-        "company": "Anthropic Partner Lab",
-        "role": "AI Safety & Evaluation Intern",
-        "focus": "Constitutional AI, Benchmark Suite",
-        "location": "Remote",
-        "stipend": "₹130K / month",
-        "start_date": "01 Oct 2026",
-        "end_date": "31 Dec 2026",
-        "duration": "3 Months",
-        "match": "96%",
-        "top_candidate": "Marcus Vance (ID: M8V1Y)",
-        "skills_required": "NLP, Evaluation Metrics, Python",
-        "status": "Applications Open"
-    }
-]
-
 # ================= S30 ADMIN DASHBOARD =================
 @app.route("/admin")
 @admin_required
@@ -2885,47 +2617,27 @@ def admin_dashboard():
     all_approvals_rows = conn.execute("SELECT user_id, internship_id, status FROM candidate_internship_approvals").fetchall()
     approvals_map = {(r["user_id"], r["internship_id"]): r["status"] for r in all_approvals_rows}
     
-    disc_list = [dict(d) for d in discovered_internships]
+    disc_list = []
+    for d in discovered_internships:
+        d_dict = dict(d)
+        skills_req = []
+        try:
+            skills_req = json.loads(d_dict.get("skills_required")) if d_dict.get("skills_required") else []
+        except Exception:
+            skills_req = ["Python", "Problem Solving"]
+        d_dict["skills_list"] = skills_req
+        disc_list.append(d_dict)
+
     pending_discovered = [d for d in disc_list if d.get("is_verified_by_admin") == 0]
     approved_discovered = [d for d in disc_list if d.get("is_verified_by_admin") == 1 and d.get("is_scam_flagged") == 0]
     rejected_discovered = [d for d in disc_list if d.get("is_verified_by_admin") == -1 or d.get("is_scam_flagged") == 1]
     
-    # Compute Candidate Matching Roster per internship for Admin Desk
-    internships_roster = []
-    for int_item in INTERNSHIPS_DATA:
-        item_copy = dict(int_item)
-        cand_list = []
-        for u in users_list:
-            score = internship_agent.score_internship_against_passport(int_item, u["skills"], u.get("coursework"))
-            status = approvals_map.get((u["id"], int_item["id"]), "PENDING")
-            cand_list.append({
-                "user_id": u["id"],
-                "full_name": u["full_name"],
-                "user_code": u["user_code"],
-                "email": u["email"],
-                "match_percentage": score["match_percentage"],
-                "compatibility": score["compatibility"],
-                "compat_color": score["compat_color"],
-                "matched_skills": score["matched_skills"],
-                "missing_skills": score["missing_skills"],
-                "rationale": score["rationale"],
-                "approval_status": status
-            })
-        cand_list.sort(key=lambda x: x["match_percentage"], reverse=True)
-        item_copy["candidate_matches"] = cand_list[:3]
-        internships_roster.append(item_copy)
-
     # Compute Candidate Matching for Approved Discovered Listings
     approved_disc_roster = []
     for d in approved_discovered:
         d_copy = dict(d)
         disc_id = f"DISC-{d['id']}"
-        skills_req = []
-        try:
-            skills_req = json.loads(d["skills_required"]) if d.get("skills_required") else []
-        except Exception:
-            skills_req = ["Python", "Problem Solving"]
-        d_copy["skills_list"] = skills_req
+        skills_req = d_copy.get("skills_list", [])
         
         cand_list = []
         for u in users_list:
@@ -2966,8 +2678,8 @@ def admin_dashboard():
         "rejected": rejected_count,
         "approved_today": approved_today_total,
         "pending_today": pending_total,
-        "internships_count": len(INTERNSHIPS_DATA) + len(approved_discovered),
-        "ai_internships_count": len(AI_INTERNSHIPS_DATA),
+        "internships_count": len(approved_discovered),
+        "ai_internships_count": len(discovered_internships),
         "discovered_count": len(discovered_internships),
         "pending_internships_count": len(pending_discovered),
         "approved_internships_count": len(approved_discovered)
@@ -2978,8 +2690,8 @@ def admin_dashboard():
         users=users_list, 
         stats=stats, 
         active_section=section,
-        internships=internships_roster,
-        ai_internships=AI_INTERNSHIPS_DATA,
+        internships=approved_disc_roster,
+        ai_internships=disc_list,
         discovered_internships=disc_list,
         pending_discovered=pending_discovered,
         approved_discovered=approved_disc_roster,

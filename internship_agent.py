@@ -412,17 +412,20 @@ def inspect_live_internship_page(url, expected_title="", expected_company=""):
         soup = BeautifulSoup(raw_html[:150000], 'html.parser')
         
         for s in soup(["script", "style", "noscript", "svg", "header", "footer"]):
-            s.extract()
+            try:
+                s.decompose()
+            except Exception:
+                pass
 
         page_title = soup.title.string.strip() if soup.title and soup.title.string else ""
         h1_tags = [h.get_text(strip=True) for h in soup.find_all(['h1', 'h2']) if h.get_text(strip=True)]
         headings_text = " | ".join(h1_tags[:5])
         body_text = soup.get_text(separator=" ", strip=True)
-        body_snippet = body_text[:4000].lower()
+        body_snippet = body_text[:15000].lower()
     except Exception:
         page_title = ""
         headings_text = ""
-        body_snippet = raw_html[:4000].lower()
+        body_snippet = raw_html[:15000].lower()
 
     # 1. Real Specific Opportunity or Recruitment Portal Check
     opportunity_keywords = [
@@ -432,7 +435,19 @@ def inspect_live_internship_page(url, expected_title="", expected_company=""):
     ]
     is_real_listing = any(kw in body_snippet or kw in page_title.lower() or kw in headings_text.lower() for kw in opportunity_keywords)
 
-    # 2. Title & Company Match
+    # 2. Extract Tech Skills Found on Live DOM
+    known_tech_skills = [
+        "Python", "Java", "C++", "C#", "JavaScript", "TypeScript", "React", "Node.js",
+        "Next.js", "Angular", "Vue", "SQL", "PostgreSQL", "MongoDB", "MySQL", "Docker",
+        "Kubernetes", "AWS", "Azure", "GCP", "Linux", "Git", "Machine Learning",
+        "Deep Learning", "PyTorch", "TensorFlow", "OpenCV", "ROS", "ROS2", "Robotics",
+        "Computer Vision", "NLP", "LLM", "Data Analysis", "Pandas", "NumPy", "FastAPI",
+        "Flask", "Django", "Cybersecurity", "IoT", "Embedded Systems", "Qiskit", "Figma",
+        "UI/UX", "GraphQL", "REST APIs", "Microservices", "Kafka", "Apache Spark"
+    ]
+    detected_skills = [sk for sk in known_tech_skills if re.search(r'\b' + re.escape(sk.lower()) + r'\b', body_snippet)]
+
+    # 3. Title & Company Match Percentage
     t_words = [w.lower() for w in expected_title.split() if len(w) > 3] if expected_title else []
     c_words = [w.lower() for w in expected_company.split() if len(w) > 3] if expected_company else []
     
@@ -441,10 +456,17 @@ def inspect_live_internship_page(url, expected_title="", expected_company=""):
     
     total_expected_words = max(1, len(t_words) + len(c_words))
     matched_words = t_matched + c_matched
-    match_confidence = int(min(100, round((matched_words / total_expected_words) * 100))) if (t_words or c_words) else 90
+    
+    # Calculate weighted match confidence (includes portal relevance)
+    base_match = int(min(100, round((matched_words / total_expected_words) * 100))) if (t_words or c_words) else 80
+    if is_real_listing and base_match < 50:
+        match_confidence = max(50, base_match + 20)
+    else:
+        match_confidence = base_match
+        
     title_match = match_confidence >= 35 or is_real_listing
 
-    # 3. Active vs Expired/Closed Status
+    # 4. Active vs Expired/Closed Status
     closure_signals = [
         "applications closed", "application closed", "closed for submissions",
         "last date has passed", "no longer accepting", "recruitment closed",
@@ -465,7 +487,7 @@ def inspect_live_internship_page(url, expected_title="", expected_company=""):
     else:
         is_active = "OPEN"
 
-    # 4. Scam & Registration Fee Scan on live DOM
+    # 5. Scam & Registration Fee Scan on live DOM
     scam_keywords = [
         "pay registration fee", "security deposit required", "telegram link to join",
         "processing fee of rs", "send money to", "pay to get interview"
@@ -486,18 +508,19 @@ def inspect_live_internship_page(url, expected_title="", expected_company=""):
     else:
         verdict = "✓ VERIFIED: Active & Authentic Opportunity"
         matched_info = f"'{expected_company}'" if expected_company else "official portal"
-        reasoning = f"Live inspection confirmed official portal (HTTP {http_status} OK). Page '{page_title[:65]}' matches {matched_info} and is actively accepting applications."
+        reasoning = f"Live inspection confirmed official portal (HTTP {http_status} OK). Page '{page_title[:65]}' matches {matched_info} with {match_confidence}% relevance."
 
     return {
         "success": True,
         "url": url,
         "final_url": final_url,
         "http_status": http_status,
-        "page_title": page_title[:90],
-        "headings": headings_text[:120],
+        "page_title": page_title[:90] or "Official Portal Webpage",
+        "headings": headings_text[:120] or "Direct Recruitment Section",
         "is_real_listing": is_real_listing,
         "title_match": title_match,
         "match_confidence": match_confidence,
+        "detected_skills": detected_skills[:8],
         "is_active": is_active,
         "is_scam_flagged": is_scam_flagged,
         "verdict": verdict,
@@ -551,12 +574,6 @@ def run_scam_and_safety_checks(listing):
 
 # ================= STEP 6: Match to Student Skill Passport =================
 def score_internship_against_passport(listing, user_skills, coursework=""):
-    """
-    Compares internship requirements against the student's verified skills passport:
-    - Calculates match score % (0% to 100%)
-    - Extracts matched skills and missing skills
-    - Provides evidence rationale
-    """
     req_skills = listing.get("skills_required", [])
     if isinstance(req_skills, str):
         req_skills = [s.strip() for s in req_skills.split(",") if s.strip()]

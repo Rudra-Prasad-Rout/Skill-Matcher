@@ -12,14 +12,11 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   
   <style>
-    /* Ultra-Premium Glassmorphic Admin Shell */
+    /* Clean Material 3 Admin Shell on Warm Beige / Blaze Backdrop */
     .s30-admin-shell {
       min-height: 100vh;
-      background: radial-gradient(circle at 12% 15%, rgba(99, 102, 241, 0.18), transparent 35%),
-                  radial-gradient(circle at 88% 25%, rgba(6, 182, 212, 0.14), transparent 38%),
-                  radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.1), transparent 42%),
-                  #070a14;
-      color: #ffffff;
+      background-color: var(--md-sys-color-background, #f5f2eb);
+      color: var(--s30-text-primary, #1c1917);
       display: flex;
       flex-direction: column;
       overflow-x: hidden;
@@ -611,15 +608,15 @@
             <span class="neo-badge neo-badge-cyan" style="font-size: 11px; padding: 4px 8px;">ADMIN</span>
           </div>
 
-          <div style="margin-left: 12px; border-left: 2px solid rgba(255,255,255,0.2); padding-left: 14px;">
-            <div style="font-size: 11px; color: #38BDF8; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em;">
+          <div style="margin-left: 12px; border-left: 2px solid var(--md-sys-color-outline); padding-left: 14px;">
+            <div style="font-size: 11px; color: var(--md-sys-color-secondary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em;">
               {% if active_section == 'approvals' %}Candidate Approvals & Verification
               {% elif active_section == 'dashboard' %}Dashboard & System Metrics
               {% elif active_section == 'internships' %}Internship Management
               {% elif active_section == 'ai_internship' %}AI Research Internships
               {% endif %}
             </div>
-            <div style="font-size: 15px; font-weight: 900; color: #fff; letter-spacing: -0.01em;">
+            <div style="font-size: 15px; font-weight: 800; color: var(--s30-text-primary); letter-spacing: -0.01em;">
               {% if active_section == 'approvals' %}Student Verification Console
               {% elif active_section == 'dashboard' %}Executive Analytics Overview
               {% elif active_section == 'internships' %}Corporate Internship Openings
@@ -726,10 +723,10 @@
                 <span id="live-indicator-text">LIVE AUTO-SYNC ACTIVE</span>
               </div>
             </div>
-            <h2 style="font-size: 26px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.02em;">
+            <h2 style="font-size: 26px; font-weight: 800; color: var(--s30-text-primary); text-transform: uppercase; letter-spacing: -0.02em;">
               Student Candidate Approvals Queue
             </h2>
-            <p style="font-size: 13.5px; color: #cbd5e1; margin-top: 4px; font-weight: 500;">
+            <p style="font-size: 13.5px; color: var(--s30-text-secondary); margin-top: 4px; font-weight: 500;">
               Review student ID cards (Front/Back), AI Certificate authenticity scores, and project proofs.
             </p>
           </div>
@@ -747,10 +744,10 @@
         <!-- Search Bar & Filters for Candidate Registrations -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; flex-wrap: wrap; gap: 14px;">
           <div>
-            <h3 style="font-size: 20px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.01em;">
+            <h3 style="font-size: 20px; font-weight: 800; color: var(--s30-text-primary); text-transform: uppercase; letter-spacing: -0.01em;">
               Candidate Verification Queue (<span id="total-queue-count">{{ users|length }}</span>)
             </h3>
-            <p style="font-size: 13px; color: #cbd5e1; margin-top: 2px; font-weight: 500;">
+            <p style="font-size: 13px; color: var(--s30-text-secondary); margin-top: 2px; font-weight: 500;">
               Inspect credentials, run OCR validation, and issue verified candidate status.
             </p>
           </div>
@@ -1041,83 +1038,7 @@
           </div>
         </div>
 
-        <!-- ================= 1. PENDING DISCOVERED OPPORTUNITIES DESK (APPROVE HERE) ================= -->
-        <div class="neo-card-yellow" style="padding: 24px; margin-bottom: 28px; background: var(--md-sys-color-surface-container); border: 1px solid rgba(251, 191, 36, 0.4); box-shadow: var(--md-elevation-2);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 14px;">
-            <div>
-              <div style="margin-bottom: 8px;">
-                <span class="neo-badge neo-badge-yellow">⏳ PENDING APPROVAL QUEUE</span>
-                <span class="neo-badge neo-badge-cyan">STAGE 2 HUMAN MODERATION</span>
-              </div>
-              <h3 style="font-size: 21px; font-weight: 800; color: var(--s30-text-primary); text-transform: uppercase; letter-spacing: -0.01em;">
-                Opportunities Awaiting Admin Approval ({{ pending_discovered|length }})
-              </h3>
-              <p style="font-size: 13px; color: var(--s30-text-secondary); margin-top: 3px; font-weight: 400;">
-                Click <strong>"✅ APPROVE & PUBLISH"</strong> to verify and immediately push these opportunities to registered student feeds.
-              </p>
-            </div>
-
-            <div style="display: flex; gap: 10px; align-items: center;">
-              <button type="button" onclick="triggerAiDiscovery(this)" class="neo-btn neo-btn-yellow" style="font-size: 12px; padding: 8px 16px;">
-                <span>🔄 FETCH MORE TO APPROVE</span>
-              </button>
-            </div>
-          </div>
-
-          {% if pending_discovered %}
-          <div style="display: flex; flex-direction: column; gap: 14px;">
-            {% for disc in pending_discovered %}
-            <div id="disc-row-{{ disc.id }}" class="neo-card" style="background: var(--md-sys-color-surface); border: 1px solid rgba(56, 189, 248, 0.4); box-shadow: var(--md-elevation-1); padding: 18px 20px; display: flex; justify-content: space-between; align-items: flex-start; flex-direction: column; gap: 16px; width: 100%; box-sizing: border-box; overflow: hidden;">
-              <div style="width: 100%; min-width: 0; box-sizing: border-box;">
-                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap;">
-                  <span class="neo-badge neo-badge-cyan" style="font-size: 10.5px; padding: 2px 7px;">
-                    🌐 {{ disc.source_site }}
-                  </span>
-                  <span class="neo-badge neo-badge-yellow" style="font-size: 10.5px; padding: 2px 7px;">
-                    ⏳ AWAITING APPROVAL
-                  </span>
-                  <span class="neo-badge neo-badge-green" style="font-size: 10.5px; padding: 2px 7px;">
-                    ✓ 100% FREE
-                  </span>
-                </div>
-
-                <div style="font-size: 18px; font-weight: 800; color: var(--s30-text-primary); line-height: 1.35; overflow-wrap: anywhere; word-break: break-word; width: 100%;">
-                  {{ disc.title }}
-                </div>
-                <div style="font-size: 13.5px; color: var(--md-sys-color-secondary); font-weight: 700; margin-top: 6px; line-height: 1.45; overflow-wrap: anywhere; word-break: break-word; width: 100%;">
-                  🏢 {{ disc.company }} • 📍 {{ disc.location }} • 💰 <strong style="color: var(--md-sys-color-primary);">{{ disc.stipend }}</strong>
-                </div>
-                <div style="font-size: 11.5px; color: var(--s30-text-secondary); margin-top: 6px; font-family: monospace; overflow-wrap: anywhere; word-break: break-word; width: 100%;">
-                  🗓️ {{ disc.start_date }} &rarr; {{ disc.end_date }} ({{ disc.duration }})
-                </div>
-              </div>
-
-              <!-- Action Buttons -->
-              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%; box-sizing: border-box;">
-                <a href="{{ disc.application_link }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 11.5px; padding: 7px 14px; box-sizing: border-box;">
-                  🔗 TEST LINK ↗
-                </a>
-                <button type="button" class="neo-btn neo-btn-yellow" style="font-size: 11.5px; padding: 7px 14px; box-sizing: border-box;" onclick="inspectLiveUrl('{{ disc.application_link }}', '{{ disc.title }}', '{{ disc.company }}', {{ disc.id }})">
-                  🤖 AUDIT
-                </button>
-                <button type="button" class="neo-btn neo-btn-green" style="font-size: 12px; padding: 8px 18px; background: var(--md-sys-color-tertiary) !important; color: #000 !important; box-sizing: border-box;" onclick="curateListing({{ disc.id }}, 'approve')">
-                  ✅ APPROVE & PUBLISH
-                </button>
-                <button type="button" class="neo-btn neo-btn-pink" style="font-size: 11.5px; padding: 7px 12px; box-sizing: border-box;" onclick="curateListing({{ disc.id }}, 'reject')">
-                  ✕ REJECT
-                </button>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-          {% else %}
-          <div style="text-align: center; padding: 22px; color: var(--s30-text-secondary); font-size: 13px; border: 1px dashed rgba(251,191,36,0.4); border-radius: var(--md-shape-md); background: var(--md-sys-color-surface); font-weight: 500;">
-            ✓ All discovered opportunities have been approved! Click <strong>"🔄 FETCH MORE TO APPROVE"</strong> to pull new live openings from AICTE, ISRO, and PM Scheme.
-          </div>
-          {% endif %}
-        </div>
-
-        <!-- ================= 2. HUMAN-APPROVED PUBLIC & LEGAL PORTAL INTERNSHIPS ================= -->
+        <!-- ================= 1. HUMAN-APPROVED PUBLIC & LEGAL PORTAL INTERNSHIPS ================= -->
         <div class="neo-card-green" style="padding: 24px; margin-bottom: 30px; background: var(--md-sys-color-surface-container); border: 1px solid rgba(52, 211, 153, 0.4); box-shadow: var(--md-elevation-2);">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 14px;">
             <div>
@@ -1164,6 +1085,20 @@
                   🗓️ <strong>Dates:</strong> {{ disc.start_date }} &rarr; {{ disc.end_date }} ({{ disc.duration }}) • 💰 <strong style="color: var(--md-sys-color-primary);">{{ disc.stipend }}</strong>
                 </div>
 
+                <!-- Skills Needed Badges -->
+                {% if disc.skills_list %}
+                <div style="margin-top: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span style="font-size: 10.5px; font-weight: 800; color: var(--s30-text-primary); text-transform: uppercase; letter-spacing: 0.04em;">
+                    🎯 Skills Needed:
+                  </span>
+                  {% for sk in disc.skills_list %}
+                    <span class="neo-badge neo-badge-yellow" style="font-size: 9.5px; padding: 1px 6px;">
+                      {{ sk }}
+                    </span>
+                  {% endfor %}
+                </div>
+                {% endif %}
+
                 <p style="font-size: 12.5px; color: var(--s30-text-secondary); margin-top: 10px; line-height: 1.5; font-weight: 400; overflow-wrap: anywhere; word-break: break-word;">
                   {{ disc.description|truncate(120) }}
                 </p>
@@ -1175,8 +1110,8 @@
                   <a href="{{ disc.application_link }}" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 11px; padding: 6px 14px;">
                     🔗 TEST LINK ↗
                   </a>
-                  <button type="button" class="neo-btn neo-btn-green" style="font-size: 11px; padding: 6px 12px; cursor: default;" onclick="curateListing({{ disc.id }}, 'approve')">
-                    ✅ APPROVED (LIVE)
+                  <button type="button" class="neo-btn neo-btn-yellow" style="font-size: 11px; padding: 6px 14px;" onclick="inspectLiveUrl('{{ disc.application_link }}', '{{ disc.title }}', '{{ disc.company }}', {{ disc.id }})">
+                    🤖 AI AUDIT
                   </button>
                 </div>
                 <button type="button" class="btn-act btn-act-reject" style="font-size: 11px; padding: 5px 12px;" onclick="curateListing({{ disc.id }}, 'reject')">
@@ -1193,112 +1128,6 @@
           {% endif %}
         </div>
 
-        <!-- S30 Partner Corporate Roles with Candidate Match Breakdown & Direct Approval Desk -->
-        <div style="font-size: 18px; font-weight: 800; color: var(--s30-text-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.02em;">
-          <span>🏢</span> S30 CORPORATE PARTNER ROLES & MATCH MODERATION DESK
-        </div>
-
-        <div class="s30-two-col-grid" style="margin-bottom: 30px;">
-          {% for int in internships %}
-          <div class="neo-card-yellow" style="background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline); box-shadow: var(--md-elevation-2); padding: 22px; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                <div>
-                  <span class="neo-badge neo-badge-cyan" style="font-size: 10.5px; padding: 2px 7px;">{{ int.id }}</span>
-                  <h3 style="font-size: 20px; font-weight: 800; margin-top: 6px; color: var(--s30-text-primary); text-transform: uppercase;">{{ int.role }}</h3>
-                  <div style="font-size: 14px; color: var(--md-sys-color-primary); font-weight: 700;">{{ int.company }}</div>
-                </div>
-                <span class="neo-badge neo-badge-green">{{ int.status }}</span>
-              </div>
-
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline-variant); padding: 12px; border-radius: var(--md-shape-sm); margin-bottom: 14px; font-size: 12.5px;">
-                <div>📍 <strong>{{ int.location }}</strong></div>
-                <div>💰 <strong style="color: var(--md-sys-color-tertiary);">{{ int.stipend }}</strong></div>
-                <div style="grid-column: span 2; font-size: 12px; color: var(--md-sys-color-secondary); font-weight: 700;">
-                  🗓️ <strong>Timeline:</strong> {{ int.start_date }} &rarr; {{ int.end_date }} ({{ int.duration }})
-                </div>
-                <div style="grid-column: span 2; font-size: 12px; color: var(--s30-text-secondary); font-weight: 500;">
-                  ⚡ <strong>Stack:</strong> {{ int.skills_required|join(', ') if int.skills_required else 'General Engineering / Problem Solving' }}
-                </div>
-              </div>
-
-              <!-- Candidate Match Scores & Skills Breakdown -->
-              <div style="background: var(--md-sys-color-surface); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: var(--md-shape-sm); padding: 14px; margin-bottom: 14px; box-shadow: var(--md-elevation-1);">
-                <div style="font-size: 12px; font-weight: 800; color: var(--md-sys-color-secondary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.04em;">
-                  🎯 CANDIDATE MATCH ROSTER ({{ int.candidate_matches|length }})
-                </div>
-
-                {% if int.candidate_matches %}
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                  {% for cand in int.candidate_matches %}
-                  <div id="int-cand-row-{{ cand.user_id }}-{{ int.id }}" style="background: #090f1d; border: 1.5px solid rgba(255,255,255,0.15); border-radius: 6px; padding: 10px 12px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                      <div>
-                        <strong style="color: #fff; font-size: 13.5px;">{{ cand.full_name }}</strong>
-                        <span class="neo-badge neo-badge-cyan" style="font-size: 10px; padding: 1px 5px; margin-left: 4px;">{{ cand.user_code }}</span>
-                      </div>
-                      <div style="display: flex; align-items: center; gap: 6px;">
-                        <span style="font-size: 12.5px; font-weight: 900; font-family: monospace; color: {{ cand.compat_color }};">
-                          {{ cand.match_percentage }}% MATCH
-                        </span>
-                        <span id="badge-int-appr-{{ cand.user_id }}-{{ int.id }}" class="badge-status {% if cand.approval_status == 'APPROVED' %}badge-done{% elif cand.approval_status == 'REJECTED' %}badge-rejected{% else %}badge-progress{% endif %}" style="font-size: 9.5px;">
-                          {% if cand.approval_status == 'APPROVED' %}✓ NOMINATED{% elif cand.approval_status == 'REJECTED' %}✕ REJECTED{% else %}⏳ PENDING{% endif %}
-                        </span>
-                      </div>
-                    </div>
-
-                    <!-- Matched and Missing Skills -->
-                    <div style="display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; margin-bottom: 8px;">
-                      <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
-                        <span style="color: #34A853; font-weight: 800;">Matched:</span>
-                        {% for sk in cand.matched_skills %}
-                          <span class="neo-badge neo-badge-green" style="font-size: 9.5px; padding: 1px 5px;">✓ {{ sk }}</span>
-                        {% else %}
-                          <span style="color: #94a3b8; font-style: italic; font-size: 11px;">No direct stack match (0/{{ int.skills_required|length if int.skills_required else 0 }})</span>
-                        {% endfor %}
-                      </div>
-                      <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
-                        <span style="color: #E0536C; font-weight: 800;">Missing:</span>
-                        {% for sk in cand.missing_skills %}
-                          <span class="neo-badge neo-badge-pink" style="font-size: 9.5px; padding: 1px 5px;">✕ {{ sk }}</span>
-                        {% else %}
-                          {% if cand.matched_skills %}
-                            <span style="color: #34A853; font-size: 10.5px; font-weight: 800;">✓ 100% STACK MATCHED</span>
-                          {% else %}
-                            <span style="color: #cbd5e1; font-size: 11px; font-style: italic;">No skill requirements</span>
-                          {% endif %}
-                        {% endfor %}
-                      </div>
-                    </div>
-
-                    <!-- Direct Approval Action Buttons -->
-                    <div style="display: flex; gap: 6px; justify-content: flex-end;">
-                      <button type="button" class="btn-act btn-act-done" style="font-size: 10.5px; padding: 3px 9px;" onclick="approveCandidateInternshipDesk({{ cand.user_id }}, '{{ int.id }}', '{{ int.role }}', '{{ int.company }}', 'APPROVED')">
-                        ✓ Approve for Candidate
-                      </button>
-                      <button type="button" class="btn-act btn-act-reject" style="font-size: 10.5px; padding: 3px 8px;" onclick="approveCandidateInternshipDesk({{ cand.user_id }}, '{{ int.id }}', '{{ int.role }}', '{{ int.company }}', 'REJECTED')">
-                        ✕ Reject
-                      </button>
-                    </div>
-                  </div>
-                  {% endfor %}
-                </div>
-                {% else %}
-                <div style="font-size: 12px; color: #94a3b8; font-style: italic;">
-                  No registered student candidates yet.
-                </div>
-                {% endif %}
-              </div>
-            </div>
-
-            <div style="display: flex; gap: 8px;">
-              <a href="{{ url_for('admin_dashboard', section='approvals') }}" class="neo-btn neo-btn-yellow" style="flex: 1; text-align: center; text-decoration: none; font-size: 11.5px; padding: 8px 14px;">
-                VIEW CANDIDATE DOSSIERS &rarr;
-              </a>
-            </div>
-          </div>
-          {% endfor %}
-        </div>
       </div>
 
     <!-- ================= SECTION 4: STAGE 1 AI INTERNSHIP & DISCOVERY ================= -->
@@ -1312,11 +1141,11 @@
             <span class="neo-badge neo-badge-cyan">🤖 AUTONOMOUS WEB AGENT</span>
             <span class="neo-badge neo-badge-green">🛡️ SCAM SHIELD 100%</span>
           </div>
-          <h2 style="font-size: 26px; font-weight: 900; letter-spacing: -0.02em; color: #ffffff;">
+          <h2 style="font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: var(--s30-text-primary);">
             AI Internship Discovery & Verification Center
           </h2>
-          <p style="font-size: 13.5px; color: #cbd5e1; margin-top: 4px; font-weight: 500;">
-            <strong style="color: #D9A726;">RULE 1:</strong> Gemini autonomously crawls whitelisted legal portals (AICTE, ISRO ICRB, PM Scheme, MEA, Unstop), performs live DOM auditing, blocks fee scams, and queues verified opportunities.
+          <p style="font-size: 13.5px; color: var(--s30-text-secondary); margin-top: 4px; font-weight: 500;">
+            <strong style="color: var(--md-sys-color-primary);">RULE 1:</strong> Gemini autonomously crawls whitelisted legal portals (AICTE, ISRO ICRB, PM Scheme, MEA, Unstop), performs live DOM auditing, blocks fee scams, and queues verified opportunities.
           </p>
         </div>
 
@@ -1406,6 +1235,20 @@
               <div style="font-size: 11.5px; color: var(--s30-text-secondary); margin-top: 3px; font-family: monospace; font-weight: 500;">
                 🗓️ <strong>TIMELINE:</strong> {{ disc.start_date }} &rarr; {{ disc.end_date }} ({{ disc.duration }})
               </div>
+
+              <!-- Required Skills Badges -->
+              {% if disc.skills_list %}
+              <div style="margin-top: 8px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span style="font-size: 11px; font-weight: 800; color: var(--s30-text-primary); text-transform: uppercase; letter-spacing: 0.04em;">
+                  🎯 Skills Needed:
+                </span>
+                {% for sk in disc.skills_list %}
+                  <span class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 7px;">
+                    {{ sk }}
+                  </span>
+                {% endfor %}
+              </div>
+              {% endif %}
             </div>
 
             <!-- Action Controls -->
@@ -1444,58 +1287,6 @@
         </div>
         {% endif %}
       </div>
-
-      <!-- S30 Frontier AI Research Lab Roles -->
-      <div style="font-size: 17px; font-weight: 800; color: var(--s30-text-primary); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.04em;">
-        <span>🔬</span> S30 Frontier AI Research Lab Requisitions
-      </div>
-
-      <div class="s30-scoreboards-grid" style="margin-bottom: 30px;">
-        {% for ai in ai_internships %}
-        <div class="neo-card" style="border-color: rgba(59, 130, 246, 0.4); box-shadow: var(--md-elevation-2); padding: 24px; display: flex; flex-direction: column; justify-content: space-between;">
-          
-          <div>
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-              <div>
-                <span class="neo-badge neo-badge-cyan">
-                  {{ ai.id }} • FRONTIER LAB
-                </span>
-                <h3 style="font-size: 20px; font-weight: 800; margin-top: 8px; color: var(--s30-text-primary); letter-spacing: -0.01em;">{{ ai.role }}</h3>
-                <div style="font-size: 14px; color: var(--md-sys-color-primary); font-weight: 700;">{{ ai.company }}</div>
-              </div>
-              <span class="neo-badge neo-badge-cyan">
-                🎯 {{ ai.match }} MATCH
-              </span>
-            </div>
-
-            <div style="background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-shape-sm); padding: 14px; margin-bottom: 16px;">
-              <div style="font-size: 12.5px; color: var(--s30-text-secondary); margin-bottom: 4px;">
-                🔬 <strong>FOCUS:</strong> {{ ai.focus }}
-              </div>
-              <div style="font-size: 12.5px; color: var(--md-sys-color-secondary); margin-bottom: 4px; font-weight: 700;">
-                ⚡ <strong>STACK:</strong> {{ ai.skills_required }}
-              </div>
-              <div style="font-size: 12.5px; color: var(--md-sys-color-tertiary); margin-bottom: 4px; font-weight: 700;">
-                ⭐ <strong>TOP CANDIDATE:</strong> {{ ai.top_candidate }}
-              </div>
-              <div style="font-size: 12px; color: var(--md-sys-color-primary); margin-top: 8px; border-top: 1px dashed var(--md-sys-color-outline-variant); padding-top: 8px; font-family: monospace;">
-                🗓️ <strong>DATES:</strong> {{ ai.start_date }} &rarr; {{ ai.end_date }} ({{ ai.duration }})
-              </div>
-              <div style="font-size: 12.5px; color: var(--s30-text-secondary); margin-top: 4px; font-weight: 500;">
-                💰 <strong>STIPEND:</strong> {{ ai.stipend }} • 📍 {{ ai.location }}
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <a href="{{ url_for('admin_dashboard', section='approvals') }}" class="neo-btn neo-btn-yellow" style="width: 100%; text-align: center; text-decoration: none; padding: 10px; font-size: 12.5px;">
-              VERIFY AI CANDIDATE PROOFS & NOMINATE &rarr;
-            </a>
-          </div>
-
-        </div>
-        {% endfor %}
-      </div>
       {% endif %}
 
     </main>
@@ -1507,12 +1298,12 @@
     <div class="doc-modal-dialog" style="max-width: 980px; height: 90vh; display: flex; flex-direction: column; background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-lg); box-shadow: var(--md-elevation-4);">
       
       <!-- Modal Header -->
-      <div style="padding: 12px 20px; background: #070b14; border-bottom: 2.5px solid #38BDF8; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <div style="padding: 14px 20px; background: var(--md-sys-color-surface); border-bottom: 1px solid var(--md-sys-color-outline); display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
         <div style="min-width: 0; display: flex; align-items: center; gap: 10px;">
           <span id="modal-doc-badge" class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 6px;">DOCUMENT AUDIT</span>
           <div>
-            <div style="font-size: 15px; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px;" id="modal-doc-title">Document Inspection</div>
-            <div style="font-size: 11.5px; color: #38bdf8; font-weight: 700;" id="modal-doc-candidate">Candidate: Alex Rivera</div>
+            <div style="font-size: 15px; font-weight: 800; color: var(--s30-text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px;" id="modal-doc-title">Document Inspection</div>
+            <div style="font-size: 11.5px; color: var(--md-sys-color-secondary); font-weight: 700;" id="modal-doc-candidate">Candidate: --</div>
           </div>
         </div>
 
@@ -1534,7 +1325,7 @@
         
         <!-- Image Container (Always fits screen by default with object-fit: contain) -->
         <div id="admin-doc-img-container" style="display: none; width: 100%; height: 100%; overflow: auto; align-items: center; justify-content: center;">
-          <img id="admin-doc-img" src="" alt="Document Preview" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 4px; border: 2px solid #38BDF8; box-shadow: 4px 4px 0px rgba(0,0,0,0.6); transition: transform 0.2s ease;">
+          <img id="admin-doc-img" src="" alt="Document Preview" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 4px; border: 2px solid var(--md-sys-color-primary); box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.2s ease;">
         </div>
 
         <!-- PDF Document Iframe -->
@@ -1542,8 +1333,8 @@
       </div>
 
       <!-- Modal Footer -->
-      <div style="padding: 12px 20px; background: #070b14; border-top: 2.5px solid #38BDF8; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-        <div style="font-size: 12px; color: #94a3b8; font-weight: 600;">Verify institutional logo, student name, and registration year.</div>
+      <div style="padding: 14px 20px; background: var(--md-sys-color-surface); border-top: 1px solid var(--md-sys-color-outline); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div style="font-size: 12px; color: var(--s30-text-secondary); font-weight: 600;">Verify institutional logo, student name, and registration year.</div>
         <div style="display: flex; gap: 8px;">
           <button type="button" class="btn-act btn-act-done" id="modal-btn-approve">✓ APPROVE DOCUMENT</button>
           <button type="button" class="btn-act btn-act-reject" id="modal-btn-reject">✕ REJECT DOCUMENT</button>
@@ -2034,6 +1825,9 @@
       document.getElementById('inspectTargetUrl').textContent = url;
       document.getElementById('inspectTargetTitle').textContent = `${title} (${company})`;
 
+      // Store current ID for modal quick actions
+      modal.dataset.currentId = id;
+
       try {
         const res = await fetch('/api/internships/inspect-url', {
           method: 'POST',
@@ -2045,34 +1839,65 @@
         loading.style.display = 'none';
         content.style.display = 'block';
 
-        // Populate fields
-        document.getElementById('inspectHttpStatus').textContent = `HTTP ${data.http_status} OK`;
-        document.getElementById('inspectHttpStatus').style.background = data.http_status < 400 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)';
-        document.getElementById('inspectHttpStatus').style.color = data.http_status < 400 ? '#34d399' : '#f87171';
+        // 1. Link Status
+        const httpBadge = document.getElementById('inspectHttpStatus');
+        if (data.http_status === 200) {
+          httpBadge.textContent = '🟢 HTTP 200 OK (LINK WORKING)';
+          httpBadge.className = 'neo-badge neo-badge-green';
+        } else {
+          httpBadge.textContent = `🔴 HTTP ${data.http_status || 'ERROR'} (UNREACHABLE)`;
+          httpBadge.className = 'neo-badge neo-badge-pink';
+        }
 
-        document.getElementById('inspectPageTitle').textContent = data.page_title || 'N/A';
-        
-        // 4-Point Checklist
+        // 2. Match Confidence Meter
+        const conf = data.match_confidence || 0;
+        document.getElementById('inspectMatchScore').textContent = `${conf}% MATCH CONFIDENCE`;
+        const bar = document.getElementById('inspectMatchBar');
+        bar.style.width = `${conf}%`;
+        bar.style.background = conf >= 75 ? '#16a34a' : (conf >= 45 ? '#d97706' : '#dc2626');
+
+        // 3. Comparison
+        document.getElementById('inspectClaimedRole').textContent = `${title} • ${company}`;
+        document.getElementById('inspectLiveTitle').textContent = data.page_title || 'N/A';
+        document.getElementById('inspectLiveHeadings').textContent = data.headings || 'No specific header detected';
+
+        // 4. Detected Skills
+        const skillsBox = document.getElementById('inspectDetectedSkills');
+        skillsBox.innerHTML = '';
+        if (data.detected_skills && data.detected_skills.length > 0) {
+          data.detected_skills.forEach(sk => {
+            const badge = document.createElement('span');
+            badge.className = 'neo-badge neo-badge-yellow';
+            badge.style.fontSize = '10px';
+            badge.style.padding = '2px 7px';
+            badge.textContent = sk;
+            skillsBox.appendChild(badge);
+          });
+        } else {
+          skillsBox.innerHTML = '<span style="color: var(--s30-text-muted); font-size: 11px; font-style: italic;">No specific tech keywords extracted from live body</span>';
+        }
+
+        // 5. 4-Pillar Verification Checklist
         document.getElementById('inspectCheck1').innerHTML = data.is_real_listing 
-          ? '<span style="color: #34d399;">✓ Real Opportunity / Official Portal Confirmed</span>'
-          : '<span style="color: #f87171;">✕ Generic or Ambiguous Webpage</span>';
+          ? '<span style="color: #16a34a;">✓ Real Opportunity / Official Portal Confirmed</span>'
+          : '<span style="color: #dc2626;">✕ Generic or Ambiguous Webpage</span>';
 
         document.getElementById('inspectCheck2').innerHTML = data.title_match 
-          ? `<span style="color: #34d399;">✓ Matches ${company || 'Claimed Role'} (${data.match_confidence}% Match)</span>`
-          : '<span style="color: #fbbf24;">⚠️ Partial Relevance Match</span>';
+          ? `<span style="color: #16a34a;">✓ Matches Claimed Role & Company (${conf}% Overlap)</span>`
+          : '<span style="color: #d97706;">⚠️ Low Content Match on Live Portal</span>';
 
         document.getElementById('inspectCheck3').innerHTML = data.is_active === 'CLOSED / EXPIRED'
-          ? '<span style="color: #f87171;">✕ EXPIRED / APPLICATION CLOSED</span>'
-          : '<span style="color: #34d399;">✓ ACTIVE & ACCEPTING CANDIDATES</span>';
+          ? '<span style="color: #dc2626;">✕ EXPIRED / APPLICATION WINDOW CLOSED</span>'
+          : '<span style="color: #16a34a;">✓ ACTIVE & ACCEPTING CANDIDATES</span>';
 
         document.getElementById('inspectCheck4').innerHTML = data.is_scam_flagged
-          ? '<span style="color: #f87171;">⚠️ Registration Fee / Deposit Detected</span>'
-          : '<span style="color: #34d399;">✓ 100% Free & Verified Authentic</span>';
+          ? '<span style="color: #dc2626;">⚠️ Registration Fee / Deposit Detected</span>'
+          : '<span style="color: #16a34a;">✓ 100% Free & Verified Authentic</span>';
 
-        // Verdict & Reasoning
+        // 6. Verdict & Reasoning
         const verdictEl = document.getElementById('inspectVerdict');
         verdictEl.textContent = data.verdict;
-        verdictEl.style.color = data.is_scam_flagged ? '#f87171' : (data.is_active === 'CLOSED / EXPIRED' ? '#fbbf24' : '#34d399');
+        verdictEl.style.color = data.is_scam_flagged ? '#dc2626' : (data.is_active === 'CLOSED / EXPIRED' ? '#d97706' : '#16a34a');
 
         document.getElementById('inspectReasoning').textContent = data.reasoning;
       } catch (err) {
@@ -2089,32 +1914,32 @@
     }
   </script>
 
-  <!-- Autonomous Browsing AI Live Inspection Modal (Neo-Brutalist Design) -->
-  <div id="aiInspectModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
-    <div class="neo-card-yellow" style="width: 100%; max-width: 650px; overflow: hidden; background: var(--md-sys-color-surface); border-radius: 8px; animation: fadeIn 0.2s ease;">
+  <!-- Autonomous Browsing AI Live Inspection Modal (Enhanced & Visual) -->
+  <div id="aiInspectModal" style="display: none; position: fixed; inset: 0; background: rgba(0, 0, 0, 0.7); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+    <div class="neo-card-yellow" style="width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; background: var(--md-sys-color-surface); border-radius: var(--md-shape-lg); animation: fadeIn 0.2s ease; box-shadow: var(--md-elevation-4);">
       
       <!-- Modal Header -->
-      <div style="background: #D9A726; color: #000000; padding: 18px 24px; border-bottom: 2.5px solid #000000; display: flex; justify-content: space-between; align-items: center;">
+      <div style="background: var(--md-sys-color-surface); padding: 18px 24px; border-bottom: 1px solid var(--md-sys-color-outline); display: flex; justify-content: space-between; align-items: center;">
         <div style="display: flex; align-items: center; gap: 10px;">
-          <span style="font-size: 24px;">🤖</span>
+          <span style="font-size: 26px;">🤖</span>
           <div>
-            <h3 style="font-size: 17px; font-weight: 800; color: #000000; margin: 0; text-transform: uppercase; letter-spacing: 0.02em;">
-              Autonomous Browsing AI • Web Inspector
+            <h3 style="font-size: 17px; font-weight: 800; color: var(--s30-text-primary); margin: 0; text-transform: uppercase; letter-spacing: -0.01em;">
+              Autonomous Browsing AI • Web Auditor
             </h3>
-            <p style="font-size: 11.5px; color: #000000; margin: 2px 0 0 0; font-weight: 600;">
-              LIVE DOM CONTENT AUDIT • REAL TIME ACTIVE STATUS • VERIFICATION RADAR
+            <p style="font-size: 11.5px; color: var(--s30-text-secondary); margin: 2px 0 0 0; font-weight: 500;">
+              REAL-TIME LINK CHECK • DOM EXTRACTION • ROLE MATCH ACCURACY
             </p>
           </div>
         </div>
-        <button type="button" onclick="closeInspectModal()" style="background: rgba(0,0,0,0.2); border: none; color: #000000; font-size: 16px; font-weight: 800; width: 32px; height: 32px; border-radius: var(--md-shape-sm); cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
+        <button type="button" onclick="closeInspectModal()" style="background: transparent; border: none; color: var(--s30-text-secondary); font-size: 20px; font-weight: 800; width: 32px; height: 32px; border-radius: var(--md-shape-sm); cursor: pointer; display: flex; align-items: center; justify-content: center;">✕</button>
       </div>
 
       <!-- Modal Body -->
       <div id="inspectModalBody" style="padding: 24px;">
         
         <!-- Target Info -->
-        <div style="background: var(--md-sys-color-surface); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: var(--md-shape-sm); padding: 12px 16px; margin-bottom: 16px; font-size: 12.5px; box-shadow: var(--md-elevation-1);">
-          <div style="color: var(--md-sys-color-secondary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px;" id="inspectTargetTitle">Target Opportunity</div>
+        <div style="background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-sm); padding: 12px 16px; margin-bottom: 16px; font-size: 12.5px;">
+          <div style="color: var(--md-sys-color-primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px;" id="inspectTargetTitle">Target Opportunity</div>
           <div style="color: var(--s30-text-secondary); font-family: monospace; font-size: 11.5px; word-break: break-all; font-weight: 500;" id="inspectTargetUrl">https://...</div>
         </div>
 
@@ -2122,26 +1947,54 @@
         <div id="inspectModalLoading" style="text-align: center; padding: 36px 20px;">
           <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid var(--md-sys-color-primary); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s infinite linear;"></div>
           <p style="margin-top: 14px; font-size: 14px; color: var(--md-sys-color-primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em;">
-            BROWSING AI IS FETCHING LIVE DOM & AUDITING WEBPAGE...
+            BROWSING AI IS CONNECTING TO LIVE WEBPAGE & AUDITING DOM...
           </p>
         </div>
 
         <!-- Content State -->
         <div id="inspectModalContent" style="display: none;">
           
-          <!-- Live Page Title & Status -->
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
-            <div style="flex: 1; min-width: 200px;">
-              <div style="font-size: 11px; font-weight: 800; color: var(--s30-text-muted); text-transform: uppercase; letter-spacing: 0.05em;">LIVE PAGE TITLE</div>
-              <div id="inspectPageTitle" style="font-size: 14px; font-weight: 700; color: var(--s30-text-primary); margin-top: 2px;">-</div>
+          <!-- Live Link Status & Match Score Meter -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+            <span id="inspectHttpStatus" class="neo-badge neo-badge-green" style="font-size: 11.5px; padding: 4px 10px;">HTTP 200 OK</span>
+            <span id="inspectMatchScore" class="neo-badge neo-badge-yellow" style="font-size: 12px; font-weight: 800; padding: 4px 10px;">85% MATCH CONFIDENCE</span>
+          </div>
+
+          <!-- Match Confidence Visual Progress Bar -->
+          <div style="width: 100%; height: 8px; background: var(--md-sys-color-surface-container); border-radius: 4px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--md-sys-color-outline);">
+            <div id="inspectMatchBar" style="width: 0%; height: 100%; transition: width 0.4s ease; background: #16a34a;"></div>
+          </div>
+
+          <!-- Claimed vs Live Detected Comparison -->
+          <div style="background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-sm); padding: 14px; margin-bottom: 14px; font-size: 12.5px;">
+            <div style="font-size: 11px; font-weight: 800; color: var(--s30-text-secondary); text-transform: uppercase; margin-bottom: 8px;">
+              📊 CLAIMED LISTING VS LIVE WEBPAGE COMPARISON:
             </div>
-            <span id="inspectHttpStatus" class="neo-badge neo-badge-green">HTTP 200 OK</span>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <div>
+                <strong style="color: var(--md-sys-color-primary);">Claimed Role:</strong> <span id="inspectClaimedRole" style="color: var(--s30-text-primary);">-</span>
+              </div>
+              <div>
+                <strong style="color: var(--md-sys-color-secondary);">Live Page Title:</strong> <span id="inspectLiveTitle" style="color: var(--s30-text-primary);">-</span>
+              </div>
+              <div>
+                <strong style="color: var(--s30-text-secondary);">Section Headings:</strong> <span id="inspectLiveHeadings" style="color: var(--s30-text-secondary); font-style: italic;">-</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Detected Technical Skills on Live DOM -->
+          <div style="background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-sm); padding: 12px 14px; margin-bottom: 14px;">
+            <div style="font-size: 11px; font-weight: 800; color: var(--s30-text-secondary); text-transform: uppercase; margin-bottom: 6px;">
+              🎯 TECH SKILLS EXTRACTED FROM LIVE PAGE:
+            </div>
+            <div id="inspectDetectedSkills" style="display: flex; flex-wrap: wrap; gap: 5px;"></div>
           </div>
 
           <!-- 4-Pillar Verification Checklist -->
-          <div style="background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-sm); padding: 16px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 10px; font-size: 13px; font-weight: 600; box-shadow: var(--md-elevation-1);">
-            <div style="font-size: 11px; font-weight: 800; color: var(--md-sys-color-primary); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px;">
-              🛡️ 4-PILLAR AI LIVE VERIFICATION AUDIT
+          <div style="background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-sm); padding: 14px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 8px; font-size: 12.5px; font-weight: 600;">
+            <div style="font-size: 11px; font-weight: 800; color: var(--md-sys-color-primary); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px;">
+              🛡️ 4-PILLAR AI LIVE VERIFICATION CHECKLIST
             </div>
             <div id="inspectCheck1">1. Real Specific Listing?</div>
             <div id="inspectCheck2">2. Title & Company Match?</div>
@@ -2150,9 +2003,9 @@
           </div>
 
           <!-- Final Verdict & Reason -->
-          <div style="background: var(--md-sys-color-surface); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: var(--md-shape-sm); padding: 16px; font-size: 13px; box-shadow: var(--md-elevation-1);">
-            <div style="font-weight: 800; font-size: 15px; text-transform: uppercase; letter-spacing: 0.04em;" id="inspectVerdict">✓ VERIFIED: Active & Authentic Opportunity</div>
-            <div style="color: var(--s30-text-secondary); margin-top: 6px; line-height: 1.5; font-weight: 400;" id="inspectReasoning">Live inspection confirmed...</div>
+          <div style="background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline); border-radius: var(--md-shape-sm); padding: 14px; font-size: 13px;">
+            <div style="font-weight: 800; font-size: 14.5px; text-transform: uppercase;" id="inspectVerdict">✓ VERIFIED: Active & Authentic Opportunity</div>
+            <div style="color: var(--s30-text-secondary); margin-top: 4px; line-height: 1.45; font-size: 12.5px;" id="inspectReasoning">Live inspection confirmed...</div>
           </div>
 
         </div>
@@ -2160,8 +2013,8 @@
       </div>
 
       <!-- Modal Footer -->
-      <div style="background: var(--md-sys-color-surface-container-high); padding: 14px 24px; border-top: 1px solid var(--md-sys-color-outline-variant); display: flex; justify-content: flex-end; gap: 10px;">
-        <button type="button" onclick="closeInspectModal()" class="s30-btn-primary" style="padding: 6px 18px; font-size: 12.5px; border-radius: var(--md-shape-sm);">
+      <div style="background: var(--md-sys-color-surface-container); padding: 14px 24px; border-top: 1px solid var(--md-sys-color-outline); display: flex; justify-content: flex-end; align-items: center;">
+        <button type="button" onclick="closeInspectModal()" class="neo-btn neo-btn-white" style="padding: 7px 20px; font-size: 12px;">
           Close Audit
         </button>
       </div>
