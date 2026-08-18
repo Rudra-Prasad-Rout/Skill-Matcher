@@ -553,7 +553,7 @@
     }
   });
 
-  const DRAFT_STORAGE_KEY = 's30_signup_profile_draft';
+  const DRAFT_STORAGE_KEY = 's30_signup_profile_draft_v2';
 
   function saveProfileDraft() {
     try {
@@ -564,6 +564,8 @@
         age: document.getElementById('age')?.value || '',
         school: document.getElementById('school')?.value || '',
         coursework: document.getElementById('coursework')?.value || '',
+        password: document.getElementById('password')?.value || '',
+        re_password: document.getElementById('re_password')?.value || '',
         email_verified: isEmailVerified,
         timestamp: Date.now()
       };
@@ -572,7 +574,10 @@
       if (hasContent) {
         localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
         const badge = document.getElementById('draft-status-badge');
-        if (badge) badge.style.display = 'inline-flex';
+        if (badge) {
+          badge.style.display = 'inline-flex';
+          badge.innerHTML = '💾 DRAFT SAVED IN BROWSER';
+        }
       }
     } catch (e) {
       console.warn('[Draft AutoSave]:', e);
@@ -581,26 +586,37 @@
 
   function restoreProfileDraft() {
     try {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('new') === '1' || urlParams.get('reset') === '1') {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+        return;
+      }
+
       const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
       if (!raw) return;
       const draft = JSON.parse(raw);
       if (!draft) return;
 
-      const fillIfEmpty = (id, val) => {
+      const fillVal = (id, val) => {
         const input = document.getElementById(id);
-        if (input && (!input.value || input.value.trim() === '') && val) {
+        if (input && val) {
           input.value = val;
         }
       };
 
-      fillIfEmpty('full_name', draft.full_name);
-      fillIfEmpty('email', draft.email);
-      fillIfEmpty('age', draft.age);
-      fillIfEmpty('school', draft.school);
-      fillIfEmpty('coursework', draft.coursework);
+      if (draft.full_name) fillVal('full_name', draft.full_name);
+      if (draft.email) fillVal('email', draft.email);
+      if (draft.age) fillVal('age', draft.age);
+      if (draft.school) fillVal('school', draft.school);
+      if (draft.coursework) fillVal('coursework', draft.coursework);
+      if (draft.password) fillVal('password', draft.password);
+      if (draft.re_password) {
+        fillVal('re_password', draft.re_password);
+        validatePasswordsMatch();
+      }
 
       const genderSelect = document.getElementById('gender');
-      if (genderSelect && (!genderSelect.value || genderSelect.value === '') && draft.gender) {
+      if (genderSelect && draft.gender) {
         genderSelect.value = draft.gender;
       }
 
@@ -618,7 +634,10 @@
       }
 
       const badge = document.getElementById('draft-status-badge');
-      if (badge) badge.style.display = 'inline-flex';
+      if (badge) {
+        badge.style.display = 'inline-flex';
+        badge.innerHTML = '💾 DRAFT RESTORED FROM BROWSER';
+      }
     } catch (e) {
       console.warn('[Draft Restore]:', e);
     }
@@ -629,13 +648,20 @@
     restoreProfileDraft();
 
     // 2. Attach live input listeners for real-time draft saving
-    ['full_name', 'email', 'gender', 'age', 'school', 'coursework'].forEach(id => {
+    ['full_name', 'email', 'gender', 'age', 'school', 'coursework', 'password', 're_password'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
         el.addEventListener('input', saveProfileDraft);
         el.addEventListener('change', saveProfileDraft);
+        el.addEventListener('blur', saveProfileDraft);
       }
     });
+
+    // Save on window blur/tab switch
+    window.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') saveProfileDraft();
+    });
+    window.addEventListener('beforeunload', saveProfileDraft);
 
     const urlParams = new URLSearchParams(window.location.search);
     const emailParam = urlParams.get('email');

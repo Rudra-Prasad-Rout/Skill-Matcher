@@ -953,6 +953,159 @@
     })();
   </script>
 
+  <!-- Universal S30 Form AutoSave & Browser Data Persistence Engine -->
+  <script>
+    (function() {
+      const STORAGE_PREFIX = 's30_autosave_v2_';
+
+      function getStorageKey(form) {
+        const path = window.location.pathname.replace(/\/$/, '') || '/';
+        if (form && form.id) return STORAGE_PREFIX + form.id;
+        if (form && form.getAttribute('action')) return STORAGE_PREFIX + form.getAttribute('action');
+        return STORAGE_PREFIX + path;
+      }
+
+      function saveFormData(form) {
+        if (!form) return;
+        const key = getStorageKey(form);
+        const data = {};
+        const elements = form.querySelectorAll('input:not([type="file"]):not([type="hidden"]), select, textarea');
+        
+        let hasValue = false;
+        elements.forEach(el => {
+          const fieldKey = el.name || el.id;
+          if (fieldKey) {
+            if (el.type === 'checkbox') {
+              data[fieldKey] = el.checked;
+              if (el.checked) hasValue = true;
+            } else if (el.type === 'radio') {
+              if (el.checked) {
+                data[fieldKey] = el.value;
+                hasValue = true;
+              }
+            } else {
+              data[fieldKey] = el.value;
+              if (el.value && el.value.trim() !== '') hasValue = true;
+            }
+          }
+        });
+
+        if (hasValue) {
+          try {
+            localStorage.setItem(key, JSON.stringify({ data: data, updated_at: Date.now() }));
+            showAutoSaveIndicator();
+          } catch(e) {}
+        }
+      }
+
+      function restoreFormData(form) {
+        if (!form) return;
+        const key = getStorageKey(form);
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) return;
+          const payload = JSON.parse(raw);
+          if (!payload || !payload.data) return;
+
+          const data = payload.data;
+          const elements = form.querySelectorAll('input:not([type="file"]):not([type="hidden"]), select, textarea');
+          
+          elements.forEach(el => {
+            const fieldKey = el.name || el.id;
+            if (fieldKey && data[fieldKey] !== undefined) {
+              const savedVal = data[fieldKey];
+              if (el.type === 'checkbox') {
+                el.checked = Boolean(savedVal);
+              } else if (el.type === 'radio') {
+                el.checked = (el.value === savedVal);
+              } else {
+                if (savedVal && (!el.value || el.value.trim() === '')) {
+                  el.value = savedVal;
+                  el.dispatchEvent(new Event('input', { bubbles: true }));
+                  el.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+              }
+            }
+          });
+          showAutoSaveIndicator();
+        } catch(e) {}
+      }
+
+      function clearFormDraft(form) {
+        if (!form) return;
+        const key = getStorageKey(form);
+        try {
+          localStorage.removeItem(key);
+        } catch(e) {}
+      }
+
+      function showAutoSaveIndicator() {
+        const badge = document.getElementById('draft-status-badge') || document.getElementById('global-draft-indicator');
+        if (badge) {
+          badge.style.display = 'inline-flex';
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+          restoreFormData(form);
+
+          form.addEventListener('input', () => saveFormData(form));
+          form.addEventListener('change', () => saveFormData(form));
+          form.addEventListener('blur', () => saveFormData(form), true);
+        });
+
+        // Standalone inputs persistence
+        const standaloneInputs = document.querySelectorAll('#new-skill-name, #new-project-name, #new-project-url, #search-input, #filter-search');
+        if (standaloneInputs.length > 0) {
+          const path = window.location.pathname.replace(/\/$/, '') || '/';
+          const standaloneKey = STORAGE_PREFIX + 'standalone_' + path;
+          try {
+            const raw = localStorage.getItem(standaloneKey);
+            if (raw) {
+              const saved = JSON.parse(raw);
+              standaloneInputs.forEach(input => {
+                if (saved[input.id] && (!input.value || input.value.trim() === '')) {
+                  input.value = saved[input.id];
+                  input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+              });
+            }
+          } catch(e) {}
+
+          const saveStandalone = () => {
+            const data = {};
+            let has = false;
+            standaloneInputs.forEach(input => {
+              data[input.id] = input.value;
+              if (input.value && input.value.trim() !== '') has = true;
+            });
+            if (has) {
+              try { localStorage.setItem(standaloneKey, JSON.stringify(data)); } catch(e) {}
+            }
+          };
+
+          standaloneInputs.forEach(input => {
+            input.addEventListener('input', saveStandalone);
+            input.addEventListener('change', saveStandalone);
+            input.addEventListener('blur', saveStandalone);
+          });
+        }
+
+        // Flush when switching tabs, minimizing, or unloading
+        window.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden') {
+            forms.forEach(form => saveFormData(form));
+          }
+        });
+        window.addEventListener('beforeunload', () => {
+          forms.forEach(form => saveFormData(form));
+        });
+      });
+    })();
+  </script>
+
   {% block scripts %}{% endblock %}
 </body>
 </html>

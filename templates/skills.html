@@ -159,6 +159,7 @@
       });
 
       if (res.ok) {
+        localStorage.removeItem('s30_skill_draft');
         window.location.reload();
       } else {
         const data = await res.json();
@@ -189,5 +190,54 @@
       console.error(e);
     }
   }
+
+  // Auto-Save & Restore Draft for Step 2 Skills
+  function saveSkillDraft() {
+    try {
+      const draft = {
+        skill_name: document.getElementById('new-skill-name')?.value || '',
+        project_name: document.getElementById('new-project-name')?.value || '',
+        project_url: document.getElementById('new-project-url')?.value || '',
+        timestamp: Date.now()
+      };
+      if (draft.skill_name || draft.project_name || draft.project_url) {
+        localStorage.setItem('s30_skill_draft', JSON.stringify(draft));
+      }
+    } catch (e) {}
+  }
+
+  function restoreSkillDraft() {
+    try {
+      const raw = localStorage.getItem('s30_skill_draft');
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      if (!draft) return;
+
+      const sInput = document.getElementById('new-skill-name');
+      const pInput = document.getElementById('new-project-name');
+      const uInput = document.getElementById('new-project-url');
+
+      if (sInput && (!sInput.value || sInput.value === '') && draft.skill_name) sInput.value = draft.skill_name;
+      if (pInput && (!pInput.value || pInput.value === '') && draft.project_name) pInput.value = draft.project_name;
+      if (uInput && (!uInput.value || uInput.value === '') && draft.project_url) uInput.value = draft.project_url;
+    } catch (e) {}
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    restoreSkillDraft();
+    ['new-skill-name', 'new-project-name', 'new-project-url'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', saveSkillDraft);
+        el.addEventListener('change', saveSkillDraft);
+        el.addEventListener('blur', saveSkillDraft);
+      }
+    });
+
+    window.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') saveSkillDraft();
+    });
+    window.addEventListener('beforeunload', saveSkillDraft);
+  });
 </script>
 {% endblock %}
