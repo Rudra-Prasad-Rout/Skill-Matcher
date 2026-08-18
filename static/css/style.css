@@ -143,6 +143,93 @@ body {
 }
 
 /* ==========================================================================
+   Ambient Moving Background Canvas (Dark Techno-Glow Mesh)
+   ========================================================================== */
+.s30-ambient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  background: #000000;
+}
+
+.s30-bg-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+  animation: s30GridDrift 30s linear infinite;
+  opacity: 0.7;
+}
+
+@keyframes s30GridDrift {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-64px, -64px, 0); }
+}
+
+.s30-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  will-change: transform;
+  pointer-events: none;
+}
+
+.s30-bg-orb-1 {
+  width: 650px;
+  height: 650px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(56, 189, 248, 0.02) 50%, transparent 70%);
+  top: -120px;
+  left: -80px;
+  animation: s30OrbFloat1 24s ease-in-out infinite alternate;
+}
+
+.s30-bg-orb-2 {
+  width: 580px;
+  height: 580px;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.1) 0%, rgba(251, 191, 36, 0.02) 50%, transparent 70%);
+  bottom: -100px;
+  right: -80px;
+  animation: s30OrbFloat2 28s ease-in-out infinite alternate;
+}
+
+.s30-bg-orb-3 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(168, 85, 247, 0.01) 50%, transparent 70%);
+  top: 45%;
+  left: 45%;
+  animation: s30OrbFloat3 22s ease-in-out infinite alternate;
+}
+
+@keyframes s30OrbFloat1 {
+  0% { transform: translate3d(0px, 0px, 0) scale(1); }
+  50% { transform: translate3d(140px, 90px, 0) scale(1.18); }
+  100% { transform: translate3d(70px, 180px, 0) scale(0.92); }
+}
+
+@keyframes s30OrbFloat2 {
+  0% { transform: translate3d(0px, 0px, 0) scale(1); }
+  50% { transform: translate3d(-120px, -140px, 0) scale(1.22); }
+  100% { transform: translate3d(-60px, -70px, 0) scale(0.88); }
+}
+
+@keyframes s30OrbFloat3 {
+  0% { transform: translate3d(-50%, -50%, 0) scale(0.9); }
+  50% { transform: translate3d(-35%, -65%, 0) scale(1.15); }
+  100% { transform: translate3d(-60%, -40%, 0) scale(1); }
+}
+
+/* ==========================================================================
    Header Navigation (Material Top App Bar)
    ========================================================================== */
 .s30-navbar {
