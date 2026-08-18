@@ -448,8 +448,8 @@
 
     let idx1 = 0;
     let idx2 = 0;
-    const SPEED_LINE1 = 45; // Smooth progression for prefix
-    const SPEED_LINE2 = 70; // Punchy impactful speed for highlight
+    const SPEED_LINE1 = 48; // Crisp, fast fluid cadence
+    const SPEED_LINE2 = 64; // Fast, energetic punchy cadence
 
     line1El.textContent = "";
     line2El.textContent = "";
@@ -458,7 +458,7 @@
       if (idx1 < line1Text.length) {
         line1El.textContent += line1Text.charAt(idx1);
         idx1++;
-        const jitter = Math.floor(Math.random() * 15);
+        const jitter = Math.floor(Math.random() * 10);
         setTimeout(typeLine1, SPEED_LINE1 + jitter);
       } else {
         // Line 1 completed! Show line break and proceed with Line 2
@@ -466,7 +466,7 @@
           if (brEl) brEl.style.display = 'inline';
           if (line2El) line2El.style.display = 'inline';
           typeLine2();
-        }, 160);
+        }, 140);
       }
     }
 
@@ -474,13 +474,25 @@
       if (idx2 < line2Text.length) {
         line2El.textContent += line2Text.charAt(idx2);
         idx2++;
-        const jitter = Math.floor(Math.random() * 20);
+        const jitter = Math.floor(Math.random() * 12);
         setTimeout(typeLine2, SPEED_LINE2 + jitter);
+      } else {
+        // Animation finished 1 time! Remove cursor & stop all animations completely
+        setTimeout(function() {
+          if (cursorEl) {
+            cursorEl.style.animation = 'none';
+            cursorEl.style.transition = 'opacity 0.35s ease';
+            cursorEl.style.opacity = '0';
+            setTimeout(function() {
+              cursorEl.style.display = 'none';
+            }, 350);
+          }
+        }, 500);
       }
     }
 
-    // Start streaming from the very start of the text on page load
-    setTimeout(typeLine1, 300);
+    // Start streaming after initial page reveal
+    setTimeout(typeLine1, 180);
   })();
 </script>
 {% endblock %}

@@ -1207,20 +1207,10 @@
     })();
   </script>
 
-  <!-- Universal 4-Second Auto-Refresh & Real-Time Sync Engine for Main Website & User Interface -->
+  <!-- Live State & Mailbox Badge Poller for Logged-In Candidates -->
   <script>
     (function() {
-      const AUTO_REFRESH_INTERVAL_MS = 4000;
-      let lastActivityTime = Date.now();
-
-      // Track recent user interaction (keystrokes, mouse moves, scrolls, touch)
-      ['keydown', 'input', 'mousedown', 'touchstart'].forEach(eventType => {
-        document.addEventListener(eventType, () => {
-          lastActivityTime = Date.now();
-        }, { passive: true });
-      });
-
-      // 1. Live State & Mailbox Badge Poller (every 4 seconds)
+      // Background poller for mailbox badge count (zero page refresh)
       async function pollLiveUserState() {
         try {
           const res = await fetch('/api/user-state');
@@ -1250,29 +1240,7 @@
         }
       }
 
-      setInterval(pollLiveUserState, AUTO_REFRESH_INTERVAL_MS);
-
-      // 2. Auto-Refresh Engine (every 4 seconds) for Main Website & User Interface
-      setInterval(() => {
-        const activeElement = document.activeElement;
-        const isInputFocused = activeElement && (
-          activeElement.tagName === 'INPUT' || 
-          activeElement.tagName === 'TEXTAREA' || 
-          activeElement.tagName === 'SELECT' || 
-          activeElement.isContentEditable
-        );
-
-        const isModalOpen = document.querySelector(
-          '.modal.open, [role="dialog"][aria-hidden="false"], .s30-nav-drawer.active, #edit-squad-modal[style*="flex"]'
-        );
-
-        // Auto-refresh if user is not actively typing into a form field or interacting inside a modal
-        const idleForAtLeast2Sec = (Date.now() - lastActivityTime) >= 2000;
-
-        if (!isInputFocused && !isModalOpen && idleForAtLeast2Sec) {
-          window.location.reload();
-        }
-      }, AUTO_REFRESH_INTERVAL_MS);
+      setInterval(pollLiveUserState, 8000);
     })();
   </script>
 
