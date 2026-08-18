@@ -1169,15 +1169,18 @@ html, body {
 /* Tablet / Medium Screens */
 @media (max-width: 900px) {
   .s30-auth-wrapper {
-    padding: 28px 0;
+    padding: 24px 14px;
     width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
   .s30-auth-grid {
     grid-template-columns: 1fr;
-    width: 90%;
-    max-width: 90vw;
+    width: 100%;
+    max-width: 520px;
     margin: 0 auto;
     box-shadow: 6px 6px 0px #D9A726;
+    box-sizing: border-box;
   }
   .s30-auth-hero {
     display: none;
@@ -1185,90 +1188,105 @@ html, body {
   .s30-auth-card {
     padding: 30px 22px;
     width: 100%;
+    box-sizing: border-box;
   }
   .s30-nav-links {
     display: none;
   }
   .s30-nav-container {
-    width: 90%;
+    width: 94%;
     margin: 0 auto;
   }
 }
 
 /* Mobile Screens */
 @media (max-width: 600px) {
-  /* Navbar adjustments */
+  /* Navbar adjustments - Clean single row fit */
   .s30-navbar {
-    min-height: 60px;
+    min-height: 56px;
     height: auto;
-    padding: 8px 0;
+    padding: 6px 0;
   }
   .s30-nav-container {
-    width: 92%;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
-    padding: 0;
+    padding: 0 12px;
     gap: 8px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    box-sizing: border-box;
   }
   .s30-brand {
-    gap: 6px;
+    gap: 5px;
+    flex-shrink: 0;
   }
   .s30-logo-badge {
-    font-size: 16px;
+    font-size: 15px;
     padding: 2px 6px;
     box-shadow: 2px 2px 0px #D9A726;
   }
   .s30-brand-sub {
-    font-size: 9px;
-    padding: 2px 5px;
+    font-size: 8.5px;
+    padding: 2px 4px;
   }
   .s30-nav-actions {
     gap: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
   }
   .s30-btn-outline, a.s30-btn-outline {
     padding: 5px 8px !important;
-    font-size: 11px !important;
+    font-size: 10px !important;
     box-shadow: 2px 2px 0px #ffffff !important;
+    white-space: nowrap !important;
   }
   .s30-btn-primary, a.s30-btn-primary {
     padding: 5px 10px !important;
-    font-size: 11px !important;
+    font-size: 10px !important;
     box-shadow: 2px 2px 0px #D9A726 !important;
+    white-space: nowrap !important;
   }
 
-  /* Form & Card adjustments (Strict 90% Screen Width) */
+  /* Form & Card adjustments (Perfect screen fit without horizontal overflow) */
   .s30-auth-wrapper {
-    padding: 16px 0;
+    padding: 14px 10px;
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
   .s30-auth-grid {
-    border-radius: 10px;
+    border-radius: 8px;
     border-width: 2px;
     box-shadow: 4px 4px 0px #D9A726;
-    width: 90%;
-    max-width: 90vw;
+    width: 100%;
+    max-width: 100%;
     margin: 0 auto;
     overflow: hidden;
+    box-sizing: border-box;
   }
   .s30-auth-card {
     padding: 20px 14px;
     width: 100%;
+    box-sizing: border-box;
   }
   .s30-form-header {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .s30-form-title {
-    font-size: 19px;
+    font-size: 18px;
     line-height: 1.25;
     word-break: break-word;
     overflow-wrap: anywhere;
   }
   .s30-form-subtitle {
     font-size: 12px;
-    line-height: 1.4;
+    line-height: 1.35;
     word-break: break-word;
     overflow-wrap: anywhere;
   }
@@ -1276,10 +1294,10 @@ html, body {
   /* Stepper */
   .s30-stepper {
     gap: 4px;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
   }
   .s30-step-segment {
-    height: 5px;
+    height: 4px;
   }
 
   /* Checklist & Status items on Mobile */
@@ -1301,35 +1319,39 @@ html, body {
     margin-top: 1px;
   }
   .s30-checklist-title {
-    font-size: 12.5px;
+    font-size: 12px;
     line-height: 1.3;
   }
   .s30-checklist-sub {
-    font-size: 10.5px;
+    font-size: 10px;
     line-height: 1.3;
   }
   .badge-status {
-    font-size: 9px;
-    padding: 2px 5px;
+    font-size: 8.5px;
+    padding: 2px 4px;
     margin-top: 1px;
   }
 
   /* Inputs & Grid */
   .s30-form-grid-2 {
     grid-template-columns: 1fr;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 10px;
   }
   .s30-form-group {
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+    width: 100%;
+    box-sizing: border-box;
   }
   .s30-input-wrap {
     width: 100%;
+    box-sizing: border-box;
   }
   .s30-input, .s30-select {
     font-size: 13px;
     padding: 9px 10px 9px 34px;
     width: 100%;
+    box-sizing: border-box;
   }
 
   /* Buttons & Actions */
@@ -1338,9 +1360,10 @@ html, body {
     text-align: center;
     justify-content: center;
     max-width: 100%;
-    padding: 9px 12px !important;
-    font-size: 11.5px !important;
+    padding: 8px 10px !important;
+    font-size: 11px !important;
     line-height: 1.3 !important;
+    box-sizing: border-box;
   }
   #btn-send-otp {
     width: 100%;
@@ -1348,7 +1371,7 @@ html, body {
   .s30-nav-step-row {
     flex-direction: column-reverse;
     gap: 10px;
-    margin-top: 18px;
+    margin-top: 16px;
     width: 100%;
   }
   .s30-btn-back, #action-btn-container, #action-btn-container a, #action-btn-container button {
@@ -1356,12 +1379,13 @@ html, body {
     justify-content: center;
     text-align: center;
     height: auto;
-    min-height: 42px;
+    min-height: 40px;
+    box-sizing: border-box;
   }
 
   /* OTP Verification Box */
   #otp-verification-box {
-    padding: 14px 12px !important;
+    padding: 12px 10px !important;
     box-shadow: 2.5px 2.5px 0px #38BDF8 !important;
   }
   #otp-verification-box input#otp-input {
@@ -1376,48 +1400,47 @@ html, body {
   }
 }
 
-/* Small Mobile Screens (e.g., iPhone SE, Galaxy Fold) */
+/* Small Mobile Screens (e.g., iPhone SE, Galaxy Fold, Android 360px) */
 @media (max-width: 380px) {
   .s30-auth-wrapper {
-    padding: 12px 0;
+    padding: 10px 6px;
   }
   .s30-auth-grid {
-    width: 90%;
-    max-width: 90vw;
+    width: 100%;
     box-shadow: 3px 3px 0px #D9A726;
   }
   .s30-auth-card {
     padding: 16px 10px;
   }
   .s30-form-title {
-    font-size: 17px;
+    font-size: 16px;
   }
   .s30-brand {
     gap: 4px;
   }
   .s30-logo-badge {
-    font-size: 14px;
+    font-size: 13px;
     padding: 1px 5px;
   }
   .s30-brand-sub {
-    font-size: 8px;
-    padding: 1px 4px;
+    font-size: 7.5px;
+    padding: 1px 3px;
   }
   .s30-btn-outline, a.s30-btn-outline,
   .s30-btn-primary, a.s30-btn-primary {
     padding: 4px 6px !important;
-    font-size: 9.5px !important;
+    font-size: 9px !important;
   }
   .s30-checklist-card {
-    padding: 10px 10px;
+    padding: 8px 8px;
   }
   .s30-checklist-left {
-    gap: 8px;
+    gap: 6px;
   }
   .s30-checklist-icon {
-    width: 24px;
-    height: 24px;
-    font-size: 12px;
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
   }
 }
 
