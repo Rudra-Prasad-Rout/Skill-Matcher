@@ -49,12 +49,37 @@
     padding: 4px 16px;
     border-radius: var(--md-shape-md);
     border: 1px solid rgba(251, 191, 36, 0.4);
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 8px;
     max-width: 100%;
     box-sizing: border-box;
     overflow-wrap: anywhere;
     word-break: break-word;
+    min-height: 1.4em;
+  }
+
+  /* Material Design 3 Typewriter Animation */
+  .typewriter-text {
+    display: inline;
+    letter-spacing: -0.01em;
+  }
+
+  .typewriter-cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1.15em;
+    background-color: var(--md-sys-color-primary);
+    margin-left: 5px;
+    border-radius: 2px;
+    animation: s30TypewriterBlink 0.85s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    vertical-align: middle;
+  }
+
+  @keyframes s30TypewriterBlink {
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50% { opacity: 0; transform: scaleY(0.85); }
   }
 
   .neo-hero-desc {
@@ -228,11 +253,11 @@
         </span>
       </div>
 
-      <!-- Main Material Headline -->
+      <!-- Main Material Headline with Interactive Typewriter Effect -->
       <h1 class="neo-hero-title">
         Verify Your Skills. Claim Your <br>
-        <span class="neo-hero-highlight">
-          OPPORTUNITY PASSPORT.
+        <span class="neo-hero-highlight" aria-live="polite">
+          <span id="s30-typewriter-text" class="typewriter-text">OPPORTUNITY PASSPORT.</span><span class="typewriter-cursor" aria-hidden="true"></span>
         </span>
       </h1>
 
@@ -411,4 +436,74 @@
   </div>
 
 </div>
+
+<!-- S30 Material Design 3 Typewriter Animation Engine -->
+<script>
+  (function initS30Typewriter() {
+    const textEl = document.getElementById('s30-typewriter-text');
+    if (!textEl) return;
+
+    const phrases = [
+      "OPPORTUNITY PASSPORT.",
+      "GOVERNMENT INTERNSHIPS.",
+      "FRONTIER AI RESEARCH.",
+      "HIGH-STIPEND ROLES.",
+      "DREAM SQUAD MATCHES."
+    ];
+
+    let phraseIndex = 0;
+    let charIndex = phrases[0].length;
+    let isDeleting = true;
+    let isWaiting = false;
+
+    const TYPING_SPEED = 75;
+    const DELETING_SPEED = 38;
+    const PAUSE_BEFORE_DELETE = 2200;
+    const PAUSE_BEFORE_TYPE = 350;
+
+    function typeStep() {
+      const currentPhrase = phrases[phraseIndex];
+
+      if (isWaiting) return;
+
+      if (isDeleting) {
+        charIndex--;
+        textEl.textContent = currentPhrase.substring(0, charIndex);
+
+        if (charIndex <= 0) {
+          isDeleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+          isWaiting = true;
+          setTimeout(function() {
+            isWaiting = false;
+            typeStep();
+          }, PAUSE_BEFORE_TYPE);
+          return;
+        }
+
+        setTimeout(typeStep, DELETING_SPEED);
+      } else {
+        charIndex++;
+        textEl.textContent = currentPhrase.substring(0, charIndex);
+
+        if (charIndex >= currentPhrase.length) {
+          isDeleting = true;
+          isWaiting = true;
+          setTimeout(function() {
+            isWaiting = false;
+            typeStep();
+          }, PAUSE_BEFORE_DELETE);
+          return;
+        }
+
+        // Add slight organic typing jitter
+        const jitter = Math.floor(Math.random() * 25);
+        setTimeout(typeStep, TYPING_SPEED + jitter);
+      }
+    }
+
+    // Start typewriter loop after initial viewing pause
+    setTimeout(typeStep, PAUSE_BEFORE_DELETE);
+  })();
+</script>
 {% endblock %}
