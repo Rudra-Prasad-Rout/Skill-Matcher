@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Squad Details — {{ team.team_name }} — S30{% endblock %}
+
+{% block content_wrapper %}
+<main style="max-width: 860px; width: 100%; margin: 36px auto 80px auto; padding: 0 20px; position: relative; z-index: 2;">
+
+  <!-- Header Banner -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <div style="margin-bottom: 8px;">
+        <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.25); backdrop-filter: blur(8px);">✏️ SQUAD LEADER SETTINGS</span>
+      </div>
+      <h1 style="font-size: 32px; font-weight: 900; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: -0.02em; margin: 0;">
+        Edit Squad Details
+      </h1>
+      <p style="font-size: 14.5px; color: var(--s30-text-secondary, #57534e); margin-top: 6px; font-weight: 500;">
+        Modify squad name, expand or adjust member capacity, and update hackathon domain focus.
+      </p>
+    </div>
+
+    <div>
+      <a href="{{ url_for('team_manage', team_id=team.id) }}" class="neo-btn" style="background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid rgba(221, 213, 199, 0.8) !important; padding: 10px 18px !important; font-size: 13px !important; backdrop-filter: blur(8px);">
+        <span>&larr; BACK TO SQUAD</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" style="margin-bottom: 20px; display: none;"></div>
+
+  <!-- Error Alert -->
+  {% if error %}
+  <div style="background: rgba(220, 38, 38, 0.1); border: 1.5px solid #dc2626; border-radius: 12px; padding: 14px 18px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px; backdrop-filter: blur(8px);">
+    <span style="font-size: 20px;">⚠️</span>
+    <strong style="color: #dc2626; font-size: 14px;">{{ error }}</strong>
+  </div>
+  {% endif %}
+
+  <!-- Edit Squad Main Card -->
+  <div style="padding: 32px 28px; background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04);">
+    
+    <!-- Card Subheader -->
+    <div style="margin-bottom: 26px; border-bottom: 1px solid rgba(221, 213, 199, 0.7); padding-bottom: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 44px; height: 44px; background: rgba(217, 119, 6, 0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px;">
+          👑
+        </div>
+        <div>
+          <h2 style="font-size: 20px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; margin: 0;">
+            {{ team.team_name }}
+          </h2>
+          <span style="font-size: 13px; color: var(--s30-text-secondary, #57534e);">
+            Squad Code: <code style="font-weight: 800; color: #d97706;">{{ team.team_code }}</code> • Confirmed Members: <strong>{{ member_count }}</strong>
+          </span>
+        </div>
+      </div>
+
+      <div style="background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(221, 213, 199, 0.8); border-radius: 8px; padding: 6px 14px; font-size: 12px; font-weight: 700; color: var(--s30-text-secondary, #57534e);">
+        Current Capacity: <strong style="color: var(--s30-text-primary, #1c1917);">{{ team.team_size }} Members</strong>
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <form method="POST" action="{{ url_for('team_edit_page', team_id=team.id) }}" id="edit-squad-page-form">
+      
+      <!-- Field 1: Squad Name (with real-time unique availability check) -->
+      <div style="margin-bottom: 24px;">
+        <label style="display: block; font-size: 13px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+          Squad / Team Name <span style="color: #dc2626;">*</span>
+        </label>
+        <div style="position: relative;">
+          <input 
+            type="text" 
+            id="team_name_input"
+            name="team_name" 
+            value="{{ team.team_name }}"
+            required
+            autofocus
+            oninput="checkSquadNameAvailability(this.value)"
+            placeholder="e.g. CyberVikings, NeuralNexus, Quantum Coders" 
+            style="width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-weight: 700; color: var(--s30-text-primary, #1c1917); outline: none;"
+          >
+          <span id="name-status-indicator" style="position: absolute; right: 14px; top: 14px; font-size: 13px; font-weight: 700; display: none;"></span>
+        </div>
+        <div id="name-feedback-msg" style="font-size: 12px; margin-top: 5px; font-weight: 600; display: none;"></div>
+        <span style="font-size: 12px; color: var(--s30-text-secondary, #57534e); margin-top: 5px; display: block;">
+          Squad names must be unique across the platform. Real-time availability will check as you type.
+        </span>
+      </div>
+
+      <!-- Field 2: Squad Capacity Selection -->
+      <div style="margin-bottom: 24px;">
+        <label style="display: block; font-size: 13px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+          Total Squad Capacity (Members) <span style="color: #dc2626;">*</span>
+        </label>
+        <select 
+          name="team_size" 
+          id="team_size_select"
+          style="width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-weight: 600; color: var(--s30-text-primary, #1c1917); outline: none; cursor: pointer;"
+        >
+          {% for sz in range(2, 11) %}
+            {% if sz >= member_count %}
+              <option value="{{ sz }}" {% if team.team_size == sz %}selected{% endif %}>
+                {{ sz }} Members {% if sz == 4 %}(Standard Hackathon Squad){% elif sz == 2 %}(Duo){% elif sz == 3 %}(Trio){% elif sz == 5 %}(Extended Squad){% elif sz == 6 %}(Full Engineering Team){% endif %}
+              </option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        <span style="font-size: 12px; color: var(--s30-text-secondary, #57534e); margin-top: 5px; display: block;">
+          Cannot reduce capacity below the <strong>{{ member_count }} currently confirmed members</strong> in your squad.
+        </span>
+      </div>
+
+      <!-- Field 3: Hackathon / Project Theme -->
+      <div style="margin-bottom: 30px;">
+        <label style="display: block; font-size: 13px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+          Target Hackathon / Project Focus
+        </label>
+        <input 
+          type="text" 
+          name="theme" 
+          value="{{ team.theme }}"
+          placeholder="e.g. Smart India Hackathon 2026, AI Agents Buildathon, Web3 FinTech" 
+          style="width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-weight: 500; color: var(--s30-text-primary, #1c1917); outline: none;"
+        >
+      </div>
+
+      <!-- Form Actions -->
+      <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap; border-top: 1px solid rgba(221, 213, 199, 0.7); padding-top: 20px;">
+        <button 
+          type="submit" 
+          id="btn-submit-edit"
+          class="neo-btn" 
+          style="padding: 13px 32px !important; font-size: 14.5px !important; background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; font-weight: 800 !important;"
+        >
+          <span>✓ SAVE CHANGES &amp; RETURN TO SQUAD &rarr;</span>
+        </button>
+
+        <a 
+          href="{{ url_for('team_manage', team_id=team.id) }}" 
+          class="neo-btn" 
+          style="padding: 13px 22px !important; font-size: 14px !important; background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid rgba(221, 213, 199, 0.8) !important; backdrop-filter: blur(8px);"
+        >
+          <span>CANCEL</span>
+        </a>
+      </div>
+
+    </form>
+
+  </div>
+
+</main>
+
+<script>
+  const currentTeamId = {{ team.id }};
+  const originalTeamName = "{{ team.team_name|e }}";
+  let nameCheckTimeout = null;
+
+  function checkSquadNameAvailability(val) {
+    clearTimeout(nameCheckTimeout);
+    const indicator = document.getElementById('name-status-indicator');
+    const msg = document.getElementById('name-feedback-msg');
+    const input = document.getElementById('team_name_input');
+    const submitBtn = document.getElementById('btn-submit-edit');
+
+    if (!val || val.trim().length < 3) {
+      if (indicator) indicator.style.display = 'none';
+      if (msg) msg.style.display = 'none';
+      if (input) input.style.borderColor = 'rgba(221, 213, 199, 0.85)';
+      if (submitBtn) submitBtn.disabled = true;
+      return;
+    }
+
+    // If unchanged from original name
+    if (val.trim().toLowerCase() === originalTeamName.toLowerCase()) {
+      if (indicator) {
+        indicator.style.display = 'block';
+        indicator.style.color = '#16a34a';
+        indicator.textContent = '✓ Current Name';
+      }
+      if (msg) {
+        msg.style.display = 'block';
+        msg.style.color = '#16a34a';
+        msg.textContent = '✓ This is your current squad name.';
+      }
+      if (input) input.style.borderColor = '#16a34a';
+      if (submitBtn) submitBtn.disabled = false;
+      return;
+    }
+
+    if (indicator) {
+      indicator.style.display = 'block';
+      indicator.style.color = '#d97706';
+      indicator.textContent = '...';
+    }
+
+    nameCheckTimeout = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/team/check-name?name=${encodeURIComponent(val.trim())}&team_id=${currentTeamId}`);
+        const data = await res.json();
+        if (data.available) {
+          if (indicator) {
+            indicator.style.display = 'block';
+            indicator.style.color = '#16a34a';
+            indicator.textContent = '✓ Available';
+          }
+          if (msg) {
+            msg.style.display = 'block';
+            msg.style.color = '#16a34a';
+            msg.textContent = data.message;
+          }
+          if (input) input.style.borderColor = '#16a34a';
+          if (submitBtn) submitBtn.disabled = false;
+        } else {
+          if (indicator) {
+            indicator.style.display = 'block';
+            indicator.style.color = '#dc2626';
+            indicator.textContent = '✕ Taken';
+          }
+          if (msg) {
+            msg.style.display = 'block';
+            msg.style.color = '#dc2626';
+            msg.textContent = data.message;
+          }
+          if (input) input.style.borderColor = '#dc2626';
+          if (submitBtn) submitBtn.disabled = true;
+        }
+      } catch (e) {
+        if (indicator) indicator.style.display = 'none';
+      }
+    }, 250);
+  }
+</script>
+{% endblock %}

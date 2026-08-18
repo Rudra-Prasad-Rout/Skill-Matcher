@@ -1464,6 +1464,67 @@ def api_team_check_name():
         return jsonify({"available": False, "message": f"✕ '{name}' is already taken. Please choose another."})
     return jsonify({"available": True, "message": f"✓ '{name}' is available!"})
 
+# ================= DEDICATED SQUAD EDIT PAGE (FOR SQUAD LEADER) =================
+@app.route("/team/edit", methods=["GET", "POST"])
+@app.route("/team/edit/<int:team_id>", methods=["GET", "POST"])
+def team_edit_page(team_id=None):
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login_page"))
+        
+    conn = database.get_db_connection()
+    if team_id:
+        team_row = conn.execute("SELECT * FROM teams WHERE id = ? AND leader_id = ?", (team_id, user["id"])).fetchone()
+    else:
+        team_row = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+        
+    if not team_row:
+        conn.close()
+        return redirect(url_for("team_manage"))
+        
+    team = dict(team_row)
+    member_count = 1 + conn.execute("SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'", (team["id"],)).fetchone()["c"]
+    error_msg = None
+    
+    if request.method == "POST":
+        team_name = request.form.get("team_name", "").strip()
+        team_size_val = request.form.get("team_size", "").strip()
+        theme = request.form.get("theme", "").strip()
+        
+        if not team_name:
+            error_msg = "Please provide a Squad Name."
+        elif len(team_name) < 3:
+            error_msg = "Squad Name must be at least 3 characters long."
+        else:
+            dup = conn.execute("SELECT id FROM teams WHERE LOWER(team_name) = LOWER(?) AND id != ?", (team_name, team["id"])).fetchone()
+            if dup:
+                error_msg = f"The squad name '{team_name}' is already taken by another squad. Please choose a unique name."
+            else:
+                try:
+                    team_size = int(team_size_val)
+                    if team_size < 2 or team_size > 10:
+                        team_size = team["team_size"]
+                except (ValueError, TypeError):
+                    team_size = team["team_size"]
+                    
+                if team_size < member_count:
+                    error_msg = f"Cannot reduce squad capacity below current confirmed member count ({member_count} members)."
+                else:
+                    final_theme = theme if theme else team["theme"]
+                    conn.execute("UPDATE teams SET team_name = ?, team_size = ?, theme = ? WHERE id = ?", (team_name, team_size, final_theme, team["id"]))
+                    conn.commit()
+                    conn.close()
+                    return redirect(url_for("team_manage", team_id=team["id"]))
+                    
+    conn.close()
+    return render_template(
+        "team_edit.html",
+        user=dict(user),
+        team=team,
+        member_count=member_count,
+        error=error_msg
+    )
+
 # ================= EDIT SQUAD DETAILS API (FOR SQUAD LEADER) =================
 @app.route("/api/team/edit", methods=["POST"])
 def api_team_edit():

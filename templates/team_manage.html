@@ -30,9 +30,9 @@
     <!-- Header Actions -->
     <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
       {% if is_leader %}
-        <button type="button" onclick="openEditSquadModal()" class="neo-btn" style="background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid rgba(221, 213, 199, 0.85) !important; padding: 10px 18px !important; font-size: 13px !important; font-weight: 800 !important; backdrop-filter: blur(8px); display: inline-flex; align-items: center; gap: 6px;">
+        <a href="{{ url_for('team_edit_page', team_id=team.id) }}" class="neo-btn" style="background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid rgba(221, 213, 199, 0.85) !important; padding: 10px 18px !important; font-size: 13px !important; font-weight: 800 !important; backdrop-filter: blur(8px); display: inline-flex; align-items: center; gap: 6px;">
           <span>✏️ EDIT SQUAD</span>
-        </button>
+        </a>
       {% else %}
         <button type="button" onclick="leaveCurrentSquad({{ team.id }}, '{{ team.team_name }}')" class="neo-btn" style="background: rgba(220, 38, 38, 0.12) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.3) !important; padding: 10px 18px !important; font-size: 13px !important; font-weight: 700 !important; backdrop-filter: blur(8px);">
           🚪 LEAVE SQUAD
@@ -49,112 +49,6 @@
       </a>
     </div>
   </div>
-
-  <!-- ========== EDIT SQUAD MODAL (LEADER ONLY) ========== -->
-  {% if is_leader %}
-  <div id="edit-squad-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(20, 15, 10, 0.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;">
-    <div style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1.5px solid rgba(221, 213, 199, 0.9); border-radius: 18px; max-width: 520px; width: 100%; box-shadow: 0 16px 48px rgba(40, 30, 20, 0.15); padding: 28px; position: relative;">
-      
-      <!-- Modal Header -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 1px solid rgba(221, 213, 199, 0.7); padding-bottom: 14px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <div style="width: 40px; height: 40px; background: rgba(217, 119, 6, 0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
-            ✏️
-          </div>
-          <div>
-            <h3 style="font-size: 18px; font-weight: 900; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; margin: 0;">
-              Edit Squad Details
-            </h3>
-            <span style="font-size: 12px; color: var(--s30-text-secondary, #57534e);">Update squad name, target capacity, and hackathon focus</span>
-          </div>
-        </div>
-        <button type="button" onclick="closeEditSquadModal()" style="background: none; border: none; font-size: 20px; color: var(--s30-text-secondary, #57534e); cursor: pointer; line-height: 1;">✕</button>
-      </div>
-
-      <!-- Edit Form -->
-      <form id="edit-squad-form" onsubmit="submitEditSquad(event)">
-        <!-- Field 1: Squad Name -->
-        <div style="margin-bottom: 18px;">
-          <label style="display: block; font-size: 12px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
-            Squad Name <span style="color: #dc2626;">*</span>
-          </label>
-          <div style="position: relative;">
-            <input 
-              type="text" 
-              id="edit_team_name" 
-              name="team_name" 
-              value="{{ team.team_name }}" 
-              required 
-              oninput="checkEditNameAvailability(this.value)"
-              style="width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.85); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 11px 14px; font-size: 14px; font-weight: 700; color: var(--s30-text-primary, #1c1917); outline: none;"
-            >
-            <span id="edit-name-status-indicator" style="position: absolute; right: 12px; top: 12px; font-size: 13px; font-weight: 700; display: none;"></span>
-          </div>
-          <div id="edit-name-feedback-msg" style="font-size: 11.5px; margin-top: 4px; font-weight: 600; display: none;"></div>
-        </div>
-
-        <!-- Field 2: Squad Capacity -->
-        <div style="margin-bottom: 18px;">
-          <label style="display: block; font-size: 12px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
-            Total Squad Capacity (Current Members: {{ member_count }}) <span style="color: #dc2626;">*</span>
-          </label>
-          <select 
-            id="edit_team_size" 
-            name="team_size" 
-            style="width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.85); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 11px 14px; font-size: 14px; font-weight: 600; color: var(--s30-text-primary, #1c1917); outline: none; cursor: pointer;"
-          >
-            {% for sz in range(2, 11) %}
-              {% if sz >= member_count %}
-                <option value="{{ sz }}" {% if team.team_size == sz %}selected{% endif %}>
-                  {{ sz }} Members {% if sz == 4 %}(Standard Hackathon Squad){% elif sz == 2 %}(Duo){% elif sz == 3 %}(Trio){% endif %}
-                </option>
-              {% endif %}
-            {% endfor %}
-          </select>
-          <span style="font-size: 11.5px; color: var(--s30-text-secondary, #57534e); margin-top: 4px; display: block;">
-            Capacity cannot be reduced below the {{ member_count }} currently confirmed member{{ 's' if member_count != 1 else '' }}.
-          </span>
-        </div>
-
-        <!-- Field 3: Hackathon Theme / Focus -->
-        <div style="margin-bottom: 22px;">
-          <label style="display: block; font-size: 12px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
-            Hackathon / Project Focus
-          </label>
-          <input 
-            type="text" 
-            id="edit_theme" 
-            name="theme" 
-            value="{{ team.theme }}" 
-            placeholder="e.g. Smart India Hackathon, AI Agents Buildathon" 
-            style="width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.85); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 11px 14px; font-size: 14px; font-weight: 500; color: var(--s30-text-primary, #1c1917); outline: none;"
-          >
-        </div>
-
-        <!-- Action Buttons -->
-        <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid rgba(221, 213, 199, 0.7); padding-top: 16px;">
-          <button 
-            type="button" 
-            onclick="closeEditSquadModal()" 
-            class="neo-btn" 
-            style="background: rgba(255, 255, 255, 0.6) !important; color: var(--s30-text-secondary, #57534e) !important; border: 1.5px solid rgba(221, 213, 199, 0.8) !important; font-size: 13px !important; padding: 10px 18px !important;"
-          >
-            Cancel
-          </button>
-          <button 
-            type="submit" 
-            id="btn-save-squad-edit"
-            class="neo-btn" 
-            style="background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; font-size: 13px !important; font-weight: 800 !important; padding: 10px 22px !important;"
-          >
-            ✓ SAVE CHANGES
-          </button>
-        </div>
-      </form>
-
-    </div>
-  </div>
-  {% endif %}
 
   <!-- ========== SQUAD INFO CARD ========== -->
   <div style="background: rgba(255, 255, 255, 0.45); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1.5px solid rgba(221, 213, 199, 0.7); border-radius: 16px; box-shadow: 0 8px 32px 0 rgba(40, 30, 20, 0.04); padding: 24px 28px; margin-bottom: 28px;">
@@ -716,118 +610,7 @@
         showToast(data.message || 'Could not revoke invite.', 'error');
       }
     } catch (e) {
-  function openEditSquadModal() {
-    const modal = document.getElementById('edit-squad-modal');
-    if (modal) modal.style.display = 'flex';
-  }
-
-  function closeEditSquadModal() {
-    const modal = document.getElementById('edit-squad-modal');
-    if (modal) modal.style.display = 'none';
-  }
-
-  let editNameTimeout = null;
-  function checkEditNameAvailability(val) {
-    clearTimeout(editNameTimeout);
-    const indicator = document.getElementById('edit-name-status-indicator');
-    const msg = document.getElementById('edit-name-feedback-msg');
-    const input = document.getElementById('edit_team_name');
-
-    if (!val || val.trim().length < 3) {
-      if (indicator) indicator.style.display = 'none';
-      if (msg) msg.style.display = 'none';
-      if (input) input.style.borderColor = 'rgba(221, 213, 199, 0.85)';
-      return;
-    }
-
-    if (indicator) {
-      indicator.style.display = 'block';
-      indicator.style.color = '#d97706';
-      indicator.textContent = '...';
-    }
-
-    editNameTimeout = setTimeout(async () => {
-      try {
-        const res = await fetch(`/api/team/check-name?name=${encodeURIComponent(val.trim())}&team_id=${teamId}`);
-        const data = await res.json();
-        if (data.available) {
-          if (indicator) {
-            indicator.style.display = 'block';
-            indicator.style.color = '#16a34a';
-            indicator.textContent = '✓';
-          }
-          if (msg) {
-            msg.style.display = 'block';
-            msg.style.color = '#16a34a';
-            msg.textContent = data.message;
-          }
-          if (input) input.style.borderColor = '#16a34a';
-        } else {
-          if (indicator) {
-            indicator.style.display = 'block';
-            indicator.style.color = '#dc2626';
-            indicator.textContent = '✕';
-          }
-          if (msg) {
-            msg.style.display = 'block';
-            msg.style.color = '#dc2626';
-            msg.textContent = data.message;
-          }
-          if (input) input.style.borderColor = '#dc2626';
-        }
-      } catch (e) {
-        if (indicator) indicator.style.display = 'none';
-      }
-    }, 250);
-  }
-
-  async function submitEditSquad(e) {
-    e.preventDefault();
-    const btn = document.getElementById('btn-save-squad-edit');
-    const name = document.getElementById('edit_team_name').value.trim();
-    const size = document.getElementById('edit_team_size').value;
-    const theme = document.getElementById('edit_theme').value.trim();
-
-    if (!name || name.length < 3) {
-      alert('Squad name must be at least 3 characters long.');
-      return;
-    }
-
-    if (btn) {
-      btn.disabled = true;
-      btn.innerText = '⏳ Saving...';
-    }
-
-    try {
-      const res = await fetch('/api/team/edit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          team_id: teamId,
-          team_name: name,
-          team_size: size,
-          theme: theme
-        })
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        showToast(`✓ ${data.message}`, 'success');
-        closeEditSquadModal();
-        setTimeout(() => { window.location.reload(); }, 1000);
-      } else {
-        showToast(data.message || 'Error updating squad details.', 'error');
-        if (btn) {
-          btn.disabled = false;
-          btn.innerText = '✓ SAVE CHANGES';
-        }
-      }
-    } catch (err) {
       showToast('Connection error. Please try again.', 'error');
-      if (btn) {
-        btn.disabled = false;
-        btn.innerText = '✓ SAVE CHANGES';
-      }
     }
   }
 </script>
