@@ -1138,7 +1138,7 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 14px;">
             <div>
               <div style="margin-bottom: 8px;">
-                <span class="neo-badge neo-badge-green">✓ 100% HUMAN-APPROVED & SCAM-FREE</span>
+                <span class="neo-badge neo-badge-green">✓ 100% HUMAN-APPROVED & VERIFIED</span>
               </div>
               <h3 style="font-size: 21px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.01em;">
                 Approved Portal & Govt Listings ({{ approved_discovered|length }})
@@ -1390,11 +1390,11 @@
                 </span>
                 {% if disc.is_scam_flagged %}
                   <span class="neo-badge neo-badge-pink" style="font-size: 10px; padding: 2px 6px;">
-                    ⚠️ SCAM FLAGGED
+                    ⚠️ FLAGGED INACTIVE
                   </span>
                 {% else %}
                   <span class="neo-badge neo-badge-green" style="font-size: 10px; padding: 2px 6px;">
-                    ✓ 100% FREE & SCAM-FREE
+                    ✓ 100% VERIFIED ACTIVE
                   </span>
                 {% endif %}
 
@@ -2083,7 +2083,7 @@
 
         document.getElementById('inspectCheck4').innerHTML = data.is_scam_flagged
           ? '<span style="color: #f87171;">⚠️ Registration Fee / Deposit Detected</span>'
-          : '<span style="color: #34d399;">✓ 100% Free & Scam-Free Verified</span>';
+          : '<span style="color: #34d399;">✓ 100% Free & Verified Authentic</span>';
 
         // Verdict & Reasoning
         const verdictEl = document.getElementById('inspectVerdict');
@@ -2118,7 +2118,7 @@
               Autonomous Browsing AI • Web Inspector
             </h3>
             <p style="font-size: 11.5px; color: #000000; margin: 2px 0 0 0; font-weight: 700;">
-              LIVE DOM CONTENT AUDIT • REAL TIME ACTIVE STATUS • ANTI-SCAM RADAR
+              LIVE DOM CONTENT AUDIT • REAL TIME ACTIVE STATUS • VERIFICATION RADAR
             </p>
           </div>
         </div>
@@ -2162,7 +2162,7 @@
             <div id="inspectCheck1">1. Real Specific Listing?</div>
             <div id="inspectCheck2">2. Title & Company Match?</div>
             <div id="inspectCheck3">3. Application Active & Open?</div>
-            <div id="inspectCheck4">4. 100% Free & Scam-Free?</div>
+            <div id="inspectCheck4">4. 100% Free & Verified Authentic?</div>
           </div>
 
           <!-- Final Verdict & Reason -->
