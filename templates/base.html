@@ -11,7 +11,23 @@
   
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.0">
   <style>
-    /* Global Neo-Brutalism Overrides */
+    /* Global Neo-Brutalism Overrides & 80% Screen Width Container */
+    .s30-auth-wrapper {
+      width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 36px 0 !important;
+      box-sizing: border-box !important;
+    }
+
+    .s30-auth-grid {
+      width: 80% !important;
+      max-width: 80vw !important;
+      margin: 0 auto !important;
+      box-sizing: border-box !important;
+    }
+
     .neo-btn {
       display: inline-flex !important;
       align-items: center !important;

@@ -402,7 +402,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 16px;
+  padding: 36px 0;
   width: 100%;
   min-height: calc(100vh - 75px);
   box-sizing: border-box;
@@ -411,8 +411,8 @@ body {
 
 .s30-auth-grid {
   display: block;
-  width: 100%;
-  max-width: 620px;
+  width: 80% !important;
+  max-width: 80vw !important;
   margin: 0 auto;
   background: #0f172a;
   border: 3px solid #ffffff;
@@ -1166,15 +1166,15 @@ html, body {
 /* Tablet / Medium Screens */
 @media (max-width: 900px) {
   .s30-auth-wrapper {
-    padding: 24px 14px;
+    padding: 24px 0;
     width: 100%;
     box-sizing: border-box;
     overflow-x: hidden;
   }
   .s30-auth-grid {
     grid-template-columns: 1fr;
-    width: 100%;
-    max-width: 520px;
+    width: 80% !important;
+    max-width: 80vw !important;
     margin: 0 auto;
     box-shadow: 6px 6px 0px #D9A726;
     box-sizing: border-box;
@@ -1247,9 +1247,9 @@ html, body {
     white-space: nowrap !important;
   }
 
-  /* Form & Card adjustments (Perfect screen fit without horizontal overflow) */
+  /* Form & Card adjustments (80% screen fit) */
   .s30-auth-wrapper {
-    padding: 14px 10px;
+    padding: 16px 0;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -1261,8 +1261,8 @@ html, body {
     border-radius: 8px;
     border-width: 2px;
     box-shadow: 4px 4px 0px #D9A726;
-    width: 100%;
-    max-width: 100%;
+    width: 80% !important;
+    max-width: 80vw !important;
     margin: 0 auto;
     overflow: hidden;
     box-sizing: border-box;
@@ -1400,10 +1400,12 @@ html, body {
 /* Small Mobile Screens (e.g., iPhone SE, Galaxy Fold, Android 360px) */
 @media (max-width: 380px) {
   .s30-auth-wrapper {
-    padding: 10px 6px;
+    padding: 10px 0;
   }
   .s30-auth-grid {
-    width: 100%;
+    width: 85% !important;
+    max-width: 85vw !important;
+    margin: 0 auto;
     box-shadow: 3px 3px 0px #D9A726;
   }
   .s30-auth-card {
