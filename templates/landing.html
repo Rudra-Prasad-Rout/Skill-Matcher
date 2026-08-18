@@ -669,59 +669,32 @@
 
 </div>
 
-<!-- S30 Material Design 3 Typewriter Animation Engine (Letter-by-Letter Stream) -->
+<!-- S30 Material Design 3 Typewriter Animation Engine (Single Forward Letter-by-Letter Stream) -->
 <script>
   (function initS30Typewriter() {
     const textEl = document.getElementById('s30-typewriter-text');
     if (!textEl) return;
 
-    const phrases = [
-      "OPPORTUNITY PASSPORT.",
-      "GOVERNMENT INTERNSHIPS.",
-      "FRONTIER AI RESEARCH.",
-      "HIGH-STIPEND ROLES.",
-      "DREAM SQUAD MATCHES."
-    ];
-
-    let phraseIndex = 0;
+    const targetText = "OPPORTUNITY PASSPORT.";
     let charIndex = 0;
-    const TYPING_SPEED = 70;
-    const PAUSE_COMPLETE = 2500;
-    const PAUSE_RESET = 300;
+    const TYPING_SPEED = 75;
 
-    // Clear initial fallback text to start the one-by-one typing sequence
+    // Start with empty text and stream letters in one by one
     textEl.textContent = "";
 
     function typeNextChar() {
-      const currentPhrase = phrases[phraseIndex];
-
-      if (charIndex < currentPhrase.length) {
-        textEl.textContent += currentPhrase.charAt(charIndex);
+      if (charIndex < targetText.length) {
+        textEl.textContent += targetText.charAt(charIndex);
         charIndex++;
         
-        // Add subtle organic typing cadence
+        // Add natural typing speed with subtle variation
         const jitter = Math.floor(Math.random() * 20);
         setTimeout(typeNextChar, TYPING_SPEED + jitter);
-      } else {
-        // Full phrase has come in one by one - pause and move to next phrase
-        setTimeout(function() {
-          textEl.style.opacity = '0';
-          setTimeout(function() {
-            phraseIndex = (phraseIndex + 1) % phrases.length;
-            charIndex = 0;
-            textEl.textContent = "";
-            textEl.style.opacity = '1';
-            setTimeout(typeNextChar, PAUSE_RESET);
-          }, 200);
-        }, PAUSE_COMPLETE);
       }
     }
 
-    // Smooth transition style for phrase swaps
-    textEl.style.transition = 'opacity 0.2s ease';
-
-    // Start one-by-one typing on load
-    setTimeout(typeNextChar, 400);
+    // Begin typing character-by-character on page load
+    setTimeout(typeNextChar, 350);
   })();
 </script>
 {% endblock %}
