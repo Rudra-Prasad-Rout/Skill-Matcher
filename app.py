@@ -1199,7 +1199,14 @@ def calculate_team_formation_matches(user, skills_list):
         SELECT u.*, GROUP_CONCAT(s.skill_name, '||') as all_skills, GROUP_CONCAT(s.project_name, '||') as all_projects
         FROM users u
         LEFT JOIN user_skills s ON u.id = s.user_id
-        WHERE u.id != ? AND u.is_banned = 0
+        WHERE u.id != ? 
+          AND u.is_banned = 0
+          AND u.id NOT IN (SELECT leader_id FROM teams)
+          AND u.id NOT IN (
+              SELECT receiver_id FROM team_invites WHERE status = 'ACCEPTED' AND invite_type = 'INVITATION'
+              UNION
+              SELECT sender_id FROM team_invites WHERE status = 'ACCEPTED' AND invite_type = 'JOIN_REQUEST'
+          )
         GROUP BY u.id
         ORDER BY u.id ASC
     """, (user_id,)).fetchall()
@@ -1902,17 +1909,31 @@ def api_team_invite():
         conn.close()
         return jsonify({"success": False, "message": "You cannot invite yourself to your own squad."}), 400
         
-    # Check if target is already an accepted member of this squad
-    already_member = conn.execute("""
-    SELECT id FROM team_invites 
-    WHERE team_id = ? AND status = 'ACCEPTED' AND (
-        (receiver_id = ? AND invite_type = 'INVITATION') OR
-        (sender_id = ? AND invite_type = 'JOIN_REQUEST')
-    )
-    """, (team["id"], target_dict["id"], target_dict["id"])).fetchone()
-    if already_member:
+    # Check if target is a leader of ANY squad
+    target_leads = conn.execute("SELECT team_name FROM teams WHERE leader_id = ?", (target_dict["id"],)).fetchone()
+    if target_leads:
         conn.close()
-        return jsonify({"success": False, "message": f"{target_dict['full_name']} is already an active member of your squad."}), 400
+        return jsonify({
+            "success": False, 
+            "message": f"{target_dict['full_name']} (ID: {target_dict['user_code']}) is already in a team (leads squad '{target_leads['team_name']}') and cannot be invited."
+        }), 400
+
+    # Check if target is an accepted member of ANY squad
+    target_in_team = conn.execute("""
+    SELECT t.team_name FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    WHERE ti.status = 'ACCEPTED' AND (
+        (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+        (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+    )
+    LIMIT 1
+    """, (target_dict["id"], target_dict["id"])).fetchone()
+    if target_in_team:
+        conn.close()
+        return jsonify({
+            "success": False, 
+            "message": f"{target_dict['full_name']} (ID: {target_dict['user_code']}) is already in a team (member of '{target_in_team['team_name']}') and cannot be invited."
+        }), 400
 
     # Reuse existing invite/request or insert a clean new one
     existing = conn.execute("""
@@ -2189,17 +2210,31 @@ def api_team_request_join():
         conn.close()
         return jsonify({"success": False, "message": "You are already the leader of this squad."}), 400
 
-    # Check if user is already an accepted member in this squad
-    already_member = conn.execute("""
-    SELECT id FROM team_invites 
-    WHERE team_id = ? AND status = 'ACCEPTED' AND (
-        (receiver_id = ? AND invite_type = 'INVITATION') OR
-        (sender_id = ? AND invite_type = 'JOIN_REQUEST')
-    )
-    """, (team_dict["id"], user["id"], user["id"])).fetchone()
-    if already_member:
+    # Check if user leads ANY squad
+    user_leads = conn.execute("SELECT team_name FROM teams WHERE leader_id = ?", (user["id"],)).fetchone()
+    if user_leads:
         conn.close()
-        return jsonify({"success": False, "message": "You are already a member of this squad."}), 400
+        return jsonify({
+            "success": False, 
+            "message": f"You are already leading squad '{user_leads['team_name']}'. You cannot request to join another squad."
+        }), 400
+
+    # Check if user is already an accepted member of ANY squad
+    user_in_team = conn.execute("""
+    SELECT t.team_name FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    WHERE ti.status = 'ACCEPTED' AND (
+        (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+        (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+    )
+    LIMIT 1
+    """, (user["id"], user["id"])).fetchone()
+    if user_in_team:
+        conn.close()
+        return jsonify({
+            "success": False, 
+            "message": f"You are already a member of squad '{user_in_team['team_name']}'. You must leave your current squad before requesting to join another."
+        }), 400
 
     # If leader already sent an invitation to this user, auto-accept it!
     existing_inv = conn.execute("""
