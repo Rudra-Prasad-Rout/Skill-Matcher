@@ -537,17 +537,28 @@
 
       <!-- SECTION: My Squad Status -->
       <div style="background: #090f1d; border: 2.5px solid {% if my_team %}{% if my_team_role == 'LEADER' %}#FFE600{% else %}#22c55e{% endif %}{% else %}#334155{% endif %}; border-radius: 10px; padding: 22px; box-shadow: 6px 6px 0px {% if my_team %}{% if my_team_role == 'LEADER' %}#FFE600{% else %}#22c55e{% endif %}{% else %}#1e293b{% endif %}; margin-bottom: 24px;">
-        <span class="neo-badge {% if my_team %}{% if my_team_role == 'LEADER' %}neo-badge-yellow{% else %}neo-badge-green{% endif %}{% else %}neo-badge-pink{% endif %}" style="margin-bottom: 6px;">👥 MY SQUAD STATUS</span>
-        <h3 style="font-size: 18px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin: 4px 0 14px 0;">
+        <span class="neo-badge {% if my_team %}{% if my_team_role == 'LEADER' %}neo-badge-yellow{% else %}neo-badge-green{% endif %}{% else %}neo-badge-pink{% endif %}" style="margin-bottom: 6px;">
+          {% if my_team %}{% if my_team_role == 'LEADER' %}👑 CREATED SQUAD{% else %}👥 JOINED SQUAD{% endif %}{% else %}👥 SQUAD STATUS{% endif %}
+        </span>
+        <h3 style="font-size: 18px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin: 4px 0 6px 0;">
           {% if my_team %}{{ my_team.team_name }}{% else %}Not In a Squad Yet{% endif %}
         </h3>
+        {% if my_team %}
+          <div style="font-size: 12px; color: #cbd5e1; margin-bottom: 12px; font-weight: 600;">
+            {% if my_team_role == 'LEADER' %}
+              ⚡ You created this squad and are the designated Leader.
+            {% else %}
+              ✓ You joined this squad (Led by <strong style="color: #FFE600;">{{ my_team.leader_name }}</strong>).
+            {% endif %}
+          </div>
+        {% endif %}
 
         {% if my_team %}
           <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
-              <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">YOUR ROLE</span>
+              <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">YOUR SQUAD ROLE</span>
               <span class="neo-badge {% if my_team_role == 'LEADER' %}neo-badge-yellow{% else %}neo-badge-green{% endif %}" style="font-size: 10px;">
-                {% if my_team_role == 'LEADER' %}👑 SQUAD LEADER{% else %}✓ SQUAD MEMBER{% endif %}
+                {% if my_team_role == 'LEADER' %}👑 SQUAD CREATOR &amp; LEADER{% else %}✓ JOINED SQUAD MEMBER{% endif %}
               </span>
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
@@ -568,14 +579,14 @@
             {% endif %}
             {% if my_team_role != 'LEADER' and my_team.leader_name %}
             <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
-              <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">LEADER</span>
+              <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">SQUAD LEADER</span>
               <span style="font-size: 12px; color: #ffffff; font-weight: 800;">{{ my_team.leader_name }} <code style="color: #FFE600; font-size: 10px;">({{ my_team.leader_code }})</code></span>
             </div>
             {% endif %}
           </div>
           {% if my_team_role == 'LEADER' %}
           <a href="{{ url_for('team_manage') }}" class="neo-btn neo-btn-yellow" style="width: 100%; text-align: center; padding: 9px !important; font-size: 12.5px !important; box-sizing: border-box;">
-            ⚙️ MANAGE SQUAD & INVITE →
+            ⚙️ MANAGE SQUAD &amp; INVITE →
           </a>
           {% else %}
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">

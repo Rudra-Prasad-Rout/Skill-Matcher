@@ -133,24 +133,28 @@ def inject_user():
             WHERE t.leader_id = ? AND ti.invite_type = 'JOIN_REQUEST' AND ti.status = 'PENDING'
             """, (curr_user["id"],)).fetchone()["c"]
 
-            # Check if user has an active squad (as leader or accepted member)
-            led = conn.execute("SELECT id, team_name, team_code FROM teams WHERE leader_id = ? LIMIT 1", (curr_user["id"],)).fetchone()
-            if led:
-                curr_squad = dict(led)
-                curr_squad["role"] = "LEADER"
+            # Check if user has an active squad (prioritize joined squad membership first, then created squad)
+            joined = conn.execute("""
+            SELECT t.id, t.team_name, t.team_code, u.full_name as leader_name, u.user_code as leader_code 
+            FROM team_invites ti
+            JOIN teams t ON ti.team_id = t.id
+            JOIN users u ON t.leader_id = u.id
+            WHERE ti.status = 'ACCEPTED' AND (
+                (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+                (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+            )
+            ORDER BY ti.id DESC
+            LIMIT 1
+            """, (curr_user["id"], curr_user["id"])).fetchone()
+            
+            if joined:
+                curr_squad = dict(joined)
+                curr_squad["role"] = "MEMBER"
             else:
-                joined = conn.execute("""
-                SELECT t.id, t.team_name, t.team_code FROM team_invites ti
-                JOIN teams t ON ti.team_id = t.id
-                WHERE ti.status = 'ACCEPTED' AND (
-                    (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
-                    (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
-                )
-                LIMIT 1
-                """, (curr_user["id"], curr_user["id"])).fetchone()
-                if joined:
-                    curr_squad = dict(joined)
-                    curr_squad["role"] = "MEMBER"
+                led = conn.execute("SELECT id, team_name, team_code FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (curr_user["id"],)).fetchone()
+                if led:
+                    curr_squad = dict(led)
+                    curr_squad["role"] = "LEADER"
 
             conn.close()
             unread_mailbox = invites_count + requests_count
@@ -1189,10 +1193,7 @@ def candidate_home():
     skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
     docs = conn.execute("SELECT * FROM user_documents WHERE user_id = ? ORDER BY id DESC", (user["id"],)).fetchall()
 
-    # Check if user is a squad leader
-    led_team = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
-
-    # Check if user has ACCEPTED an invitation (joined someone else's team)
+    # 1. Check if user has ACCEPTED an invitation (joined someone else's squad via invitation)
     joined_invite = conn.execute("""
     SELECT ti.id, t.id as team_id, t.team_name, t.team_code, t.theme, t.team_size,
            u.full_name as leader_name, u.user_code as leader_code
@@ -1203,7 +1204,7 @@ def candidate_home():
     ORDER BY ti.id DESC LIMIT 1
     """, (user["id"],)).fetchone()
 
-    # Check if user's JOIN_REQUEST was accepted (they requested to join)
+    # 2. Check if user's JOIN_REQUEST was accepted (they requested to join)
     requested_join = conn.execute("""
     SELECT ti.id, t.id as team_id, t.team_name, t.team_code, t.theme, t.team_size,
            u.full_name as leader_name, u.user_code as leader_code
@@ -1214,31 +1215,36 @@ def candidate_home():
     ORDER BY ti.id DESC LIMIT 1
     """, (user["id"],)).fetchone()
 
+    # 3. Check if user is a squad leader
+    led_team = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+
     my_team = None
     my_team_role = None
-    if led_team:
-        my_team = dict(led_team)
-        my_team_role = "LEADER"
-        # Count members
-        member_count = conn.execute(
-            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED' AND invite_type = 'INVITATION'",
-            (my_team["id"],)
-        ).fetchone()["c"]
-        my_team["member_count"] = 1 + member_count
-    elif joined_invite:
+    if joined_invite:
         my_team = dict(joined_invite)
         my_team_role = "MEMBER"
+        my_team["joined_via"] = "INVITATION"
         member_count = conn.execute(
-            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED' AND invite_type = 'INVITATION'",
+            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'",
             (my_team["team_id"],)
         ).fetchone()["c"]
         my_team["member_count"] = 1 + member_count
     elif requested_join:
         my_team = dict(requested_join)
         my_team_role = "MEMBER"
+        my_team["joined_via"] = "JOIN_REQUEST"
         member_count = conn.execute(
             "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'",
             (my_team["team_id"],)
+        ).fetchone()["c"]
+        my_team["member_count"] = 1 + member_count
+    elif led_team:
+        my_team = dict(led_team)
+        my_team_role = "LEADER"
+        my_team["joined_via"] = "CREATED"
+        member_count = conn.execute(
+            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'",
+            (my_team["id"],)
         ).fetchone()["c"]
         my_team["member_count"] = 1 + member_count
 
@@ -1479,48 +1485,47 @@ def team_manage(team_id=None):
     is_leader = False
     team_row = None
     
-    # 1. First check if user is leader of a squad
+    # 1. First check if user is an accepted member of any squad
     if team_id:
-        team_row = conn.execute("SELECT * FROM teams WHERE id = ? AND leader_id = ?", (team_id, user["id"])).fetchone()
+        joined = conn.execute("""
+        SELECT t.* FROM team_invites ti
+        JOIN teams t ON ti.team_id = t.id
+        WHERE ti.team_id = ? AND ti.status = 'ACCEPTED' AND (
+            (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+            (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+        )
+        LIMIT 1
+        """, (team_id, user["id"], user["id"])).fetchone()
     else:
-        team_row = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+        joined = conn.execute("""
+        SELECT t.* FROM team_invites ti
+        JOIN teams t ON ti.team_id = t.id
+        WHERE ti.status = 'ACCEPTED' AND (
+            (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+            (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+        )
+        ORDER BY ti.id DESC LIMIT 1
+        """, (user["id"], user["id"])).fetchone()
         
-    if team_row:
-        is_leader = True
-        team = dict(team_row)
-        leader_user = dict(user)
-    else:
-        # 2. Check if user is an accepted member of any squad
-        if team_id:
-            joined = conn.execute("""
-            SELECT t.* FROM team_invites ti
-            JOIN teams t ON ti.team_id = t.id
-            WHERE ti.team_id = ? AND ti.status = 'ACCEPTED' AND (
-                (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
-                (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
-            )
-            LIMIT 1
-            """, (team_id, user["id"], user["id"])).fetchone()
-        else:
-            joined = conn.execute("""
-            SELECT t.* FROM team_invites ti
-            JOIN teams t ON ti.team_id = t.id
-            WHERE ti.status = 'ACCEPTED' AND (
-                (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
-                (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
-            )
-            ORDER BY ti.id DESC LIMIT 1
-            """, (user["id"], user["id"])).fetchone()
-            
-        if not joined:
-            conn.close()
-            return redirect(url_for("find_teams"))
-            
+    if joined:
         team = dict(joined)
         is_leader = False
-        # Fetch the actual leader's user data
         leader_row = conn.execute("SELECT * FROM users WHERE id = ?", (team["leader_id"],)).fetchone()
         leader_user = dict(leader_row) if leader_row else {}
+    else:
+        # 2. Check if user is leader of a squad
+        if team_id:
+            team_row = conn.execute("SELECT * FROM teams WHERE id = ? AND leader_id = ?", (team_id, user["id"])).fetchone()
+        else:
+            team_row = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+            
+        if team_row:
+            is_leader = True
+            team = dict(team_row)
+            leader_user = dict(user)
+        else:
+            conn.close()
+            return redirect(url_for("find_teams"))
 
     # Fetch Leader's verified skills
     leader_skills_rows = conn.execute(
@@ -1993,9 +1998,22 @@ def api_mailbox_respond():
             (sender_id = ? AND invite_type = 'JOIN_REQUEST')
         )
         """, (inv_dict["team_id"], item_id, cand_id, cand_id))
+
+        # If user accepted an invitation to join someone else's team, clean up any old empty solo team they created
+        if inv_dict["invite_type"] == "INVITATION" and inv_dict["receiver_id"] == user["id"]:
+            solo_teams = conn.execute("""
+            SELECT t.id FROM teams t
+            WHERE t.leader_id = ? AND (
+                SELECT COUNT(*) FROM team_invites WHERE team_id = t.id AND status = 'ACCEPTED'
+            ) = 0
+            """, (user["id"],)).fetchall()
+            for st in solo_teams:
+                conn.execute("DELETE FROM team_invites WHERE team_id = ?", (st["id"],))
+                conn.execute("DELETE FROM teams WHERE id = ?", (st["id"],))
+
         conn.commit()
         conn.close()
-        return jsonify({"success": True, "message": "Squad request successfully accepted!", "new_status": "ACCEPTED"})
+        return jsonify({"success": True, "message": "Squad invitation successfully accepted! You are now a member of this squad.", "new_status": "ACCEPTED"})
         
     conn.execute("UPDATE team_invites SET status = ? WHERE id = ?", (new_status, item_id))
     conn.commit()
@@ -2112,29 +2130,30 @@ def find_teams():
         if td["slots_left"] > 0:
             open_squads.append(td)
 
-    # Check if the user is already in a team (as leader or accepted member)
+    # Check if the user is already in a team (prioritize joined squad first, then leader)
     my_team = None
     my_team_role = None
-    led_team = conn.execute("SELECT * FROM teams WHERE leader_id = ? LIMIT 1", (user["id"],)).fetchone()
-    if led_team:
-        my_team = dict(led_team)
-        my_team_role = "LEADER"
+    joined = conn.execute("""
+    SELECT t.id, t.team_name, t.team_code, t.theme, t.team_size,
+           u.full_name as leader_name, u.user_code as leader_code
+    FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    JOIN users u ON t.leader_id = u.id
+    WHERE ti.status = 'ACCEPTED' AND (
+        (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+        (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+    )
+    ORDER BY ti.id DESC LIMIT 1
+    """, (user["id"], user["id"])).fetchone()
+    
+    if joined:
+        my_team = dict(joined)
+        my_team_role = "MEMBER"
     else:
-        joined = conn.execute("""
-        SELECT t.id, t.team_name, t.team_code, t.theme, t.team_size,
-               u.full_name as leader_name, u.user_code as leader_code
-        FROM team_invites ti
-        JOIN teams t ON ti.team_id = t.id
-        JOIN users u ON t.leader_id = u.id
-        WHERE ti.status = 'ACCEPTED' AND (
-            (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
-            (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
-        )
-        ORDER BY ti.id DESC LIMIT 1
-        """, (user["id"], user["id"])).fetchone()
-        if joined:
-            my_team = dict(joined)
-            my_team_role = "MEMBER"
+        led_team = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+        if led_team:
+            my_team = dict(led_team)
+            my_team_role = "LEADER"
 
     # Check pending join requests sent by this user (to show "Awaiting" status)
     pending_requests = conn.execute("""

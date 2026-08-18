@@ -42,18 +42,18 @@
         <div style="font-size: 28px;">{% if my_team_role == 'LEADER' %}👑{% else %}✅{% endif %}</div>
         <div>
           <div style="font-size: 11px; font-weight: 900; color: {% if my_team_role == 'LEADER' %}#FFE600{% else %}#22c55e{% endif %}; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">
-            YOU ARE CURRENTLY IN A SQUAD
+            {% if my_team_role == 'LEADER' %}👑 YOU CREATED THIS SQUAD{% else %}👥 YOU JOINED THIS SQUAD{% endif %}
           </div>
           <strong style="color: #ffffff; font-size: 18px; display: block;">{{ my_team.team_name }}</strong>
           <div style="font-size: 12.5px; color: #94a3b8; margin-top: 2px;">
-            {% if my_team_role == 'LEADER' %}Your squad{% else %}Led by {{ my_team.leader_name }} ({{ my_team.leader_code }}){% endif %}
+            {% if my_team_role == 'LEADER' %}You created and lead this squad{% else %}Joined squad led by <strong style="color: #FFE600;">{{ my_team.leader_name }}</strong> ({{ my_team.leader_code }}){% endif %}
             • Theme: <strong style="color: #cbd5e1;">{{ my_team.theme }}</strong>
           </div>
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
         <span class="neo-badge {% if my_team_role == 'LEADER' %}neo-badge-yellow{% else %}neo-badge-green{% endif %}" style="font-size: 11px; padding: 5px 12px;">
-          {% if my_team_role == 'LEADER' %}👑 SQUAD LEADER{% else %}✓ SQUAD MEMBER{% endif %}
+          {% if my_team_role == 'LEADER' %}👑 SQUAD LEADER{% else %}✓ SQUAD MEMBER (JOINED){% endif %}
         </span>
         {% if my_team_role == 'LEADER' %}
         <a href="{{ url_for('team_manage') }}" class="neo-btn neo-btn-yellow" style="font-size: 12px !important; padding: 8px 16px !important;">
