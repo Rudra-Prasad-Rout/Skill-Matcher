@@ -2280,6 +2280,7 @@ def signup_analysis():
         skills=skills_list,
         documents=docs_list,
         matches=matches,
+        internship_matches=matches,
         team_matches=team_matches,
         career_intent=user_dict.get("career_intent", "both"),
         overall_score=avg_score,
