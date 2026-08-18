@@ -6,6 +6,7 @@ import os
 import secrets
 import re
 import json
+import time
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
@@ -240,6 +241,7 @@ def api_verify_otp():
         conn.close()
         
         session["verified_signup_email"] = email
+        session["verified_signup_time"] = time.time()
         return jsonify({
             "success": True,
             "message": "✓ Email verified successfully! You can now proceed."
@@ -250,6 +252,49 @@ def api_verify_otp():
             "success": False, 
             "error": "Invalid or expired verification code. Please check your Gmail or click 'Resend Code'."
         }), 400
+
+@app.route("/api/auth/check-email-verification", methods=["GET"])
+def api_check_email_verification():
+    """Checks if the email was verified within the last 30 minutes (session or DB)."""
+    email = request.args.get("email", "").strip().lower()
+    if not email:
+        return jsonify({"verified": False})
+        
+    verified_email = session.get("verified_signup_email")
+    verified_time = session.get("verified_signup_time", 0)
+    
+    # 1. Check Flask Session (30 minutes = 1800s)
+    if verified_email == email and (time.time() - verified_time < 1800):
+        remaining_seconds = int(1800 - (time.time() - verified_time))
+        return jsonify({
+            "verified": True, 
+            "remaining_seconds": remaining_seconds,
+            "source": "session"
+        })
+        
+    # 2. Check Database email_otps where is_used = 1 within last 30 minutes
+    try:
+        conn = database.get_db_connection()
+        row = conn.execute("""
+        SELECT id, created_at FROM email_otps
+        WHERE email = ? AND is_used = 1
+        AND datetime(created_at, '+30 minutes') >= datetime('now')
+        ORDER BY id DESC LIMIT 1
+        """, (email,)).fetchone()
+        conn.close()
+        
+        if row:
+            session["verified_signup_email"] = email
+            session["verified_signup_time"] = time.time()
+            return jsonify({
+                "verified": True,
+                "remaining_seconds": 1800,
+                "source": "db"
+            })
+    except Exception as e:
+        print(f"[Check Verification DB Error]: {e}")
+        
+    return jsonify({"verified": False})
 
 @app.route("/api/auth/login-otp", methods=["POST"])
 def api_login_otp():

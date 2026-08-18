@@ -89,8 +89,27 @@
       ⚠️ Please enter a complete email with '@' and domain (e.g. name@gmail.com).
     </div>
 
+    <!-- Active 30-Minute Verified Status Banner -->
+    <div id="email-verified-helper" style="display: none; margin-top: 10px; background: rgba(52, 168, 83, 0.15); border: 2px solid #34A853; border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #cbd5e1; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; box-shadow: 3px 3px 0px #34A853;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="color: #34A853; font-size: 16px;">✓</span>
+        <div>
+          <strong style="color: #34A853; text-transform: uppercase; font-size: 11.5px; letter-spacing: 0.04em;">Gmail Verified</strong>
+          <span id="email-verified-timer-text" style="color: #cbd5e1; font-size: 11.5px; margin-left: 4px;">(Valid for 30 minutes • No re-verification required)</span>
+        </div>
+      </div>
+      <button 
+        type="button" 
+        onclick="unlockEmailChange()" 
+        class="neo-btn neo-btn-white" 
+        style="font-size: 10.5px !important; padding: 4px 10px !important; text-transform: uppercase;"
+      >
+        ✏️ Change Email
+      </button>
+    </div>
+
     <!-- Sender Button (Down Below the Gmail Field) -->
-    <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+    <div id="send-otp-row" style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
       <button 
         type="button" 
         id="btn-send-otp" 
@@ -326,12 +345,137 @@
 <script>
   let isEmailVerified = {{ 'true' if (user and user.email_verified == 1) else 'false' }};
   let latestDemoOtp = '';
+  const VERIFY_CACHE_KEY = 's30_verified_email_v2';
+  const DRAFT_STORAGE_KEY = 's30_signup_profile_draft_v2';
+  const THIRTY_MINUTES_MS = 30 * 60 * 1000; // 30 minutes in milliseconds
+
+  // 1. Apply Verified UI State
+  function applyEmailVerifiedUI(emailVal, remainingSeconds) {
+    if (!emailVal) return;
+    isEmailVerified = true;
+
+    const emailInput = document.getElementById('email');
+    const sendBtnRow = document.getElementById('send-otp-row');
+    const sendBtn = document.getElementById('btn-send-otp');
+    const otpBox = document.getElementById('otp-verification-box');
+    const badge = document.getElementById('email-verified-badge');
+    const helper = document.getElementById('email-verified-helper');
+    const timerText = document.getElementById('email-verified-timer-text');
+
+    if (emailInput) {
+      emailInput.value = emailVal;
+      emailInput.readOnly = true;
+      emailInput.style.borderColor = '#34A853';
+      emailInput.style.background = '#0f1a30';
+    }
+
+    if (sendBtnRow) sendBtnRow.style.display = 'none';
+    if (sendBtn) sendBtn.style.display = 'none';
+    if (otpBox) otpBox.style.display = 'none';
+
+    if (badge) {
+      badge.className = 'neo-badge neo-badge-green';
+      badge.innerText = '✓ EMAIL VERIFIED';
+      badge.style.display = 'inline-flex';
+    }
+
+    if (helper) {
+      helper.style.display = 'flex';
+      const mins = Math.max(1, Math.round((remainingSeconds || 1800) / 60));
+      if (timerText) {
+        timerText.textContent = `(Valid for ${mins} min • No re-verification required)`;
+      }
+    }
+  }
+
+  // 2. Unlock & Change Email
+  function unlockEmailChange() {
+    isEmailVerified = false;
+    localStorage.removeItem(VERIFY_CACHE_KEY);
+
+    const emailInput = document.getElementById('email');
+    const sendBtnRow = document.getElementById('send-otp-row');
+    const sendBtn = document.getElementById('btn-send-otp');
+    const otpBox = document.getElementById('otp-verification-box');
+    const badge = document.getElementById('email-verified-badge');
+    const helper = document.getElementById('email-verified-helper');
+
+    if (emailInput) {
+      emailInput.readOnly = false;
+      emailInput.style.borderColor = '';
+      emailInput.style.background = '';
+      emailInput.focus();
+    }
+
+    if (sendBtnRow) sendBtnRow.style.display = 'flex';
+    if (sendBtn) sendBtn.style.display = 'inline-flex';
+    if (helper) helper.style.display = 'none';
+    if (otpBox) otpBox.style.display = 'none';
+
+    if (badge) {
+      badge.className = 'neo-badge neo-badge-pink';
+      badge.innerText = '⚠️ EMAIL UNVERIFIED';
+      badge.style.display = 'inline-flex';
+    }
+
+    saveProfileDraft();
+  }
+
+  // 3. Check and restore 30-minute verification status (Browser & Server)
+  async function checkAndApplyEmailVerification(targetEmail) {
+    if (!targetEmail) return false;
+    const cleanEmail = targetEmail.trim().toLowerCase();
+
+    // A. Check localStorage 30-minute token
+    try {
+      const raw = localStorage.getItem(VERIFY_CACHE_KEY);
+      if (raw) {
+        const cached = JSON.parse(raw);
+        if (cached && cached.email && cached.email.toLowerCase() === cleanEmail) {
+          const now = Date.now();
+          if (now < cached.expires_at) {
+            const remSec = Math.round((cached.expires_at - now) / 1000);
+            applyEmailVerifiedUI(cleanEmail, remSec);
+            return true;
+          } else {
+            localStorage.removeItem(VERIFY_CACHE_KEY);
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('[Cache Check Error]:', e);
+    }
+
+    // B. Check Server Session & Database verification within 30 minutes
+    try {
+      const res = await fetch(`/api/auth/check-email-verification?email=${encodeURIComponent(cleanEmail)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.verified) {
+          const cacheData = {
+            email: cleanEmail,
+            verified_at: Date.now(),
+            expires_at: Date.now() + ((data.remaining_seconds || 1800) * 1000)
+          };
+          localStorage.setItem(VERIFY_CACHE_KEY, JSON.stringify(cacheData));
+          applyEmailVerifiedUI(cleanEmail, data.remaining_seconds || 1800);
+          return true;
+        }
+      }
+    } catch (err) {
+      console.warn('[Server Verification Check Error]:', err);
+    }
+
+    return false;
+  }
 
   function handleEmailInput() {
     validateEmailLive();
     const emailVerifiedBadge = document.getElementById('email-verified-badge');
+    const sendBtnRow = document.getElementById('send-otp-row');
     const sendBtn = document.getElementById('btn-send-otp');
     const emailInput = document.getElementById('email');
+    const helper = document.getElementById('email-verified-helper');
     
     isEmailVerified = false;
     if (emailVerifiedBadge) {
@@ -339,9 +483,9 @@
       emailVerifiedBadge.innerText = '⚠️ EMAIL UNVERIFIED';
       emailVerifiedBadge.style.display = 'inline-flex';
     }
-    if (sendBtn) {
-      sendBtn.style.display = 'inline-flex';
-    }
+    if (sendBtnRow) sendBtnRow.style.display = 'flex';
+    if (sendBtn) sendBtn.style.display = 'inline-flex';
+    if (helper) helper.style.display = 'none';
     if (emailInput) {
       emailInput.readOnly = false;
       emailInput.style.borderColor = '';
@@ -445,33 +589,24 @@
       const data = await resp.json();
 
       if (data.success) {
-        isEmailVerified = true;
-        
-        // Update UI to verified state
-        const emailInput = document.getElementById('email');
-        const sendBtn = document.getElementById('btn-send-otp');
-        const otpBox = document.getElementById('otp-verification-box');
+        // Save 30-minute verified session to localStorage
+        const cacheData = {
+          email: emailVal.toLowerCase(),
+          verified_at: Date.now(),
+          expires_at: Date.now() + THIRTY_MINUTES_MS
+        };
+        localStorage.setItem(VERIFY_CACHE_KEY, JSON.stringify(cacheData));
 
-        emailInput.readOnly = true;
-        emailInput.style.borderColor = '#34A853';
-        emailInput.style.background = '#0f1a30';
-        
-        if (sendBtn) sendBtn.style.display = 'none';
-        if (badge) {
-          badge.className = 'neo-badge neo-badge-green';
-          badge.innerText = '✓ EMAIL VERIFIED';
-          badge.style.display = 'inline-flex';
-        }
-        
+        // Update UI
+        applyEmailVerifiedUI(emailVal, 1800);
+
         if (feedback) {
           feedback.style.display = 'block';
           feedback.style.color = '#34A853';
           feedback.textContent = '✓ ' + data.message;
         }
 
-        setTimeout(() => {
-          if (otpBox) otpBox.style.display = 'none';
-        }, 1200);
+        saveProfileDraft();
 
       } else {
         if (badge) {
@@ -524,19 +659,24 @@
     }
   }
 
-  document.getElementById('profile-form').addEventListener('submit', function(e) {
+  document.getElementById('profile-form').addEventListener('submit', async function(e) {
     if (!validateEmailLive()) {
       e.preventDefault();
       alert("Please enter a valid email address containing '@' and domain (e.g. name@gmail.com).");
       return false;
     }
 
+    // If flag is false, perform one final fast check against 30-min cache
     if (!isEmailVerified) {
-      e.preventDefault();
-      document.getElementById('otp-verification-box').style.display = 'block';
-      sendVerificationOtp();
-      alert("Please verify your Gmail address with the 6-digit verification code before continuing.");
-      return false;
+      const emailVal = document.getElementById('email').value.trim();
+      const verifiedNow = await checkAndApplyEmailVerification(emailVal);
+      if (!verifiedNow) {
+        e.preventDefault();
+        document.getElementById('otp-verification-box').style.display = 'block';
+        sendVerificationOtp();
+        alert("Please verify your Gmail address with the 6-digit verification code before continuing.");
+        return false;
+      }
     }
 
     const p1 = document.getElementById('password').value;
@@ -547,8 +687,6 @@
       return false;
     }
   });
-
-  const DRAFT_STORAGE_KEY = 's30_signup_profile_draft_v2';
 
   function saveProfileDraft() {
     try {
@@ -623,15 +761,7 @@
 
       if (draft.email) {
         validateEmailLive();
-      }
-
-      if (draft.email_verified) {
-        isEmailVerified = true;
-        const badge = document.getElementById('email-verified-badge');
-        if (badge) {
-          badge.className = 'neo-badge neo-badge-green';
-          badge.innerText = '✓ EMAIL VERIFIED';
-        }
+        checkAndApplyEmailVerification(draft.email);
       }
 
       const badge = document.getElementById('draft-status-badge');
@@ -648,7 +778,13 @@
     // 1. Automatically restore any previously entered user draft
     restoreProfileDraft();
 
-    // 2. Attach live input listeners for real-time draft saving
+    // 2. If email field has a value, check 30-minute verification token
+    const emailInput = document.getElementById('email');
+    if (emailInput && emailInput.value) {
+      checkAndApplyEmailVerification(emailInput.value);
+    }
+
+    // 3. Attach live input listeners for real-time draft saving
     ['full_name', 'email', 'gender', 'age', 'school', 'coursework', 'password', 're_password'].forEach(id => {
       const el = document.getElementById(id);
       if (el) {
@@ -669,16 +805,16 @@
     const autoSend = urlParams.get('autosend');
     
     if (emailParam) {
-      const emailInput = document.getElementById('email');
       if (emailInput) {
         emailInput.value = emailParam;
         validateEmailLive();
+        checkAndApplyEmailVerification(emailParam);
       }
     }
     
     if (autoSend === '1') {
       setTimeout(() => {
-        sendVerificationOtp();
+        if (!isEmailVerified) sendVerificationOtp();
       }, 400);
     }
   });
