@@ -1518,30 +1518,52 @@
 
   </div>
 
-  <!-- Document Inspection Modal -->
+  <!-- Document Inspection Modal (Fit to Screen & Photo Section) -->
   <div class="doc-modal-backdrop" id="doc-modal">
-    <div class="doc-modal-dialog">
-      <div style="padding: 16px 24px; background: #070b14; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <div style="font-size: 16px; font-weight: 800; color: #fff;" id="modal-doc-title">Document Inspection</div>
-          <div style="font-size: 12px; color: #38bdf8;" id="modal-doc-candidate">Candidate: Alex Rivera</div>
+    <div class="doc-modal-dialog" style="max-width: 980px; height: 90vh; display: flex; flex-direction: column; background: #0c1322; border: 3px solid #38BDF8; border-radius: 8px; box-shadow: 8px 8px 0px #FFE600;">
+      
+      <!-- Modal Header -->
+      <div style="padding: 12px 20px; background: #070b14; border-bottom: 2.5px solid #38BDF8; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <div style="min-width: 0; display: flex; align-items: center; gap: 10px;">
+          <span id="modal-doc-badge" class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 6px;">DOCUMENT AUDIT</span>
+          <div>
+            <div style="font-size: 15px; font-weight: 900; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 380px;" id="modal-doc-title">Document Inspection</div>
+            <div style="font-size: 11.5px; color: #38bdf8; font-weight: 700;" id="modal-doc-candidate">Candidate: Alex Rivera</div>
+          </div>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          <a href="#" id="modal-open-newtab" target="_blank" class="s30-btn-outline" style="font-size: 12px;">↗ Open in Tab</a>
-          <button onclick="closeDocModal()" style="background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer;">&times;</button>
+
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <!-- Fit to Screen & Zoom Controls for Photos -->
+          <div id="admin-photo-zoom-controls" style="display: none; align-items: center; gap: 4px; margin-right: 6px;">
+            <button type="button" onclick="zoomAdminPhoto(-0.2)" class="neo-btn neo-btn-white" style="padding: 4px 8px; font-size: 11px;" title="Zoom Out">🔍-</button>
+            <button type="button" onclick="resetAdminPhotoZoom()" class="neo-btn neo-btn-yellow" style="padding: 4px 8px; font-size: 11px;" title="Fit Image to Screen">↺ Fit to Screen</button>
+            <button type="button" onclick="zoomAdminPhoto(0.2)" class="neo-btn neo-btn-white" style="padding: 4px 8px; font-size: 11px;" title="Zoom In">🔍+</button>
+          </div>
+
+          <a href="#" id="modal-open-newtab" target="_blank" class="neo-btn neo-btn-cyan" style="font-size: 11px; padding: 5px 12px;">↗ OPEN IN TAB</a>
+          <button type="button" onclick="closeDocModal()" class="neo-btn neo-btn-pink" style="font-size: 12px; padding: 5px 10px;" title="Close">&times;</button>
         </div>
       </div>
 
-      <div style="flex: 1; background: #020617; position: relative;">
-        <iframe id="doc-iframe" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe>
+      <!-- Modal Body (Fitted to Screen with no overflow clipping) -->
+      <div style="flex: 1; background: #020617; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 12px;">
+        
+        <!-- Image Container (Always fits screen by default with object-fit: contain) -->
+        <div id="admin-doc-img-container" style="display: none; width: 100%; height: 100%; overflow: auto; align-items: center; justify-content: center;">
+          <img id="admin-doc-img" src="" alt="Document Preview" style="max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 4px; border: 2px solid #38BDF8; box-shadow: 4px 4px 0px rgba(0,0,0,0.6); transition: transform 0.2s ease;">
+        </div>
+
+        <!-- PDF Document Iframe -->
+        <iframe id="doc-iframe" src="about:blank" style="width: 100%; height: 100%; border: none; display: none; background: #ffffff; border-radius: 4px;"></iframe>
       </div>
 
-      <div style="padding: 14px 24px; background: #070b14; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
-        <div style="font-size: 12.5px; color: #94a3b8;">Verify institutional logo, student name, and registration year.</div>
+      <!-- Modal Footer -->
+      <div style="padding: 12px 20px; background: #070b14; border-top: 2.5px solid #38BDF8; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <div style="font-size: 12px; color: #94a3b8; font-weight: 600;">Verify institutional logo, student name, and registration year.</div>
         <div style="display: flex; gap: 8px;">
-          <button class="btn-act btn-act-done" id="modal-btn-approve">Approve Document</button>
-          <button class="btn-act btn-act-reject" id="modal-btn-reject">Reject Document</button>
-          <button class="s30-btn-outline" onclick="closeDocModal()">Close</button>
+          <button type="button" class="btn-act btn-act-done" id="modal-btn-approve">✓ APPROVE DOCUMENT</button>
+          <button type="button" class="btn-act btn-act-reject" id="modal-btn-reject">✕ REJECT DOCUMENT</button>
+          <button type="button" class="neo-btn neo-btn-white" style="font-size: 11px; padding: 5px 12px;" onclick="closeDocModal()">CLOSE</button>
         </div>
       </div>
     </div>
@@ -1713,11 +1735,40 @@
       });
     }
 
+    let adminPhotoScale = 1.0;
+
     function openDocModal(name, url, candidate, userId) {
       document.getElementById('modal-doc-title').textContent = name;
       document.getElementById('modal-doc-candidate').textContent = `Candidate: ${candidate}`;
       document.getElementById('modal-open-newtab').href = url;
-      document.getElementById('doc-iframe').src = url;
+
+      const ext = (url.split('?')[0].split('.').pop() || '').toLowerCase();
+      const isImg = ['jpg', 'jpeg', 'png', 'webp', 'svg', 'gif'].includes(ext);
+
+      const imgContainer = document.getElementById('admin-doc-img-container');
+      const imgEl = document.getElementById('admin-doc-img');
+      const iframeEl = document.getElementById('doc-iframe');
+      const zoomControls = document.getElementById('admin-photo-zoom-controls');
+      const badgeEl = document.getElementById('modal-doc-badge');
+
+      adminPhotoScale = 1.0;
+
+      if (isImg) {
+        imgContainer.style.display = 'flex';
+        iframeEl.style.display = 'none';
+        iframeEl.src = 'about:blank';
+        imgEl.src = url;
+        imgEl.style.transform = 'scale(1)';
+        zoomControls.style.display = 'flex';
+        if (badgeEl) badgeEl.textContent = 'PHOTO INSPECTION (FITTED)';
+      } else {
+        imgContainer.style.display = 'none';
+        imgEl.src = '';
+        iframeEl.style.display = 'block';
+        iframeEl.src = url;
+        zoomControls.style.display = 'none';
+        if (badgeEl) badgeEl.textContent = 'PDF DOCUMENT AUDIT';
+      }
 
       document.getElementById('modal-btn-approve').onclick = () => {
         updateDecision(userId, 'DONE', 'DONE');
@@ -1734,6 +1785,21 @@
     function closeDocModal() {
       document.getElementById('doc-modal').classList.remove('open');
       document.getElementById('doc-iframe').src = 'about:blank';
+      const imgEl = document.getElementById('admin-doc-img');
+      if (imgEl) imgEl.src = '';
+    }
+
+    function zoomAdminPhoto(delta) {
+      const imgEl = document.getElementById('admin-doc-img');
+      if (!imgEl) return;
+      adminPhotoScale = Math.min(Math.max(0.4, adminPhotoScale + delta), 3.5);
+      imgEl.style.transform = `scale(${adminPhotoScale})`;
+    }
+
+    function resetAdminPhotoZoom() {
+      adminPhotoScale = 1.0;
+      const imgEl = document.getElementById('admin-doc-img');
+      if (imgEl) imgEl.style.transform = 'scale(1)';
     }
 
     async function promptBan(userId) {

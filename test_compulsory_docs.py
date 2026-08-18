@@ -42,7 +42,13 @@ class TestCompulsoryDocumentsAndAdminApproval(unittest.TestCase):
         self.assertNotIn("GET STARTED", html)
         print("[PASS] Logged in student sees ID and LOGOUT in navbar.")
 
-        # Step 2: Proceed from skills to documents
+        # Step 2: Add skill & proceed from skills to documents
+        conn = database.get_db_connection()
+        user_row = conn.execute("SELECT id FROM users WHERE email = 'test.student@univ.edu'").fetchone()
+        conn.execute("INSERT INTO user_skills (user_id, skill_name, project_name, project_url, status) VALUES (?, 'Python', 'Web App', 'https://github.com/test/app', 'VERIFIED')", (user_row["id"],))
+        conn.commit()
+        conn.close()
+
         resp = self.client.post("/signup/skills", follow_redirects=True)
         self.assertEqual(resp.status_code, 200)
         self.assertIn("Official College ID Verification (Compulsory)", resp.get_data(as_text=True))

@@ -1106,6 +1106,149 @@
     })();
   </script>
 
+  <!-- ================= UNIVERSAL PHOTO & DOCUMENT VIEWER MODAL (CROSS-BROWSER) ================= -->
+  <div id="s30-universal-media-modal" style="display: none; position: fixed; inset: 0; background: rgba(3, 7, 18, 0.88); backdrop-filter: blur(8px); z-index: 99999; align-items: center; justify-content: center; padding: 16px;" onclick="if(event.target.id==='s30-universal-media-modal') closeMediaPreview();">
+    <div style="background: #0c1322; border: 3px solid #00f0ff; border-radius: 10px; width: 100%; max-width: 900px; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 8px 8px 0px #FFE600;">
+      
+      <!-- Modal Header -->
+      <div style="padding: 16px 20px; background: #090f1d; border-bottom: 2.5px solid #00f0ff; display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
+          <span id="modal-preview-badge" class="neo-badge neo-badge-yellow" style="font-size: 11px; padding: 3px 8px; flex-shrink: 0;">PHOTO PREVIEW</span>
+          <div style="min-width: 0;">
+            <h3 id="modal-preview-title" style="font-size: 15px; font-weight: 900; color: #ffffff; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">
+              Document Viewer
+            </h3>
+            <div id="modal-preview-subtitle" style="font-size: 11.5px; color: #94a3b8; font-weight: 600;">
+              High-resolution direct credential inspection
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+          <a id="modal-preview-newtab" href="#" target="_blank" class="neo-btn neo-btn-cyan" style="padding: 6px 12px; font-size: 11px;" title="Open in original browser tab">
+            <span>↗ OPEN TAB</span>
+          </a>
+          <a id="modal-preview-download" href="#" download class="neo-btn neo-btn-white" style="padding: 6px 12px; font-size: 11px;" title="Download photo or file">
+            <span>⬇ DOWNLOAD</span>
+          </a>
+          <button type="button" onclick="closeMediaPreview()" class="neo-btn neo-btn-pink" style="padding: 6px 12px; font-size: 12px;" title="Close modal (Esc)">
+            <span>✕</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Content Body -->
+      <div id="modal-preview-body" style="padding: 16px; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 320px; max-height: 78vh; background: #060a14;">
+        
+        <!-- Direct Image Photo View (Fitted to screen) -->
+        <div id="modal-img-container" style="display: none; width: 100%; height: 100%; text-align: center; flex-direction: column; align-items: center; justify-content: center; overflow: hidden;">
+          <div style="margin-bottom: 10px; display: flex; justify-content: center; gap: 8px; flex-shrink: 0;">
+            <button type="button" onclick="zoomPhotoPreview(-0.2)" class="neo-btn neo-btn-white" style="padding: 4px 10px; font-size: 11px;">🔍- Zoom Out</button>
+            <button type="button" onclick="resetPhotoZoom()" class="neo-btn neo-btn-yellow" style="padding: 4px 10px; font-size: 11px;">↺ Fit Screen</button>
+            <button type="button" onclick="zoomPhotoPreview(0.2)" class="neo-btn neo-btn-white" style="padding: 4px 10px; font-size: 11px;">🔍+ Zoom In</button>
+          </div>
+          <div style="overflow: auto; width: 100%; height: 100%; max-height: 68vh; padding: 4px; display: flex; justify-content: center; align-items: center;">
+            <img id="modal-preview-img" src="" alt="ID Card Photo Preview" style="max-height: 64vh; max-width: 100%; width: auto; height: auto; object-fit: contain; border: 2.5px solid #ffffff; border-radius: 6px; box-shadow: 4px 4px 0px #00f0ff; transition: transform 0.2s ease;">
+          </div>
+        </div>
+
+        <!-- Direct PDF / Document View -->
+        <div id="modal-pdf-container" style="display: none; width: 100%; height: 72vh;">
+          <iframe id="modal-preview-iframe" src="" style="width: 100%; height: 100%; border: 2.5px solid #00f0ff; border-radius: 6px; background: #ffffff;"></iframe>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentPhotoZoom = 1.0;
+
+    function openMediaPreview(title, fileUrl, category, subtitle) {
+      const modal = document.getElementById('s30-universal-media-modal');
+      const titleEl = document.getElementById('modal-preview-title');
+      const subEl = document.getElementById('modal-preview-subtitle');
+      const badgeEl = document.getElementById('modal-preview-badge');
+      const newtabEl = document.getElementById('modal-preview-newtab');
+      const downloadEl = document.getElementById('modal-preview-download');
+      const imgContainer = document.getElementById('modal-img-container');
+      const pdfContainer = document.getElementById('modal-pdf-container');
+      const imgEl = document.getElementById('modal-preview-img');
+      const iframeEl = document.getElementById('modal-preview-iframe');
+
+      if (!modal) return;
+
+      titleEl.textContent = title || 'Document Preview';
+      subEl.textContent = subtitle || 'Verified S30 Student Credential';
+      newtabEl.href = fileUrl;
+      downloadEl.href = fileUrl;
+      downloadEl.setAttribute('download', (title || 'document').replace(/\s+/g, '_'));
+
+      resetPhotoZoom();
+
+      const ext = (fileUrl.split('?')[0].split('.').pop() || '').toLowerCase();
+      const isImage = ['jpg', 'jpeg', 'png', 'webp', 'svg', 'gif'].includes(ext);
+
+      if (category === 'id_front') {
+        badgeEl.className = 'neo-badge neo-badge-cyan';
+        badgeEl.textContent = '🪪 ID CARD (FRONT PHOTO)';
+      } else if (category === 'id_back') {
+        badgeEl.className = 'neo-badge neo-badge-purple';
+        badgeEl.textContent = '🪪 ID CARD (BACK PHOTO)';
+      } else if (category === 'certificate') {
+        badgeEl.className = 'neo-badge neo-badge-yellow';
+        badgeEl.textContent = isImage ? '📜 CERTIFICATE PHOTO' : '📜 CERTIFICATE PDF / DOC';
+      } else {
+        badgeEl.className = 'neo-badge neo-badge-green';
+        badgeEl.textContent = '📄 CREDENTIAL PROOF';
+      }
+
+      if (isImage) {
+        imgContainer.style.display = 'flex';
+        pdfContainer.style.display = 'none';
+        imgEl.src = fileUrl;
+        iframeEl.src = 'about:blank';
+      } else {
+        imgContainer.style.display = 'none';
+        pdfContainer.style.display = 'block';
+        iframeEl.src = fileUrl;
+        imgEl.src = '';
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeMediaPreview() {
+      const modal = document.getElementById('s30-universal-media-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        const iframeEl = document.getElementById('modal-preview-iframe');
+        if (iframeEl) iframeEl.src = 'about:blank';
+        const imgEl = document.getElementById('modal-preview-img');
+        if (imgEl) imgEl.src = '';
+      }
+    }
+
+    function zoomPhotoPreview(delta) {
+      const imgEl = document.getElementById('modal-preview-img');
+      if (!imgEl) return;
+      currentPhotoZoom = Math.min(Math.max(0.5, currentPhotoZoom + delta), 3.0);
+      imgEl.style.transform = `scale(${currentPhotoZoom})`;
+    }
+
+    function resetPhotoZoom() {
+      currentPhotoZoom = 1.0;
+      const imgEl = document.getElementById('modal-preview-img');
+      if (imgEl) imgEl.style.transform = 'scale(1)';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeMediaPreview();
+      }
+    });
+  </script>
+
   {% block scripts %}{% endblock %}
 </body>
 </html>

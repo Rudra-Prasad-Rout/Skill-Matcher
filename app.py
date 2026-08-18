@@ -336,13 +336,6 @@ def user_has_compulsory_skills(user_id):
 def get_current_user(create_default=False):
     user_id = session.get("user_id")
     if not user_id:
-        if create_default:
-            conn = database.get_db_connection()
-            user = conn.execute("SELECT * FROM users ORDER BY id ASC LIMIT 1").fetchone()
-            conn.close()
-            if user:
-                session["user_id"] = user["id"]
-                return dict(user)
         return None
     
     conn = database.get_db_connection()
@@ -515,24 +508,13 @@ def signup_profile():
             """, (new_user_code, full_name, email, gender, age_int, password or "default_pass", school, coursework))
             user_id = cursor.lastrowid
             
-            cursor.execute("""
-            INSERT INTO user_skills (user_id, skill_name, project_name, project_url, status)
-            VALUES (?, ?, ?, ?, ?)
-            """, (user_id, "React", "Campus events app", "https://github.com/alexrivera/campus-events-app", "VERIFIED"))
-            
-            cursor.execute("""
-            INSERT INTO user_skills (user_id, skill_name, project_name, project_url, status)
-            VALUES (?, ?, ?, ?, ?)
-            """, (user_id, "Data analysis", "Attendance dashboard", "https://attendance-analytics.du.ac.in", "CHECKING"))
-            
         conn.commit()
         conn.close()
         
         session["user_id"] = user_id
         return redirect(url_for("signup_skills"))
         
-    user = get_current_user(create_default=False)
-    return render_template("profile.html", active_step=1, user=user)
+    return render_template("profile.html", active_step=1, user=None)
 
 # ================= STEP 2: Skills & Projects =================
 @app.route("/signup/skills", methods=["GET", "POST"])
@@ -2281,6 +2263,8 @@ def signup_verification():
     user_data = conn.execute("SELECT * FROM users WHERE id = ?", (user["id"],)).fetchone()
     skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
     certificates = conn.execute("SELECT * FROM user_documents WHERE user_id = ? AND doc_category = 'certificate' ORDER BY id DESC", (user["id"],)).fetchall()
+    front_doc = conn.execute("SELECT * FROM user_documents WHERE user_id = ? AND doc_category = 'id_front' ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+    back_doc = conn.execute("SELECT * FROM user_documents WHERE user_id = ? AND doc_category = 'id_back' ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
     conn.close()
     
     is_approved = user_is_approved_by_admin(user["id"])
@@ -2292,6 +2276,8 @@ def signup_verification():
         user=user_data,
         skills=[dict(s) for s in skills],
         certificates=[dict(c) for c in certificates],
+        front_doc=dict(front_doc) if front_doc else None,
+        back_doc=dict(back_doc) if back_doc else None,
         is_approved=is_approved,
         pending_notice=pending_notice
     )
@@ -2336,7 +2322,20 @@ def view_document(filename):
                 break
                 
     if os.path.exists(file_path):
-        if filename.endswith(".pdf"):
+        ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
+        mime_map = {
+            "pdf": "application/pdf",
+            "png": "image/png",
+            "jpg": "image/jpeg",
+            "jpeg": "image/jpeg",
+            "webp": "image/webp",
+            "svg": "image/svg+xml",
+            "gif": "image/gif"
+        }
+        mimetype = mime_map.get(ext, "application/octet-stream")
+        
+        # Check if file has HTML mock content (for sample demo SVGs/PDFs)
+        if ext == "pdf":
             try:
                 with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
                     first_line = f.read(50)
@@ -2345,25 +2344,18 @@ def view_document(filename):
                             return f_full.read(), 200, {"Content-Type": "text/html; charset=utf-8"}
             except Exception:
                 pass
-            return send_from_directory(app.config["UPLOAD_FOLDER"], filename, mimetype="application/pdf")
-        elif filename.endswith(".svg"):
-            return send_from_directory(app.config["UPLOAD_FOLDER"], filename, mimetype="image/svg+xml")
-        elif filename.endswith(".jpg") or filename.endswith(".jpeg"):
-            try:
-                with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-                    first_line = f.read(50)
-                    if "<svg" in first_line:
-                        with open(file_path, "r", encoding="utf-8", errors="ignore") as f_full:
-                            return f_full.read(), 200, {"Content-Type": "image/svg+xml"}
-            except Exception:
-                pass
-            return send_from_directory(app.config["UPLOAD_FOLDER"], filename, mimetype="image/jpeg")
-        return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+                
+        return send_from_directory(
+            app.config["UPLOAD_FOLDER"], 
+            filename, 
+            mimetype=mimetype,
+            as_attachment=False
+        )
     else:
         return f"""
-        <div style="font-family: sans-serif; padding: 40px; text-align: center; background: #0b1120; color: #fff;">
-            <h2>Document Record: {filename}</h2>
-            <p style="color: #94a3b8;">Uploaded credential proof verified by S30 system.</p>
+        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; text-align: center; background: #0c1322; color: #fff; border: 2px solid #38BDF8; border-radius: 8px; margin: 20px;">
+            <h2 style="color: #FFE600;">Document Record: {filename}</h2>
+            <p style="color: #cbd5e1;">Uploaded credential proof verified by S30 security engine.</p>
         </div>
         """, 200, {"Content-Type": "text/html"}
 

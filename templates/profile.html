@@ -50,7 +50,7 @@
         name="full_name" 
         class="s30-input" 
         placeholder="Enter your full name" 
-        value="{{ user.full_name if user else (form_data.full_name if form_data else '') }}" 
+        value="{{ form_data.full_name if form_data else '' }}" 
         required
       >
     </div>
@@ -60,12 +60,8 @@
   <div class="s30-form-group" style="margin-bottom: 22px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
       <label class="s30-form-label" for="email" style="margin-bottom: 0;">College Email / Gmail</label>
-      <span id="email-verified-badge" class="neo-badge {% if user and user.email_verified %}neo-badge-green{% else %}neo-badge-pink{% endif %}" style="font-size: 10px; padding: 2px 8px;">
-        {% if user and user.email_verified %}
-          ✓ EMAIL VERIFIED
-        {% else %}
-          ⚠️ EMAIL UNVERIFIED
-        {% endif %}
+      <span id="email-verified-badge" class="neo-badge neo-badge-pink" style="font-size: 10px; padding: 2px 8px;">
+        ⚠️ EMAIL UNVERIFIED
       </span>
     </div>
 
@@ -83,10 +79,9 @@
         name="email" 
         class="s30-input" 
         placeholder="you@college.edu or you@gmail.com" 
-        value="{{ user.email if user else (form_data.email if form_data else '') }}" 
+        value="{{ form_data.email if form_data else '' }}" 
         required
         oninput="handleEmailInput()"
-        {% if user and user.email_verified %}readonly style="background: #0f1a30; border-color: #34A853;"{% endif %}
       >
     </div>
 
@@ -100,7 +95,7 @@
         type="button" 
         id="btn-send-otp" 
         class="neo-btn neo-btn-cyan" 
-        style="padding: 9px 18px; font-size: 12px; {% if user and user.email_verified %}display: none;{% endif %}"
+        style="padding: 9px 18px; font-size: 12px;"
         onclick="sendVerificationOtp()"
       >
         <span>📨 SEND VERIFICATION CODE TO GMAIL</span>
@@ -172,7 +167,7 @@
             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
         </span>
-        {% set cur_gender = form_data.gender if (form_data and form_data.gender) else (user.gender if (user and user.gender) else '') %}
+        {% set cur_gender = form_data.gender if (form_data and form_data.gender) else '' %}
         <select id="gender" name="gender" class="s30-select" required>
           <option value="" {% if not cur_gender %}selected{% endif %} disabled hidden>Select Gender</option>
           <option value="Male" {% if cur_gender == 'Male' %}selected{% endif %}>Male</option>
@@ -193,7 +188,7 @@
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
         </span>
-        {% set cur_age = form_data.age if (form_data and form_data.age) else (user.age if (user and user.age) else '') %}
+        {% set cur_age = form_data.age if (form_data and form_data.age) else '' %}
         <input 
           type="number" 
           id="age" 
@@ -272,7 +267,7 @@
         name="school" 
         class="s30-input" 
         placeholder="e.g. Delhi University / Stanford / IIT Delhi" 
-        value="{{ user.school if user else (form_data.school if form_data else '') }}"
+        value="{{ form_data.school if form_data else '' }}"
         required
       >
     </div>
@@ -294,7 +289,7 @@
         name="coursework" 
         class="s30-input" 
         placeholder="e.g. B.Tech Computer Science" 
-        value="{{ user.coursework if user else (form_data.coursework if form_data else '') }}"
+        value="{{ form_data.coursework if form_data else '' }}"
         required
       >
     </div>
@@ -596,6 +591,12 @@
       if (!raw) return;
       const draft = JSON.parse(raw);
       if (!draft) return;
+
+      // Purge old demo data if present in localStorage
+      if (draft.full_name === 'Alex Rivera' || draft.email === 'alex.rivera@college.edu' || draft.school === 'Delhi University') {
+        localStorage.removeItem(DRAFT_STORAGE_KEY);
+        return;
+      }
 
       const fillVal = (id, val) => {
         const input = document.getElementById(id);

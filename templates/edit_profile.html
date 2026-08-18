@@ -100,6 +100,36 @@
       </div>
     </div>
 
+    <!-- Uploaded ID Cards & Verified Credentials Summary -->
+    <div style="margin-bottom: 26px;">
+      <div style="font-size: 12px; font-weight: 900; color: #38BDF8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">
+        ✦ UPLOADED ID CARDS & CERTIFICATE DOCUMENTS ({{ documents|length }})
+      </div>
+      {% if documents %}
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
+        {% for d in documents %}
+        <div style="background: #0c1322; border: 2px solid #1e293b; border-radius: 6px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+          <div style="min-width: 0;">
+            <div style="font-size: 11px; font-weight: 900; color: {% if d.doc_category == 'id_front' %}#00f0ff{% elif d.doc_category == 'id_back' %}#c084fc{% else %}#FFE600{% endif %}; text-transform: uppercase;">
+              {% if d.doc_category == 'id_front' %}🪪 ID Front Photo{% elif d.doc_category == 'id_back' %}🪪 ID Back Photo{% else %}📜 Certificate{% endif %}
+            </div>
+            <div style="font-size: 13px; font-weight: 800; color: #ffffff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px;" title="{{ d.original_name }}">
+              {{ d.original_name }}
+            </div>
+          </div>
+          <button type="button" class="neo-btn neo-btn-cyan" style="padding: 4px 10px; font-size: 11px; flex-shrink: 0;" onclick="openMediaPreview('{{ d.original_name }}', '/documents/view/{{ d.filename }}', '{{ d.doc_category }}', 'Verified Credential')">
+            <span>👁️ VIEW</span>
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="background: #0c1322; border: 1.5px dashed #334155; border-radius: 6px; padding: 14px; text-align: center; color: #94a3b8; font-size: 12.5px;">
+        No documents attached to profile yet.
+      </div>
+      {% endif %}
+    </div>
+
     <!-- Filled Skills & Live Project Proofs Summary -->
     <div>
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">

@@ -47,13 +47,18 @@
 
     <!-- Upload Box 1: College ID Card Front -->
     <div class="s30-form-group">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
         <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Front Side)</label>
-        {% if front_doc %}
-        <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
-        {% else %}
-        <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
-        {% endif %}
+        <div style="display: flex; gap: 6px; align-items: center;">
+          {% if front_doc %}
+          <button type="button" class="neo-btn neo-btn-cyan" style="padding: 3px 10px; font-size: 10.5px;" onclick="event.stopPropagation(); openMediaPreview('College ID Card (Front Side)', '/documents/view/{{ front_doc.filename }}', 'id_front', '{{ front_doc.original_name }}')">
+            <span>👁️ VIEW PHOTO</span>
+          </button>
+          <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
+          {% else %}
+          <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
+          {% endif %}
+        </div>
       </div>
       
       <div class="s30-upload-box" id="box-front" onclick="document.getElementById('file-front').click()">
@@ -79,13 +84,18 @@
 
     <!-- Upload Box 2: College ID Card Back -->
     <div class="s30-form-group">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
         <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Back Side)</label>
-        {% if back_doc %}
-        <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
-        {% else %}
-        <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
-        {% endif %}
+        <div style="display: flex; gap: 6px; align-items: center;">
+          {% if back_doc %}
+          <button type="button" class="neo-btn neo-btn-cyan" style="padding: 3px 10px; font-size: 10.5px;" onclick="event.stopPropagation(); openMediaPreview('College ID Card (Back Side)', '/documents/view/{{ back_doc.filename }}', 'id_back', '{{ back_doc.original_name }}')">
+            <span>👁️ VIEW PHOTO</span>
+          </button>
+          <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
+          {% else %}
+          <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
+          {% endif %}
+        </div>
       </div>
       
       <div class="s30-upload-box" id="box-back" onclick="document.getElementById('file-back').click()">
@@ -178,8 +188,17 @@
             </div>
           </div>
 
-          <!-- Admin Verification Status Badge -->
-          <div class="cert-item-actions">
+          <!-- Admin Verification Status Badge & Actions -->
+          <div class="cert-item-actions" style="display: flex; align-items: center; gap: 8px;">
+            <button 
+              type="button" 
+              class="neo-btn neo-btn-cyan" 
+              style="padding: 4px 10px; font-size: 11px;"
+              onclick="openMediaPreview('{{ cert.original_name }}', '/documents/view/{{ cert.filename }}', 'certificate', 'Uploaded {{ cert.uploaded_at[:10] if cert.uploaded_at else 'Just now' }}')"
+            >
+              <span>👁️ VIEW</span>
+            </button>
+
             {% if cert.review_status == 'APPROVED' %}
               <span class="badge-status badge-done">
                 ✓ Verified by Admin
@@ -437,7 +456,16 @@
                 </div>
               </div>
 
-              <div class="cert-item-actions">
+              <div class="cert-item-actions" style="display: flex; align-items: center; gap: 8px;">
+                <button 
+                  type="button" 
+                  class="neo-btn neo-btn-cyan" 
+                  style="padding: 4px 10px; font-size: 11px;"
+                  onclick="openMediaPreview('${escapeHtml(cert.original_name)}', '/documents/view/${cert.filename}', 'certificate', 'Uploaded just now')"
+                >
+                  <span>👁️ VIEW</span>
+                </button>
+
                 ${statusBadge}
 
                 <button 
