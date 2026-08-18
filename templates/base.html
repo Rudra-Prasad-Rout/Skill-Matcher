@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.5">
   <style>
     /* Material Design 3 Global Styles & 80% Screen Width Container */
     .s30-auth-wrapper {
@@ -22,13 +22,13 @@
     }
 
     .s30-auth-grid {
-      width: 80% !important;
-      max-width: 80vw !important;
+      width: 100% !important;
+      max-width: 620px !important;
       margin: 0 auto !important;
-      background: var(--md-sys-color-surface-container-low) !important;
-      border: 1px solid var(--md-sys-color-outline) !important;
-      border-radius: var(--md-shape-xl) !important;
-      box-shadow: var(--md-elevation-3) !important;
+      background: transparent !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
       box-sizing: border-box !important;
     }
 
@@ -58,13 +58,14 @@
       box-shadow: var(--md-elevation-0) !important;
     }
 
-    .neo-btn-yellow { background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; }
+    .neo-btn-yellow { background: var(--md-sys-color-primary) !important; color: #000000 !important; }
     .neo-btn-yellow:hover { background: var(--md-sys-color-primary-hover) !important; }
-    .neo-btn-cyan { background: var(--md-sys-color-secondary) !important; color: #000000 !important; }
-    .neo-btn-green { background: var(--md-sys-color-tertiary) !important; color: #000000 !important; }
-    .neo-btn-pink { background: var(--md-sys-color-error) !important; color: #ffffff !important; }
-    .neo-btn-white { background: #ffffff !important; color: #000000 !important; }
-    .neo-btn-dark { background: var(--md-sys-color-surface-container-highest) !important; color: #ffffff !important; }
+    .neo-btn-cyan, .neo-btn-blue { background: var(--md-sys-color-secondary) !important; color: #ffffff !important; }
+    .neo-btn-green { background: var(--md-sys-color-tertiary) !important; color: #ffffff !important; }
+    .neo-btn-amber { background: var(--md-sys-color-amber) !important; color: #ffffff !important; }
+    .neo-btn-pink, .neo-btn-red { background: var(--md-sys-color-error) !important; color: #ffffff !important; }
+    .neo-btn-white { background: #ffffff !important; color: #0f172a !important; border: 1px solid var(--md-sys-color-outline) !important; }
+    .neo-btn-dark { background: #0f172a !important; color: #ffffff !important; }
 
     .neo-badge {
       display: inline-flex !important;
@@ -77,12 +78,13 @@
       border-radius: var(--md-shape-sm) !important;
       line-height: 1.2 !important;
     }
-    .neo-badge-yellow { background: var(--md-sys-color-primary-container) !important; color: var(--md-sys-color-primary) !important; border: 1px solid rgba(251, 191, 36, 0.3) !important; }
-    .neo-badge-cyan { background: var(--md-sys-color-secondary-container) !important; color: var(--md-sys-color-secondary) !important; border: 1px solid rgba(56, 189, 248, 0.3) !important; }
-    .neo-badge-pink { background: var(--md-sys-color-error-container) !important; color: var(--md-sys-color-error) !important; border: 1px solid rgba(244, 63, 94, 0.3) !important; }
-    .neo-badge-green { background: var(--md-sys-color-tertiary-container) !important; color: var(--md-sys-color-tertiary) !important; border: 1px solid rgba(52, 211, 153, 0.3) !important; }
-    .neo-badge-purple { background: var(--md-sys-color-purple-container) !important; color: var(--md-sys-color-purple) !important; border: 1px solid rgba(168, 85, 247, 0.3) !important; }
-    .neo-badge-white { background: rgba(255, 255, 255, 0.1) !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; }
+    .neo-badge-yellow { background: rgba(245, 158, 11, 0.12) !important; color: #b45309 !important; border: 1px solid rgba(245, 158, 11, 0.28) !important; }
+    .neo-badge-cyan, .neo-badge-blue { background: rgba(37, 99, 235, 0.1) !important; color: #1d4ed8 !important; border: 1px solid rgba(37, 99, 235, 0.25) !important; }
+    .neo-badge-amber { background: rgba(217, 119, 6, 0.1) !important; color: #b45309 !important; border: 1px solid rgba(217, 119, 6, 0.25) !important; }
+    .neo-badge-green { background: rgba(22, 163, 74, 0.1) !important; color: #15803d !important; border: 1px solid rgba(22, 163, 74, 0.25) !important; }
+    .neo-badge-pink, .neo-badge-red { background: rgba(220, 38, 38, 0.1) !important; color: #b91c1c !important; border: 1px solid rgba(220, 38, 38, 0.25) !important; }
+    .neo-badge-purple { background: rgba(37, 99, 235, 0.1) !important; color: #1d4ed8 !important; border: 1px solid rgba(37, 99, 235, 0.25) !important; }
+    .neo-badge-white { background: #ffffff !important; color: #0f172a !important; border: 1px solid var(--md-sys-color-outline) !important; }
 
     /* Material Outlined Buttons */
     .s30-btn-outline, a.s30-btn-outline {
@@ -433,6 +435,81 @@
       position: relative !important;
       z-index: 2 !important;
     }
+
+    /* Enhanced Visible Floating Background */
+    .s30-ambient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      background: #f5f2eb;
+    }
+    .s30-bg-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background-image: 
+        linear-gradient(to right, rgba(40, 30, 20, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(40, 30, 20, 0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: s30GridDrift 25s linear infinite;
+    }
+    @keyframes s30GridDrift {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-60px, -60px, 0); }
+    }
+    .s30-bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      will-change: transform;
+      pointer-events: none;
+    }
+    .s30-bg-orb-1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(37, 99, 235, 0.06) 0%, rgba(37, 99, 235, 0.01) 55%, transparent 70%);
+      top: -100px;
+      left: -80px;
+      animation: s30OrbFloat1 18s ease-in-out infinite alternate;
+    }
+    .s30-bg-orb-2 {
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.06) 0%, rgba(245, 158, 11, 0.01) 55%, transparent 70%);
+      bottom: -80px;
+      right: -60px;
+      animation: s30OrbFloat2 22s ease-in-out infinite alternate;
+    }
+    .s30-bg-orb-3 {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(22, 163, 74, 0.05) 0%, rgba(22, 163, 74, 0.01) 55%, transparent 70%);
+      top: 40%;
+      left: 45%;
+      animation: s30OrbFloat3 16s ease-in-out infinite alternate;
+    }
+    @keyframes s30OrbFloat1 {
+      0% { transform: translate3d(0px, 0px, 0) scale(1); }
+      50% { transform: translate3d(140px, 90px, 0) scale(1.18); }
+      100% { transform: translate3d(70px, 180px, 0) scale(0.92); }
+    }
+    @keyframes s30OrbFloat2 {
+      0% { transform: translate3d(0px, 0px, 0) scale(1); }
+      50% { transform: translate3d(-120px, -140px, 0) scale(1.22); }
+      100% { transform: translate3d(-60px, -70px, 0) scale(0.88); }
+    }
+    @keyframes s30OrbFloat3 {
+      0% { transform: translate3d(-50%, -50%, 0) scale(0.9); }
+      50% { transform: translate3d(-35%, -65%, 0) scale(1.15); }
+      100% { transform: translate3d(-60%, -40%, 0) scale(1); }
+    }
   </style>
   {% block head %}{% endblock %}
 </head>
@@ -444,6 +521,7 @@
     <div class="s30-bg-orb s30-bg-orb-1"></div>
     <div class="s30-bg-orb s30-bg-orb-2"></div>
     <div class="s30-bg-orb s30-bg-orb-3"></div>
+    <canvas id="s30-floating-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
   </div>
 
   <!-- S30 Public Navbar Header -->
@@ -493,7 +571,7 @@
             </a>
           </div>
         {% elif request.endpoint in ['landing_page', 'login_page', 'signup_profile', 'signup_new'] %}
-          <a href="{{ url_for('login_page') }}" class="s30-btn-outline" style="border: 1px solid var(--md-sys-color-outline) !important; background: var(--md-sys-color-surface-container) !important; color: #ffffff !important; box-shadow: var(--md-elevation-1) !important; font-weight: 700 !important;">LOGIN</a>
+          <a href="{{ url_for('login_page') }}" class="s30-btn-outline" style="border: 1px solid var(--md-sys-color-outline) !important; background: var(--md-sys-color-surface) !important; color: #000000 !important; box-shadow: var(--md-elevation-1) !important; font-weight: 800 !important;">LOGIN</a>
           <a href="{{ url_for('signup_profile') }}" class="s30-btn-primary" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; border: none !important; box-shadow: var(--md-elevation-1) !important; font-weight: 800 !important;">GET STARTED</a>
         {% endif %}
       </div>
@@ -997,7 +1075,7 @@
         badgeEl.className = 'neo-badge neo-badge-cyan';
         badgeEl.textContent = '🪪 ID CARD (FRONT PHOTO)';
       } else if (category === 'id_back') {
-        badgeEl.className = 'neo-badge neo-badge-purple';
+        badgeEl.className = 'neo-badge neo-badge-cyan';
         badgeEl.textContent = '🪪 ID CARD (BACK PHOTO)';
       } else if (category === 'certificate') {
         badgeEl.className = 'neo-badge neo-badge-yellow';
@@ -1051,6 +1129,91 @@
         closeMediaPreview();
       }
     });
+
+    /* S30 Ambient Floating Particle & Constellation Canvas Engine */
+    (function initFloatingCanvas() {
+      const canvas = document.getElementById('s30-floating-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      let width = canvas.width = window.innerWidth;
+      let height = canvas.height = window.innerHeight;
+
+      window.addEventListener('resize', function() {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+      });
+
+      const colors = ['#2563eb', '#f59e0b', '#16a34a', '#d97706', '#94a3b8'];
+      const particles = [];
+      const PARTICLE_COUNT = Math.min(45, Math.floor(window.innerWidth / 30));
+
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 2.2 + 1,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45,
+          alpha: Math.random() * 0.5 + 0.2,
+          pulseSpeed: Math.random() * 0.02 + 0.01,
+          pulseAngle: Math.random() * Math.PI * 2
+        });
+      }
+
+      function render() {
+        ctx.clearRect(0, 0, width, height);
+
+        // Draw connections between nearby floating particles
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 130) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / 130) * 0.15})`;
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+          }
+        }
+
+        // Draw and update each floating particle
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+
+          p.pulseAngle += p.pulseSpeed;
+          const currentAlpha = p.alpha + Math.sin(p.pulseAngle) * 0.2;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = Math.max(0.1, Math.min(0.85, currentAlpha));
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = p.color;
+          ctx.fill();
+          ctx.restore();
+        }
+
+        requestAnimationFrame(render);
+      }
+
+      requestAnimationFrame(render);
+    })();
   </script>
 
   {% block scripts %}{% endblock %}

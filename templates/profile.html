@@ -16,7 +16,7 @@
   <h1 class="s30-form-title">Create your account</h1>
   <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
     <p class="s30-form-subtitle" style="margin-bottom: 0;">Join S30 and start your journey to verified career opportunities.</p>
-    <span id="draft-status-badge" class="neo-badge neo-badge-cyan" style="font-size: 9.5px; padding: 2px 8px; display: none;">
+    <span id="draft-status-badge" class="neo-badge neo-badge-yellow" style="font-size: 9.5px; padding: 2px 8px; display: none;">
       💾 PROGRESS AUTO-SAVED
     </span>
   </div>
@@ -113,21 +113,21 @@
       <button 
         type="button" 
         id="btn-send-otp" 
-        class="neo-btn neo-btn-cyan" 
-        style="padding: 9px 18px; font-size: 12px;"
+        class="neo-btn" 
+        style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 10px 20px; font-size: 13px; font-weight: 800; border-radius: var(--md-shape-md);"
         onclick="sendVerificationOtp()"
       >
         <span>📨 SEND VERIFICATION CODE TO GMAIL</span>
       </button>
-      <span style="font-size: 11px; color: #94a3b8; font-weight: 500;">
+      <span style="font-size: 12px; color: var(--s30-text-secondary); font-weight: 500;">
         ⚡ Instant 6-digit code for account security
       </span>
     </div>
 
     <!-- Live OTP Verification Card (Down Below) -->
-    <div id="otp-verification-box" style="display: none; margin-top: 12px; background: #0c1322; border: 2px solid #38BDF8; border-radius: 8px; padding: 18px; box-shadow: 4px 4px 0px #38BDF8;">
+    <div id="otp-verification-box" style="display: none; margin-top: 14px; background: var(--md-sys-color-surface); border: 2px solid var(--md-sys-color-primary); border-radius: var(--md-shape-md); padding: 18px; box-shadow: var(--md-elevation-2);">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
-        <span style="font-size: 12px; font-weight: 800; color: #38BDF8; text-transform: uppercase;">
+        <span style="font-size: 12.5px; font-weight: 800; color: var(--md-sys-color-primary); text-transform: uppercase; letter-spacing: 0.04em;">
           📩 ENTER 6-DIGIT VERIFICATION CODE FROM GMAIL
         </span>
         <span id="otp-status-badge" class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 6px;">
@@ -135,8 +135,8 @@
         </span>
       </div>
       
-      <p style="font-size: 12.5px; color: #cbd5e1; margin-bottom: 14px; line-height: 1.5;">
-        A 6-digit security verification code has been dispatched to <strong id="otp-target-email" style="color: #D9A726;">your email</strong>. Please open your <strong>Google Gmail</strong> inbox (or Spam/Promotions folder) and enter the code below:
+      <p style="font-size: 13px; color: var(--s30-text-secondary); margin-bottom: 14px; line-height: 1.5;">
+        A 6-digit security verification code has been dispatched to <strong id="otp-target-email" style="color: var(--md-sys-color-primary);">your email</strong>. Please open your <strong>Google Gmail</strong> inbox (or Spam/Promotions folder) and enter the code below:
       </p>
 
       <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
@@ -147,14 +147,14 @@
           maxlength="6" 
           placeholder="000000" 
           class="s30-input" 
-          style="letter-spacing: 6px; font-size: 18px; font-weight: 900; font-family: monospace; text-align: center; max-width: 160px; border: 2px solid #D9A726;"
+          style="letter-spacing: 6px; font-size: 18px; font-weight: 900; font-family: monospace; text-align: center; max-width: 160px; border: 2px solid var(--md-sys-color-primary); background: #ffffff; color: var(--s30-text-primary);"
         >
         <button 
           type="button" 
           id="btn-verify-otp" 
           onclick="verifyEmailOtp()" 
-          class="neo-btn neo-btn-yellow" 
-          style="padding: 10px 18px; font-size: 12px;"
+          class="neo-btn" 
+          style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 10px 18px; font-size: 12.5px; font-weight: 800;"
         >
           <span>✓ VERIFY CODE</span>
         </button>
@@ -163,13 +163,13 @@
           id="btn-resend-otp" 
           onclick="sendVerificationOtp()" 
           class="neo-btn neo-btn-white" 
-          style="padding: 10px 14px; font-size: 11px;"
+          style="padding: 10px 14px; font-size: 11px; border: 1px solid var(--md-sys-color-outline); color: var(--s30-text-primary);"
         >
           <span>🔄 Resend Code</span>
         </button>
       </div>
 
-      <div id="otp-feedback-msg" style="display: none; font-size: 11.5px; margin-top: 10px; font-weight: 700;"></div>
+      <div id="otp-feedback-msg" style="display: none; font-size: 12px; margin-top: 10px; font-weight: 700;"></div>
     </div>
   </div>
 
@@ -337,8 +337,8 @@
     </button>
   </div>
 
-  <div style="text-align: center; font-size: 13px; color: var(--s30-text-secondary); margin-top: 18px;">
-    Already have an account? <a href="{{ url_for('login_page') }}" style="color: var(--s30-accent-cyan); font-weight: 600; text-decoration: none;">Login</a>
+  <div style="text-align: center; font-size: 13.5px; color: var(--s30-text-secondary); font-weight: 500; border-top: 1px dashed var(--md-sys-color-outline); padding-top: 18px; margin-top: 18px;">
+    Already have an account? <a href="{{ url_for('login_page') }}" style="color: var(--md-sys-color-primary); font-weight: 700; text-decoration: underline; margin-left: 6px;">Log in &rarr;</a>
   </div>
 </form>
 

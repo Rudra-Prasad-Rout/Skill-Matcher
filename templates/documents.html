@@ -51,7 +51,7 @@
         <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Front Side)</label>
         <div style="display: flex; gap: 6px; align-items: center;">
           {% if front_doc %}
-          <button type="button" class="neo-btn neo-btn-cyan" style="padding: 3px 10px; font-size: 10.5px;" onclick="event.stopPropagation(); openMediaPreview('College ID Card (Front Side)', '/documents/view/{{ front_doc.filename }}', 'id_front', '{{ front_doc.original_name }}')">
+          <button type="button" class="neo-btn" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: var(--md-shape-sm);" onclick="event.stopPropagation(); openMediaPreview('College ID Card (Front Side)', '/documents/view/{{ front_doc.filename }}', 'id_front', '{{ front_doc.original_name }}')">
             <span>👁️ VIEW PHOTO</span>
           </button>
           <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
@@ -72,7 +72,7 @@
         </div>
         <div class="s30-upload-title" id="title-front">
           {% if front_doc %}
-            <span style="color: #34d399;">✓ {{ front_doc.original_name }}</span> <span style="font-size: 11px; color: var(--s30-text-muted);">(Click to replace)</span>
+            <span style="color: var(--md-sys-color-tertiary); font-weight: 800;">✓ {{ front_doc.original_name }}</span> <span style="font-size: 11.5px; color: var(--s30-text-secondary);">(Click to replace)</span>
           {% else %}
             Click to upload ID Card (Front)
           {% endif %}
@@ -88,7 +88,7 @@
         <label class="s30-form-label" style="margin-bottom: 0;">College ID Card (Back Side)</label>
         <div style="display: flex; gap: 6px; align-items: center;">
           {% if back_doc %}
-          <button type="button" class="neo-btn neo-btn-cyan" style="padding: 3px 10px; font-size: 10.5px;" onclick="event.stopPropagation(); openMediaPreview('College ID Card (Back Side)', '/documents/view/{{ back_doc.filename }}', 'id_back', '{{ back_doc.original_name }}')">
+          <button type="button" class="neo-btn" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: var(--md-shape-sm);" onclick="event.stopPropagation(); openMediaPreview('College ID Card (Back Side)', '/documents/view/{{ back_doc.filename }}', 'id_back', '{{ back_doc.original_name }}')">
             <span>👁️ VIEW PHOTO</span>
           </button>
           <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
@@ -108,7 +108,7 @@
         </div>
         <div class="s30-upload-title" id="title-back">
           {% if back_doc %}
-            <span style="color: #34d399;">✓ {{ back_doc.original_name }}</span> <span style="font-size: 11px; color: var(--s30-text-muted);">(Click to replace)</span>
+            <span style="color: var(--md-sys-color-tertiary); font-weight: 800;">✓ {{ back_doc.original_name }}</span> <span style="font-size: 11.5px; color: var(--s30-text-secondary);">(Click to replace)</span>
           {% else %}
             Click to upload ID Card (Back)
           {% endif %}
@@ -119,16 +119,16 @@
     </div>
   </div>
 
-  <!-- ================= PART 2: MULTI-CERTIFICATE SECTION (NEO-BRUTALISM) ================= -->
-  <div style="background: #0c1322; border: 2.5px solid #38BDF8; border-radius: 8px; padding: 24px; margin-bottom: 26px; box-shadow: 6px 6px 0px #38BDF8;">
+  <!-- ================= PART 2: MULTI-CERTIFICATE SECTION ================= -->
+  <div style="background: var(--md-sys-color-surface); border: 1.5px solid var(--md-sys-color-outline); border-radius: var(--md-shape-md); padding: 24px; margin-bottom: 26px; box-shadow: var(--md-elevation-1);">
     
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 8px;">
       <div>
-        <div style="font-size: 15px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.04em;">
+        <div style="font-size: 15px; font-weight: 800; color: var(--s30-text-primary); display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.04em;">
           <span>📜</span>
           <span>Academic & Skill Certificates</span>
         </div>
-        <div style="font-size: 12.5px; color: #cbd5e1; margin-top: 3px; font-weight: 600;">
+        <div style="font-size: 12.5px; color: var(--s30-text-secondary); margin-top: 3px; font-weight: 500;">
           Add multiple certificates (Degrees, Coursera/edX, Hackathons, Internships, etc.)
         </div>
       </div>
@@ -138,18 +138,18 @@
     </div>
 
     <!-- Add Certificate Upload Box (Direct Photo / File Upload) -->
-    <div style="background: #090f1d; border: 2.5px dashed #D9A726; border-radius: 6px; padding: 24px; text-align: center; margin-bottom: 18px; cursor: pointer; transition: all 0.2s ease; box-shadow: 4px 4px 0px #D9A726;" onclick="document.getElementById('new-cert-file').click()" ondragover="event.preventDefault();" ondrop="handleCertDrop(event)">
-      <div style="width: 44px; height: 44px; margin: 0 auto 10px auto; border-radius: 6px; background: #D9A726; border: 2px solid #000000; display: flex; align-items: center; justify-content: center; color: #000000; box-shadow: 2px 2px 0px #000000;">
+    <div style="background: var(--md-sys-color-surface-container-low); border: 2px dashed var(--md-sys-color-primary); border-radius: var(--md-shape-md); padding: 24px; text-align: center; margin-bottom: 18px; cursor: pointer; transition: all 0.2s ease;" onclick="document.getElementById('new-cert-file').click()" ondragover="event.preventDefault();" ondrop="handleCertDrop(event)">
+      <div style="width: 44px; height: 44px; margin: 0 auto 10px auto; border-radius: var(--md-shape-sm); background: var(--md-sys-color-primary); display: flex; align-items: center; justify-content: center; color: var(--md-sys-color-on-primary);">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 22px; height: 22px;">
           <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
           <circle cx="9" cy="9" r="2"></circle>
           <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
         </svg>
       </div>
-      <div style="font-size: 14.5px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.04em;" id="cert-upload-main-text">
+      <div style="font-size: 14px; font-weight: 800; color: var(--s30-text-primary); text-transform: uppercase; letter-spacing: 0.04em;" id="cert-upload-main-text">
         + CLICK TO UPLOAD CERTIFICATE PHOTO / DOCUMENT
       </div>
-      <div style="font-size: 12px; color: #cbd5e1; margin-top: 4px; font-weight: 600;">
+      <div style="font-size: 12px; color: var(--s30-text-secondary); margin-top: 4px; font-weight: 500;">
         Supports JPG, PNG, WEBP, PDF (Select one or multiple files)
       </div>
 
@@ -192,8 +192,8 @@
           <div class="cert-item-actions" style="display: flex; align-items: center; gap: 8px;">
             <button 
               type="button" 
-              class="neo-btn neo-btn-cyan" 
-              style="padding: 4px 10px; font-size: 11px;"
+              class="neo-btn" 
+              style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: var(--md-shape-sm);"
               onclick="openMediaPreview('{{ cert.original_name }}', '/documents/view/{{ cert.filename }}', 'certificate', 'Uploaded {{ cert.uploaded_at[:10] if cert.uploaded_at else 'Just now' }}')"
             >
               <span>👁️ VIEW</span>
@@ -257,12 +257,12 @@
     if (input.files && input.files[0]) {
       const file = input.files[0];
       const el = document.getElementById(labelId);
-      el.innerHTML = `<span style="color: #34d399; font-weight: 800;">✓ ${file.name}</span> <span style="font-size: 11px; color: #94a3b8;">(${(file.size/1024/1024).toFixed(2)} MB)</span>`;
+      el.innerHTML = `<span style="color: var(--md-sys-color-tertiary); font-weight: 800;">✓ ${file.name}</span> <span style="font-size: 11.5px; color: var(--s30-text-secondary);">(${(file.size/1024/1024).toFixed(2)} MB)</span>`;
       if (boxId) {
         const box = document.getElementById(boxId);
         if (box) {
-          box.style.borderColor = '#34A853';
-          box.style.boxShadow = '3px 3px 0px #34A853';
+          box.style.borderColor = 'var(--md-sys-color-tertiary)';
+          box.style.boxShadow = 'var(--md-elevation-1)';
         }
       }
     }
@@ -449,7 +449,7 @@
                   <div class="cert-item-meta">
                     <span>${sizeKb} KB</span>
                     <span>•</span>
-                    <a href="/documents/view/${cert.filename}" target="_blank" style="color: var(--s30-accent-cyan); text-decoration: underline;">
+                    <a href="/documents/view/${cert.filename}" target="_blank" style="color: var(--md-sys-color-primary); font-weight: 600; text-decoration: underline;">
                       View Document ↗
                     </a>
                   </div>
@@ -459,8 +459,8 @@
               <div class="cert-item-actions" style="display: flex; align-items: center; gap: 8px;">
                 <button 
                   type="button" 
-                  class="neo-btn neo-btn-cyan" 
-                  style="padding: 4px 10px; font-size: 11px;"
+                  class="neo-btn" 
+                  style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: var(--md-shape-sm);"
                   onclick="openMediaPreview('${escapeHtml(cert.original_name)}', '/documents/view/${cert.filename}', 'certificate', 'Uploaded just now')"
                 >
                   <span>👁️ VIEW</span>

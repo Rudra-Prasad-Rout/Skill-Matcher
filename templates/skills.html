@@ -41,13 +41,13 @@
 <div id="skills-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
   {% if skills and skills|length > 0 %}
     {% for skill in skills %}
-    <div style="background: #090f1d; border: 2px solid #38BDF8; border-radius: 6px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; box-shadow: 3.5px 3.5px 0px #38BDF8; box-sizing: border-box; overflow: hidden;">
+    <div style="background: var(--md-sys-color-surface); border: 1.5px solid var(--md-sys-color-outline); border-radius: var(--md-shape-md); padding: 12px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; box-shadow: var(--md-elevation-1); box-sizing: border-box; overflow: hidden;">
       <div style="min-width: 0; flex: 1 1 auto; word-break: break-word; overflow-wrap: break-word;">
-        <div style="font-size: 14px; font-weight: 800; color: #ffffff; line-height: 1.35; word-break: break-word; overflow-wrap: break-word;">
-          {{ skill.skill_name }} <span style="font-weight: 600; color: #D9A726;">— {{ skill.project_name }}</span>
+        <div style="font-size: 14px; font-weight: 800; color: var(--s30-text-primary); line-height: 1.35; word-break: break-word; overflow-wrap: break-word;">
+          {{ skill.skill_name }} <span style="font-weight: 600; color: var(--md-sys-color-primary);">— {{ skill.project_name }}</span>
         </div>
         {% if skill.project_url %}
-        <a href="{{ skill.project_url }}" target="_blank" style="font-size: 12px; color: #38BDF8; font-weight: 700; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; word-break: break-all; overflow-wrap: anywhere;">
+        <a href="{{ skill.project_url }}" target="_blank" style="font-size: 12px; color: var(--md-sys-color-secondary); font-weight: 700; text-decoration: underline; display: inline-flex; align-items: center; gap: 4px; margin-top: 4px; word-break: break-all; overflow-wrap: anywhere;">
           🔗 {{ skill.project_url }}
         </a>
         {% endif %}
@@ -57,24 +57,24 @@
         <span class="badge-status {% if skill.status == 'VERIFIED' %}badge-verified{% elif skill.status == 'REJECTED' %}badge-rejected{% else %}badge-checking{% endif %}">
           {{ skill.status }}
         </span>
-        <button type="button" onclick="deleteSkill({{ skill.id }})" title="Remove skill" style="background: #000; border: 1.5px solid #E0536C; color: #E0536C; border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 13px; padding: 2px 7px; box-shadow: 2px 2px 0px #E0536C;">✕</button>
+        <button type="button" onclick="deleteSkill({{ skill.id }})" title="Remove skill" style="background: transparent; border: 1.5px solid var(--md-sys-color-error); color: var(--md-sys-color-error); border-radius: 4px; font-weight: 900; cursor: pointer; font-size: 13px; padding: 2px 7px;">✕</button>
       </div>
     </div>
     {% endfor %}
   {% else %}
-    <div style="background: #090f1d; border: 2px dashed #E0536C; border-radius: 6px; padding: 20px; text-align: center; color: #cbd5e1; font-size: 13px; font-weight: 600;">
+    <div style="background: var(--md-sys-color-surface); border: 1.5px dashed var(--md-sys-color-outline); border-radius: var(--md-shape-md); padding: 20px; text-align: center; color: var(--s30-text-secondary); font-size: 13px; font-weight: 600;">
       <div style="font-size: 24px; margin-bottom: 6px;">⚡</div>
-      <strong style="color: #D9A726; text-transform: uppercase;">No technical skills added yet</strong><br>
-      <span style="font-size: 12px; color: #94a3b8; display: inline-block; margin-top: 4px;">
-        You must add at least <span style="color: #E0536C; font-weight: 800;">1 skill & project proof</span> below to unlock Step 3.
+      <strong style="color: var(--md-sys-color-primary); text-transform: uppercase;">No technical skills added yet</strong><br>
+      <span style="font-size: 12.5px; color: var(--s30-text-secondary); display: inline-block; margin-top: 4px;">
+        You must add at least <span style="color: var(--md-sys-color-error); font-weight: 800;">1 skill & project proof</span> below to unlock Step 3.
       </span>
     </div>
   {% endif %}
 </div>
 
-<!-- Add Skill Form Box with Neo-Brutalist Finish -->
-<div style="background: #0c1322; border: 2.5px dashed #D9A726; border-radius: 6px; padding: 22px; margin-bottom: 24px; box-shadow: 4px 4px 0px #D9A726;">
-  <div style="font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #D9A726; margin-bottom: 14px;">+ ADD TECHNICAL SKILL & PROJECT PROOF</div>
+<!-- Add Skill Form Box with Clean Warm Surface -->
+<div style="background: var(--md-sys-color-surface); border: 2px solid var(--md-sys-color-primary); border-radius: var(--md-shape-md); padding: 22px; margin-bottom: 24px; box-shadow: var(--md-elevation-1);">
+  <div style="font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: var(--md-sys-color-primary); margin-bottom: 14px;">+ ADD TECHNICAL SKILL & PROJECT PROOF</div>
   
   <div class="s30-form-grid-2">
     <div class="s30-form-group">
@@ -98,7 +98,7 @@
     </div>
   </div>
 
-  <button type="button" id="btn-add-skill" class="neo-btn neo-btn-cyan" onclick="addSkill()" style="width: 100%; padding: 11px; font-size: 12.5px;">
+  <button type="button" id="btn-add-skill" class="neo-btn" onclick="addSkill()" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; width: 100%; padding: 12px; font-size: 13px; font-weight: 800; border-radius: var(--md-shape-md);">
     <span>+ ADD SKILL TO PROFILE</span>
   </button>
 </div>

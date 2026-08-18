@@ -115,13 +115,13 @@
   </div>
 
   <!-- Remember Me Checkbox -->
-  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px; font-size: 12.5px; color: #cbd5e1; font-weight: 600;">
-    <input type="checkbox" id="remember_me" name="remember_me" style="accent-color: #D9A726; cursor: pointer; width: 16px; height: 16px;" checked>
-    <label for="remember_me" style="cursor: pointer;">Remember me on this device</label>
+  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px; font-size: 13.5px; color: var(--s30-text-secondary); font-weight: 500;">
+    <input type="checkbox" id="remember_me" name="remember_me" style="accent-color: var(--md-sys-color-primary); cursor: pointer; width: 16px; height: 16px;" checked>
+    <label for="remember_me" style="cursor: pointer; color: var(--s30-text-secondary);">Remember me on this device</label>
   </div>
 
   <!-- Submit Action Button -->
-  <button type="submit" class="neo-btn neo-btn-cyan" style="width: 100%; height: 46px; font-size: 14px; margin-bottom: 16px; justify-content: center; box-sizing: border-box;">
+  <button type="submit" class="neo-btn" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; width: 100%; height: 48px; font-size: 14px; margin-bottom: 16px; justify-content: center; box-sizing: border-box; font-weight: 800; border-radius: var(--md-shape-md);">
     <span>LOG IN WITH PASSWORD &rarr;</span>
   </button>
 </form>
@@ -154,17 +154,17 @@
       type="button" 
       id="btn-send-login-otp" 
       onclick="sendLoginOtp()" 
-      class="neo-btn neo-btn-cyan" 
-      style="width: 100%; height: 46px; font-size: 13.5px; justify-content: center; box-sizing: border-box;"
+      class="neo-btn" 
+      style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; width: 100%; height: 48px; font-size: 13.5px; justify-content: center; box-sizing: border-box; font-weight: 800; border-radius: var(--md-shape-md);"
     >
       <span>📨 SEND LOGIN CODE TO GMAIL</span>
     </button>
   </div>
 
   <!-- OTP Verification Card (Expands when Code is Sent) -->
-  <div id="otp-login-box" style="display: none; background: #0c1322; border: 2.5px solid #38BDF8; border-radius: 8px; padding: 18px; box-shadow: 4px 4px 0px #38BDF8; margin-bottom: 20px;">
+  <div id="otp-login-box" style="display: none; background: var(--md-sys-color-surface); border: 2px solid var(--md-sys-color-primary); border-radius: var(--md-shape-md); padding: 18px; box-shadow: var(--md-elevation-2); margin-bottom: 20px;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
-      <span style="font-size: 12px; font-weight: 900; color: #38BDF8; text-transform: uppercase;">
+      <span style="font-size: 12.5px; font-weight: 800; color: var(--md-sys-color-primary); text-transform: uppercase; letter-spacing: 0.04em;">
         📩 ENTER 6-DIGIT VERIFICATION CODE
       </span>
       <span class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 6px;">
@@ -172,8 +172,8 @@
       </span>
     </div>
 
-    <p style="font-size: 12.5px; color: #cbd5e1; margin-bottom: 14px; line-height: 1.5;">
-      A 6-digit security login code has been sent to <strong id="otp-login-target-email" style="color: #D9A726;">your email</strong>. Please open your <strong>Google Gmail</strong> inbox and enter the code:
+    <p style="font-size: 13px; color: var(--s30-text-secondary); margin-bottom: 14px; line-height: 1.5;">
+      A 6-digit security login code has been sent to <strong id="otp-login-target-email" style="color: var(--md-sys-color-primary);">your email</strong>. Please open your <strong>Google Gmail</strong> inbox and enter the code:
     </p>
 
     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
@@ -183,14 +183,14 @@
         maxlength="6" 
         placeholder="000000" 
         class="s30-input" 
-        style="letter-spacing: 6px; font-size: 18px; font-weight: 900; font-family: monospace; text-align: center; max-width: 150px; border: 2px solid #D9A726;"
+        style="letter-spacing: 6px; font-size: 18px; font-weight: 900; font-family: monospace; text-align: center; max-width: 150px; border: 2px solid var(--md-sys-color-primary); background: #ffffff; color: var(--s30-text-primary);"
       >
       <button 
         type="button" 
         id="btn-verify-login-otp" 
         onclick="verifyLoginOtp()" 
-        class="neo-btn neo-btn-yellow" 
-        style="padding: 10px 18px; font-size: 12.5px; flex: 1;"
+        class="neo-btn" 
+        style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 10px 18px; font-size: 12.5px; flex: 1; font-weight: 800; border-radius: var(--md-shape-md);"
       >
         <span>✓ VERIFY & LOG IN &rarr;</span>
       </button>
@@ -201,19 +201,19 @@
         type="button" 
         onclick="sendLoginOtp()" 
         class="neo-btn neo-btn-white" 
-        style="padding: 6px 12px; font-size: 10.5px;"
+        style="padding: 6px 12px; font-size: 11px; border: 1px solid var(--md-sys-color-outline); color: var(--s30-text-primary);"
       >
         <span>🔄 Resend Code</span>
       </button>
-      <div id="otp-login-msg" style="font-size: 11.5px; font-weight: 700;"></div>
+      <div id="otp-login-msg" style="font-size: 12px; font-weight: 700;"></div>
     </div>
   </div>
 </div>
 
 <!-- Bottom Switch link -->
-<div style="text-align: center; font-size: 13.5px; color: #cbd5e1; font-weight: 600; border-top: 2px dashed rgba(255,255,255,0.15); padding-top: 18px; margin-top: 14px;">
-  Don't have an account? 
-  <a href="{{ url_for('signup_profile') }}" style="color: #38BDF8; font-weight: 800; text-decoration: underline; margin-left: 4px;">
+<div style="text-align: center; font-size: 13.5px; color: var(--s30-text-secondary); font-weight: 500; border-top: 1px dashed var(--md-sys-color-outline); padding-top: 18px; margin-top: 16px;">
+  <span>Don't have an account?</span> 
+  <a href="{{ url_for('signup_profile') }}" style="color: var(--md-sys-color-primary); font-weight: 700; text-decoration: underline; margin-left: 6px;">
     Create an account &rarr;
   </a>
 </div>

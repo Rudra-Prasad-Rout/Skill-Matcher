@@ -140,20 +140,20 @@
 
   /* Skills Pills Grid */
   .skill-pill-card {
-    background: #0c1322;
-    border: 2px solid #1e293b;
-    border-radius: 8px;
+    background: var(--md-sys-color-surface-container);
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-shape-sm);
     padding: 14px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
-    transition: all 0.15s ease;
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
   }
   .skill-pill-card:hover {
-    border-color: #FFE600;
-    box-shadow: 3px 3px 0px #FFE600;
-    background: #101a2f;
+    border-color: var(--md-sys-color-primary);
+    box-shadow: var(--md-elevation-2);
+    background: var(--md-sys-color-surface-container-high);
   }
 
   /* Stepper Bar */
@@ -205,7 +205,7 @@
                 ⏳ VERIFICATION IN PROGRESS
               </span>
             {% endif %}
-            <span class="neo-badge neo-badge-purple" style="font-size: 11px;">
+            <span class="neo-badge neo-badge-amber" style="font-size: 11px;">
               STEP {{ user.step or 4 }}/5 ACTIVE
             </span>
           </div>
@@ -492,7 +492,7 @@
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 10px;">
-          <a href="{{ url_for('signup_profile') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+          <a href="{{ url_for('signup_profile') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <span class="neo-badge neo-badge-yellow" style="font-size: 10px;">1</span>
               <strong style="font-size: 13px;">Profile Information</strong>
@@ -500,7 +500,7 @@
             <span class="neo-badge neo-badge-green" style="font-size: 9px;">DONE</span>
           </a>
 
-          <a href="{{ url_for('signup_skills') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+          <a href="{{ url_for('signup_skills') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <span class="neo-badge neo-badge-cyan" style="font-size: 10px;">2</span>
               <strong style="font-size: 13px;">Skills & GitHub Proofs</strong>
@@ -510,7 +510,7 @@
             </span>
           </a>
 
-          <a href="{{ url_for('signup_documents') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+          <a href="{{ url_for('signup_documents') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <span class="neo-badge neo-badge-green" style="font-size: 10px;">3</span>
               <strong style="font-size: 13px;">College ID & Docs</strong>
@@ -520,15 +520,15 @@
             </span>
           </a>
 
-          <a href="{{ url_for('signup_analysis') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+          <a href="{{ url_for('signup_analysis') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
             <div style="display: flex; align-items: center; gap: 10px;">
-              <span class="neo-badge neo-badge-purple" style="font-size: 10px;">4</span>
+              <span class="neo-badge neo-badge-cyan" style="font-size: 10px;">4</span>
               <strong style="font-size: 13px;">AI Analysis & Radar</strong>
             </div>
             <span class="neo-badge neo-badge-cyan" style="font-size: 9px;">{{ overall_score or 94 }}% FIT</span>
           </a>
 
-          <a href="{{ url_for('signup_verification') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
+          <a href="{{ url_for('signup_verification') }}" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; color: #ffffff; text-decoration: none;">
             <div style="display: flex; align-items: center; gap: 10px;">
               <span class="neo-badge neo-badge-pink" style="font-size: 10px;">5</span>
               <strong style="font-size: 13px;">Passport & Status</strong>
@@ -560,30 +560,30 @@
 
         {% if my_team %}
           <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
               <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">YOUR SQUAD ROLE</span>
               <span class="neo-badge {% if my_team_role == 'LEADER' %}neo-badge-yellow{% else %}neo-badge-green{% endif %}" style="font-size: 10px;">
                 {% if my_team_role == 'LEADER' %}👑 SQUAD CREATOR &amp; LEADER{% else %}✓ JOINED SQUAD MEMBER{% endif %}
               </span>
             </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
               <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">SQUAD CODE</span>
               <code style="color: #FFE600; font-size: 13px; font-weight: 900;">{{ my_team.team_code }}</code>
             </div>
             {% if my_team.theme %}
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
               <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">FOCUS</span>
               <span style="font-size: 12px; color: #cbd5e1; font-weight: 700; text-align: right; max-width: 150px;">{{ my_team.theme }}</span>
             </div>
             {% endif %}
             {% if my_team.member_count is defined %}
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
               <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">MEMBERS</span>
               <span style="font-size: 13px; font-weight: 900; font-family: monospace; color: #22c55e;">{{ my_team.member_count }} / {{ my_team.team_size }}</span>
             </div>
             {% endif %}
             {% if my_team_role != 'LEADER' and my_team.leader_name %}
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; background: var(--md-sys-color-surface-container); border: 1.5px solid #1e293b; border-radius: 6px; padding: 9px 12px;">
               <span style="font-size: 12px; color: #94a3b8; font-weight: 700;">SQUAD LEADER</span>
               <span style="font-size: 12px; color: #ffffff; font-weight: 800;">{{ my_team.leader_name }} <code style="color: #FFE600; font-size: 10px;">({{ my_team.leader_code }})</code></span>
             </div>
@@ -628,14 +628,14 @@
 
           <div style="display: flex; flex-direction: column; gap: 12px;">
             {% for peer in team_matches[:3] %}
-              <div style="background: #0c1322; border: 1.5px solid #1e293b; border-radius: 8px; padding: 14px;">
+              <div style="background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline); border-radius: 8px; padding: 14px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <strong style="font-size: 14px; color: #ffffff;">{{ peer.full_name }}</strong>
+                  <strong style="font-size: 14px; color: var(--s30-text-primary);">{{ peer.full_name }}</strong>
                   <span class="neo-badge neo-badge-yellow" style="font-size: 11px;">
                     {{ peer.synergy_percentage }}% SYNERGY
                   </span>
                 </div>
-                <div style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">
+                <div style="font-size: 12px; color: var(--s30-text-secondary); margin-bottom: 8px;">
                   {{ peer.role_label }} • {{ peer.school }}
                 </div>
                 <div style="display: flex; flex-wrap: wrap; gap: 4px;">
