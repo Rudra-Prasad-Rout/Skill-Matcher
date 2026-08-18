@@ -8,19 +8,19 @@
   <!-- Header & Back Action -->
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 14px;">
     <div>
-      <div style="margin-bottom: 6px;">
-        <span class="neo-badge neo-badge-pink">👥 SQUAD MATRIX &amp; TEAM FORMATION</span>
+      <div style="margin-bottom: 8px;">
+        <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.25);">👥 SQUAD MATRIX &amp; TEAM FORMATION</span>
       </div>
-      <h1 style="font-size: 28px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.02em; margin: 0;">
+      <h1 style="font-size: 30px; font-weight: 900; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: -0.02em; margin: 0;">
         Create Your Hackathon Squad
       </h1>
-      <p style="font-size: 14px; color: #cbd5e1; margin-top: 4px; font-weight: 500;">
+      <p style="font-size: 14.5px; color: var(--s30-text-secondary, #57534e); margin-top: 4px; font-weight: 500;">
         Configure your team parameters, set squad size, and recruit verified peer developers.
       </p>
     </div>
 
     <div>
-      <a href="{{ url_for('candidate_home') }}" class="neo-btn neo-btn-cyan" style="padding: 10px 18px !important; font-size: 12.5px !important;">
+      <a href="{{ url_for('candidate_home') }}" class="neo-btn" style="background: #ffffff !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important; padding: 10px 18px !important; font-size: 13px !important;">
         <span>&larr; BACK TO DASHBOARD</span>
       </a>
     </div>
@@ -31,37 +31,37 @@
 
   <!-- Error Alert -->
   {% if error %}
-  <div style="background: rgba(255, 42, 133, 0.15); border: 2.5px solid #ff2a85; box-shadow: 4px 4px 0px #ff2a85; border-radius: 8px; padding: 14px 18px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+  <div style="background: rgba(220, 38, 38, 0.1); border: 1.5px solid #dc2626; border-radius: 10px; padding: 14px 18px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
     <span style="font-size: 20px;">⚠️</span>
-    <strong style="color: #ff2a85; font-size: 14px;">{{ error }}</strong>
+    <strong style="color: #dc2626; font-size: 14px;">{{ error }}</strong>
   </div>
   {% endif %}
 
   <!-- CASE 1: User Already Leads an Active Squad -->
   {% if existing_team %}
-  <div style="background: #090f1d; border: 3px solid #FFE600; box-shadow: 6px 6px 0px #FFE600; border-radius: 8px; padding: 24px 26px; margin-bottom: 28px;">
+  <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 24px 28px; margin-bottom: 28px;">
     <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
-      <div style="display: flex; align-items: flex-start; gap: 14px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px;">
         <div style="font-size: 32px;">👑</div>
         <div>
-          <span class="neo-badge neo-badge-yellow" style="margin-bottom: 4px;">ACTIVE SQUAD LIMIT REACHED (1/1)</span>
-          <h2 style="font-size: 22px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin: 4px 0;">
+          <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; margin-bottom: 4px; font-weight: 800;">ACTIVE SQUAD LIMIT REACHED (1/1)</span>
+          <h2 style="font-size: 22px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; margin: 6px 0;">
             You Already Lead: {{ existing_team.team_name }}
           </h2>
-          <p style="font-size: 13.5px; color: #cbd5e1; margin: 4px 0 10px 0; line-height: 1.5;">
-            Each candidate can lead or belong to <strong>only 1 squad at a time</strong>. You are currently the active leader of <strong style="color: #FFE600;">{{ existing_team.team_name }}</strong> (Code: <code>{{ existing_team.team_code }}</code>).
+          <p style="font-size: 14px; color: var(--s30-text-secondary, #57534e); margin: 4px 0 10px 0; line-height: 1.5;">
+            Each candidate can lead or belong to <strong>only 1 squad at a time</strong>. You are currently the active leader of <strong style="color: #d97706;">{{ existing_team.team_name }}</strong> (Code: <code>{{ existing_team.team_code }}</code>).
           </p>
-          <div style="font-size: 12px; color: #94a3b8;">
+          <div style="font-size: 12.5px; color: var(--s30-text-secondary, #57534e);">
             Target Focus: {{ existing_team.theme }} • Size: {{ existing_team.team_size }} Members
           </div>
         </div>
       </div>
 
       <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-        <a href="{{ url_for('team_manage', team_id=existing_team.id) }}" class="neo-btn neo-btn-yellow" style="font-size: 13px !important; padding: 10px 20px !important;">
+        <a href="{{ url_for('team_manage', team_id=existing_team.id) }}" class="neo-btn" style="background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; font-size: 13px !important; padding: 10px 20px !important; font-weight: 800 !important;">
           ⚙️ MANAGE SQUAD →
         </a>
-        <button type="button" onclick="disbandSquad({{ existing_team.id }}, '{{ existing_team.team_name }}')" class="neo-btn neo-btn-pink" style="font-size: 12px !important; padding: 10px 16px !important;">
+        <button type="button" onclick="disbandSquad({{ existing_team.id }}, '{{ existing_team.team_name }}')" class="neo-btn" style="background: rgba(220, 38, 38, 0.1) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important; font-size: 12.5px !important; padding: 10px 16px !important;">
           🗑️ DISBAND SQUAD
         </button>
       </div>
@@ -70,26 +70,26 @@
 
   <!-- CASE 2: User is Currently a Member in Another Squad -->
   {% elif joined_team %}
-  <div style="background: #090f1d; border: 3px solid #22c55e; box-shadow: 6px 6px 0px #22c55e; border-radius: 8px; padding: 24px 26px; margin-bottom: 28px;">
+  <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); padding: 24px 28px; margin-bottom: 28px;">
     <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
-      <div style="display: flex; align-items: flex-start; gap: 14px;">
+      <div style="display: flex; align-items: flex-start; gap: 16px;">
         <div style="font-size: 32px;">👥</div>
         <div>
-          <span class="neo-badge neo-badge-green" style="margin-bottom: 4px;">ACTIVE SQUAD MEMBERSHIP (1/1)</span>
-          <h2 style="font-size: 22px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin: 4px 0;">
+          <span class="neo-badge" style="background: rgba(22, 163, 74, 0.12); color: #16a34a; margin-bottom: 4px; font-weight: 800;">ACTIVE SQUAD MEMBERSHIP (1/1)</span>
+          <h2 style="font-size: 22px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; margin: 6px 0;">
             You Are in: {{ joined_team.team_name }}
           </h2>
-          <p style="font-size: 13.5px; color: #cbd5e1; margin: 4px 0 10px 0; line-height: 1.5;">
-            You are currently a member of <strong style="color: #22c55e;">{{ joined_team.team_name }}</strong> led by <strong>{{ joined_team.leader_name }}</strong> (<code>{{ joined_team.leader_code }}</code>). To create your own squad, please leave your current team first.
+          <p style="font-size: 14px; color: var(--s30-text-secondary, #57534e); margin: 4px 0 10px 0; line-height: 1.5;">
+            You are currently a member of <strong style="color: #16a34a;">{{ joined_team.team_name }}</strong> led by <strong>{{ joined_team.leader_name }}</strong> (<code>{{ joined_team.leader_code }}</code>). To create your own squad, please leave your current team first.
           </p>
         </div>
       </div>
 
       <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-        <a href="{{ url_for('team_manage') }}" class="neo-btn neo-btn-green" style="font-size: 13px !important; padding: 10px 20px !important; background: #22c55e !important; color: #000 !important; border-color: #000 !important; font-weight: 900 !important;">
+        <a href="{{ url_for('team_manage') }}" class="neo-btn" style="font-size: 13px !important; padding: 10px 20px !important; background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; font-weight: 800 !important;">
           👥 VIEW TEAMMATES →
         </a>
-        <button type="button" onclick="leaveSquad({{ joined_team.id }}, '{{ joined_team.team_name }}')" class="neo-btn neo-btn-pink" style="font-size: 12px !important; padding: 10px 16px !important;">
+        <button type="button" onclick="leaveSquad({{ joined_team.id }}, '{{ joined_team.team_name }}')" class="neo-btn" style="background: rgba(220, 38, 38, 0.1) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important; font-size: 12.5px !important; padding: 10px 16px !important;">
           🚪 LEAVE SQUAD
         </button>
       </div>
@@ -98,16 +98,16 @@
 
   <!-- CASE 3: User is Free to Create a Squad -->
   {% else %}
-  <div class="neo-card" style="padding: 32px 28px; background: #090f1d; border: 3.5px solid #ffffff; box-shadow: 8px 8px 0px #ff2a85;">
+  <div style="padding: 32px 28px; background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1);">
     
-    <div style="margin-bottom: 24px; border-bottom: 2px solid #1e293b; padding-bottom: 16px;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="width: 42px; height: 42px; background: #ff2a85; border: 2px solid #000; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 2px 2px 0px #000;">
+    <div style="margin-bottom: 24px; border-bottom: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-bottom: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="width: 44px; height: 44px; background: rgba(217, 119, 6, 0.12); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px;">
           🚀
         </div>
         <div>
-          <h2 style="font-size: 20px; font-weight: 900; color: #ffffff; text-transform: uppercase; margin: 0;">Squad Setup Details</h2>
-          <span style="font-size: 12.5px; color: #94a3b8;">Step 1 of 2: Define team name &amp; capacity before inviting candidates</span>
+          <h2 style="font-size: 20px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; margin: 0;">Squad Setup Details</h2>
+          <span style="font-size: 13px; color: var(--s30-text-secondary, #57534e);">Step 1 of 2: Define team name &amp; capacity before inviting candidates</span>
         </div>
       </div>
     </div>
@@ -116,8 +116,8 @@
       
       <!-- Field 1: Team Name -->
       <div style="margin-bottom: 22px;">
-        <label style="display: block; font-size: 12.5px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">
-          Team / Squad Name <span style="color: #ff2a85;">*</span>
+        <label style="display: block; font-size: 12.5px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+          Team / Squad Name <span style="color: #dc2626;">*</span>
         </label>
         <input 
           type="text" 
@@ -125,21 +125,21 @@
           placeholder="e.g. CyberVikings, NeuralNexus, Quantum Coders" 
           required
           autofocus
-          style="width: 100%; box-sizing: border-box; background: #0c1322; border: 2.5px solid #ffffff; border-radius: 6px; padding: 13px 16px; font-size: 15px; font-weight: 800; color: #ffffff; box-shadow: 4px 4px 0px #ffffff; outline: none;"
+          style="width: 100%; box-sizing: border-box; background: #ffffff; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-weight: 600; color: var(--s30-text-primary, #1c1917); outline: none;"
         >
-        <span style="font-size: 12px; color: #94a3b8; margin-top: 5px; display: block;">
+        <span style="font-size: 12px; color: var(--s30-text-secondary, #57534e); margin-top: 5px; display: block;">
           Give your squad an inspiring name for hackathon registries and partner evaluations.
         </span>
       </div>
 
       <!-- Field 2: Team Size Selection -->
       <div style="margin-bottom: 22px;">
-        <label style="display: block; font-size: 12.5px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">
-          Target Team Size (Total Members) <span style="color: #ff2a85;">*</span>
+        <label style="display: block; font-size: 12.5px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+          Target Team Size (Total Members) <span style="color: #dc2626;">*</span>
         </label>
         <select 
           name="team_size" 
-          style="width: 100%; box-sizing: border-box; background: #0c1322; border: 2.5px solid #ffffff; border-radius: 6px; padding: 13px 16px; font-size: 15px; font-weight: 800; color: #FFE600; box-shadow: 4px 4px 0px #ffffff; outline: none; cursor: pointer;"
+          style="width: 100%; box-sizing: border-box; background: #ffffff; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-weight: 600; color: var(--s30-text-primary, #1c1917); outline: none; cursor: pointer;"
         >
           <option value="2">2 Members (Duo)</option>
           <option value="3">3 Members (Trio)</option>
@@ -147,14 +147,14 @@
           <option value="5">5 Members (Extended Squad)</option>
           <option value="6">6 Members (Full Engineering Team)</option>
         </select>
-        <span style="font-size: 12px; color: #94a3b8; margin-top: 5px; display: block;">
+        <span style="font-size: 12px; color: var(--s30-text-secondary, #57534e); margin-top: 5px; display: block;">
           Includes you (Leader) + invited peer candidates.
         </span>
       </div>
 
       <!-- Field 3: Hackathon / Project Theme -->
       <div style="margin-bottom: 28px;">
-        <label style="display: block; font-size: 12.5px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
           Target Hackathon / Project Focus
         </label>
         <input 
@@ -162,7 +162,7 @@
           name="theme" 
           value="Smart India Hackathon 2026"
           placeholder="e.g. Smart India Hackathon, AI Agents Buildathon, Web3 FinTech" 
-          style="width: 100%; box-sizing: border-box; background: #0c1322; border: 2px solid #334155; border-radius: 6px; padding: 13px 16px; font-size: 14.5px; font-weight: 700; color: #ffffff; outline: none;"
+          style="width: 100%; box-sizing: border-box; background: #ffffff; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-weight: 500; color: var(--s30-text-primary, #1c1917); outline: none;"
         >
       </div>
 
@@ -170,16 +170,16 @@
       <div style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
         <button 
           type="submit" 
-          class="neo-btn neo-btn-pink" 
-          style="padding: 15px 36px !important; font-size: 15px !important; border: 2.5px solid #000000 !important; box-shadow: 4px 4px 0px #FFE600 !important; font-weight: 900 !important;"
+          class="neo-btn" 
+          style="padding: 13px 32px !important; font-size: 14.5px !important; background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; font-weight: 800 !important;"
         >
           <span>🚀 CREATE SQUAD &amp; PROCEED TO INVITE &rarr;</span>
         </button>
 
         <a 
           href="{{ url_for('candidate_home') }}" 
-          class="neo-btn neo-btn-cyan" 
-          style="padding: 15px 22px !important; font-size: 14px !important; border: 2.5px solid #000000 !important; box-shadow: 4px 4px 0px #ffffff !important;"
+          class="neo-btn" 
+          style="padding: 13px 22px !important; font-size: 14px !important; background: #ffffff !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important;"
         >
           <span>CANCEL</span>
         </a>
@@ -195,12 +195,12 @@
 <script>
   function showToast(msg, type = 'success') {
     const container = document.getElementById('toast-container');
-    const color = (type === 'success') ? '#22c55e' : '#ff2a85';
+    const color = (type === 'success') ? '#16a34a' : '#dc2626';
     container.style.display = 'block';
     container.innerHTML = `
-      <div style="background: rgba(9,15,29,0.97); border: 2.5px solid ${color}; box-shadow: 4px 4px 0px ${color}; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid ${color}; box-shadow: var(--md-elevation-2); border-radius: 10px; padding: 13px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
         <strong style="color: ${color}; font-size: 14px;">${msg}</strong>
-        <button onclick="document.getElementById('toast-container').style.display='none'" style="background: none; border: none; color: #ffffff; cursor: pointer; font-size: 18px; line-height: 1;">✕</button>
+        <button onclick="document.getElementById('toast-container').style.display='none'" style="background: none; border: none; color: var(--s30-text-muted, #78716c); cursor: pointer; font-size: 18px; line-height: 1;">✕</button>
       </div>
     `;
     setTimeout(() => { container.style.display = 'none'; }, 4500);

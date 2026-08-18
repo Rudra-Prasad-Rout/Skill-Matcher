@@ -6,24 +6,24 @@
 <main style="max-width: 1080px; width: 100%; margin: 36px auto 80px auto; padding: 0 20px; position: relative; z-index: 2;">
 
   <!-- Header Banner -->
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; flex-wrap: wrap; gap: 16px;">
     <div>
-      <div style="margin-bottom: 6px;">
-        <span class="neo-badge neo-badge-yellow">📬 INBOX &amp; COMMUNICATIONS</span>
+      <div style="margin-bottom: 8px;">
+        <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.25);">📬 INBOX &amp; COMMUNICATIONS</span>
       </div>
-      <h1 style="font-size: 28px; font-weight: 900; color: #ffffff; text-transform: uppercase; letter-spacing: -0.02em; margin: 0;">
+      <h1 style="font-size: 32px; font-weight: 900; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: -0.02em; margin: 0;">
         Mailbox
       </h1>
-      <p style="font-size: 13.5px; color: #cbd5e1; margin-top: 4px; font-weight: 500;">
+      <p style="font-size: 14.5px; color: var(--s30-text-secondary, #57534e); margin-top: 6px; font-weight: 500;">
         Review squad invitations sent to you, accept/decline member joining requests, and track team applications.
       </p>
     </div>
 
     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-      <a href="{{ url_for('team_create') }}" class="neo-btn neo-btn-pink" style="padding: 10px 16px !important; font-size: 12px !important;">
+      <a href="{{ url_for('team_create') }}" class="neo-btn" style="background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; padding: 10px 18px !important; font-size: 13px !important; font-weight: 700 !important;">
         <span>+ CREATE NEW SQUAD</span>
       </a>
-      <a href="{{ url_for('candidate_home') }}" class="neo-btn neo-btn-cyan" style="padding: 10px 16px !important; font-size: 12px !important;">
+      <a href="{{ url_for('candidate_home') }}" class="neo-btn" style="background: #ffffff !important; color: var(--s30-text-primary, #1c1917) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important; padding: 10px 18px !important; font-size: 13px !important;">
         <span>&larr; CANDIDATE DASHBOARD</span>
       </a>
     </div>
@@ -33,13 +33,13 @@
   <div id="toast-container" style="margin-bottom: 20px; display: none;"></div>
 
   <!-- Mini Join Request by Squad Code Box -->
-  <div class="neo-card" style="padding: 20px 24px; margin-bottom: 28px; background: #0c1322; border: 2.5px solid #00f0ff; box-shadow: 6px 6px 0px #00f0ff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+  <div style="padding: 20px 24px; margin-bottom: 28px; background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
     <div style="max-width: 540px;">
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
         <span style="font-size: 18px;">🔑</span>
-        <strong style="color: #00f0ff; font-size: 15px; text-transform: uppercase;">Request to Join a Squad by Code</strong>
+        <strong style="color: var(--s30-text-primary, #1c1917); font-size: 15px; text-transform: uppercase;">Request to Join a Squad by Code</strong>
       </div>
-      <p style="font-size: 12.5px; color: #cbd5e1; margin: 0; line-height: 1.4;">
+      <p style="font-size: 13px; color: var(--s30-text-secondary, #57534e); margin: 0; line-height: 1.4;">
         Have a Squad Code from a hackathon leader (e.g. <code>SQD-XXXX</code>)? Enter it below to send your verified student dossier.
       </p>
     </div>
@@ -49,13 +49,13 @@
         type="text" 
         id="join-team-code-input" 
         placeholder="e.g. SQD-A7X9" 
-        style="background: #090f1d; border: 2px solid #ffffff; border-radius: 6px; padding: 10px 14px; font-size: 13.5px; font-weight: 800; color: #FFE600; text-transform: uppercase; width: 160px; outline: none; box-shadow: 2px 2px 0px #ffffff;"
+        style="background: #ffffff; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 10px 14px; font-size: 14px; font-weight: 700; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; width: 160px; outline: none;"
       >
       <button 
         type="button" 
         onclick="submitJoinRequestByCode()" 
-        class="neo-btn neo-btn-yellow" 
-        style="padding: 10px 18px !important; font-size: 12.5px !important; font-weight: 900 !important;"
+        class="neo-btn" 
+        style="padding: 10px 18px !important; font-size: 13px !important; font-weight: 800 !important; background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important;"
       >
         <span>SEND REQUEST &rarr;</span>
       </button>
@@ -63,32 +63,32 @@
   </div>
 
   <!-- Interactive Mailbox Tabs -->
-  <div style="display: flex; gap: 8px; margin-bottom: 22px; border-bottom: 2px solid #1e293b; padding-bottom: 12px; flex-wrap: wrap;">
+  <div style="display: flex; gap: 10px; margin-bottom: 22px; border-bottom: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-bottom: 12px; flex-wrap: wrap;">
     <button 
       id="tab-btn-invites" 
       onclick="switchMailboxTab('invites')" 
-      class="neo-btn neo-btn-yellow" 
-      style="padding: 9px 18px !important; font-size: 12.5px !important; font-weight: 900 !important; display: flex; align-items: center; gap: 8px;"
+      class="neo-btn" 
+      style="padding: 9px 18px !important; font-size: 13px !important; font-weight: 800 !important; background: var(--md-sys-color-primary, #d97706) !important; color: #ffffff !important; display: flex; align-items: center; gap: 8px;"
     >
       <span>📩 INVITATIONS RECEIVED</span>
-      <span class="neo-badge neo-badge-pink" style="font-size: 10px; padding: 1px 7px;">{{ invitations|length }}</span>
+      <span class="neo-badge" style="background: rgba(255, 255, 255, 0.25); color: #ffffff; font-size: 10px; padding: 1px 7px;">{{ invitations|length }}</span>
     </button>
 
     <button 
       id="tab-btn-requests" 
       onclick="switchMailboxTab('requests')" 
       class="neo-btn" 
-      style="padding: 9px 18px !important; font-size: 12.5px !important; font-weight: 900 !important; background: #0c1322; color: #cbd5e1; border: 2px solid #334155; display: flex; align-items: center; gap: 8px;"
+      style="padding: 9px 18px !important; font-size: 13px !important; font-weight: 600 !important; background: #ffffff !important; color: var(--s30-text-secondary, #57534e) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important; display: flex; align-items: center; gap: 8px;"
     >
       <span>👥 MEMBER JOIN REQUESTS</span>
-      <span class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 1px 7px;">{{ join_requests|length }}</span>
+      <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; font-size: 10px; padding: 1px 7px;">{{ join_requests|length }}</span>
     </button>
 
     <button 
       id="tab-btn-sent" 
       onclick="switchMailboxTab('sent')" 
       class="neo-btn" 
-      style="padding: 9px 18px !important; font-size: 12.5px !important; font-weight: 900 !important; background: #0c1322; color: #cbd5e1; border: 2px solid #334155;"
+      style="padding: 9px 18px !important; font-size: 13px !important; font-weight: 600 !important; background: #ffffff !important; color: var(--s30-text-secondary, #57534e) !important; border: 1.5px solid var(--md-sys-color-outline, #ddd5c7) !important;"
     >
       <span>📤 SENT HISTORY ({{ sent_items|length }})</span>
     </button>
@@ -99,49 +99,49 @@
     {% if invitations %}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px;">
       {% for inv in invitations %}
-      <div id="mailbox-item-{{ inv.invite_id }}" class="neo-card" style="padding: 22px; background: #090f1d; border: 2.5px solid #FFE600; box-shadow: 6px 6px 0px #FFE600; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
+      <div id="mailbox-item-{{ inv.invite_id }}" style="padding: 22px; background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
         <div>
           <!-- Header -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px;">
             <div>
-              <span class="neo-badge neo-badge-pink" style="font-size: 10px;">SQUAD INVITATION</span>
-              <h3 style="font-size: 18px; font-weight: 900; color: #ffffff; margin: 4px 0 0 0;">{{ inv.team_name }}</h3>
-              <span style="font-family: monospace; font-size: 11px; color: #00f0ff; font-weight: 800;">CODE: {{ inv.team_code }}</span>
+              <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; font-size: 10px;">SQUAD INVITATION</span>
+              <h3 style="font-size: 18px; font-weight: 800; color: var(--s30-text-primary, #1c1917); margin: 4px 0 0 0;">{{ inv.team_name }}</h3>
+              <span style="font-family: monospace; font-size: 11px; color: #2563eb; font-weight: 800;">CODE: {{ inv.team_code }}</span>
             </div>
             
-            <span id="badge-status-{{ inv.invite_id }}" class="neo-badge {% if inv.status == 'ACCEPTED' %}neo-badge-green{% elif inv.status == 'REJECTED' %}neo-badge-pink{% else %}neo-badge-yellow{% endif %}" style="font-size: 10.5px;">
+            <span id="badge-status-{{ inv.invite_id }}" class="neo-badge" style="background: {% if inv.status == 'ACCEPTED' %}rgba(22, 163, 74, 0.12){% elif inv.status == 'REJECTED' %}rgba(220, 38, 38, 0.12){% else %}rgba(217, 119, 6, 0.12){% endif %}; color: {% if inv.status == 'ACCEPTED' %}#16a34a{% elif inv.status == 'REJECTED' %}#dc2626{% else %}#d97706{% endif %}; font-size: 10.5px;">
               {{ inv.status }}
             </span>
           </div>
 
           <!-- Squad Meta -->
-          <div style="background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px;">
-            <div style="font-size: 12px; color: #cbd5e1;">
-              Leader: <strong style="color: #ffffff;">{{ inv.leader_name }}</strong> <span class="neo-badge neo-badge-yellow" style="font-size: 9.5px; padding: 1px 5px;">ID: {{ inv.leader_code }}</span>
+          <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
+            <div style="font-size: 12.5px; color: var(--s30-text-secondary, #57534e);">
+              Leader: <strong style="color: var(--s30-text-primary, #1c1917);">{{ inv.leader_name }}</strong> <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; font-size: 9.5px; padding: 1px 5px;">ID: {{ inv.leader_code }}</span>
             </div>
-            <div style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">
+            <div style="font-size: 11.5px; color: var(--s30-text-secondary, #57534e); margin-top: 2px;">
               {{ inv.leader_school or 'Verified Institution' }} • Capacity: {{ inv.team_size }} Members
             </div>
-            <div style="font-size: 11.5px; color: #FFE600; margin-top: 4px; font-weight: 700;">
+            <div style="font-size: 12px; color: #d97706; margin-top: 4px; font-weight: 700;">
               Focus: {{ inv.theme }}
             </div>
           </div>
 
           {% if inv.message %}
-          <p style="font-size: 12px; color: #94a3b8; font-style: italic; margin-bottom: 12px;">
+          <p style="font-size: 12.5px; color: var(--s30-text-secondary, #57534e); font-style: italic; margin-bottom: 12px;">
             "{{ inv.message }}"
           </p>
           {% endif %}
         </div>
 
         <!-- Action Buttons -->
-        <div id="actions-box-{{ inv.invite_id }}" style="border-top: 1px solid #1e293b; padding-top: 12px; display: flex; gap: 8px;">
+        <div id="actions-box-{{ inv.invite_id }}" style="border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 12px; display: flex; gap: 8px;">
           {% if inv.status in ['PENDING', 'INVITED'] %}
           <button 
             type="button" 
             onclick="respondMailbox({{ inv.invite_id }}, 'accept')" 
-            class="neo-btn neo-btn-green" 
-            style="flex: 1; padding: 8px 12px !important; font-size: 12px !important; font-weight: 900 !important;"
+            class="neo-btn" 
+            style="flex: 1; padding: 8px 12px !important; font-size: 12px !important; font-weight: 800 !important; background: #16a34a !important; color: #ffffff !important;"
           >
             <span>✓ ACCEPT & JOIN</span>
           </button>
@@ -149,13 +149,13 @@
           <button 
             type="button" 
             onclick="respondMailbox({{ inv.invite_id }}, 'reject')" 
-            class="neo-btn neo-btn-pink" 
-            style="flex: 1; padding: 8px 12px !important; font-size: 12px !important; font-weight: 900 !important;"
+            class="neo-btn" 
+            style="flex: 1; padding: 8px 12px !important; font-size: 12px !important; font-weight: 800 !important; background: rgba(220, 38, 38, 0.1) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important;"
           >
             <span>✕ DECLINE</span>
           </button>
           {% else %}
-          <div style="font-size: 12px; color: #94a3b8; font-weight: 700;">
+          <div style="font-size: 12px; color: var(--s30-text-secondary, #57534e); font-weight: 700;">
             Status: {{ inv.status }}
           </div>
           {% endif %}
@@ -165,10 +165,10 @@
       {% endfor %}
     </div>
     {% else %}
-    <div style="background: #090f1d; border: 2px dashed #334155; border-radius: 8px; padding: 36px 20px; text-align: center; color: #94a3b8;">
+    <div style="background: var(--md-sys-color-surface, #ffffff); border: 2px dashed var(--md-sys-color-outline, #ddd5c7); border-radius: 12px; padding: 36px 20px; text-align: center; color: var(--s30-text-secondary, #57534e);">
       <div style="font-size: 32px; margin-bottom: 8px;">📭</div>
-      <strong style="color: #ffffff; font-size: 16px; display: block; margin-bottom: 4px;">No Pending Squad Invitations</strong>
-      <p style="font-size: 13px; max-width: 480px; margin: 0 auto; color: #cbd5e1;">
+      <strong style="color: var(--s30-text-primary, #1c1917); font-size: 16px; display: block; margin-bottom: 4px;">No Pending Squad Invitations</strong>
+      <p style="font-size: 13.5px; max-width: 480px; margin: 0 auto; color: var(--s30-text-secondary, #57534e);">
         When other hackathon teams search your candidate ID (<code>{{ user.user_code }}</code>) and invite you, their invitations will appear here.
       </p>
     </div>
@@ -180,54 +180,54 @@
     {% if join_requests %}
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px;">
       {% for req in join_requests %}
-      <div id="mailbox-item-{{ req.request_id }}" class="neo-card" style="padding: 22px; background: #090f1d; border: 2.5px solid #00f0ff; box-shadow: 6px 6px 0px #00f0ff; display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
+      <div id="mailbox-item-{{ req.request_id }}" style="padding: 22px; background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); display: flex; flex-direction: column; justify-content: space-between; gap: 14px;">
         <div>
           <!-- Header -->
           <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 10px;">
             <div>
-              <span class="neo-badge neo-badge-cyan" style="font-size: 10px;">MEMBER JOIN REQUEST</span>
-              <h3 style="font-size: 18px; font-weight: 900; color: #ffffff; margin: 4px 0 0 0;">{{ req.applicant_name }}</h3>
-              <span class="neo-badge neo-badge-yellow" style="font-size: 10px;">ID: {{ req.applicant_code }}</span>
+              <span class="neo-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; font-size: 10px;">MEMBER JOIN REQUEST</span>
+              <h3 style="font-size: 18px; font-weight: 800; color: var(--s30-text-primary, #1c1917); margin: 4px 0 0 0;">{{ req.applicant_name }}</h3>
+              <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; font-size: 10px;">ID: {{ req.applicant_code }}</span>
             </div>
             
-            <span id="badge-status-{{ req.request_id }}" class="neo-badge {% if req.status == 'ACCEPTED' %}neo-badge-green{% elif req.status == 'REJECTED' %}neo-badge-pink{% else %}neo-badge-yellow{% endif %}" style="font-size: 10.5px;">
+            <span id="badge-status-{{ req.request_id }}" class="neo-badge" style="background: {% if req.status == 'ACCEPTED' %}rgba(22, 163, 74, 0.12){% elif req.status == 'REJECTED' %}rgba(220, 38, 38, 0.12){% else %}rgba(217, 119, 6, 0.12){% endif %}; color: {% if req.status == 'ACCEPTED' %}#16a34a{% elif req.status == 'REJECTED' %}#dc2626{% else %}#d97706{% endif %}; font-size: 10.5px;">
               {{ req.status }}
             </span>
           </div>
 
           <!-- Applicant Details -->
-          <div style="background: #0c1322; border: 1.5px solid #1e293b; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px;">
-            <div style="font-size: 12px; color: #cbd5e1;">
-              Requesting to Join: <strong style="color: #FFE600;">{{ req.team_name }}</strong> (<code>{{ req.team_code }}</code>)
+          <div style="background: var(--md-sys-color-surface-container-low, #faf8f5); border: 1px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 8px; padding: 10px 12px; margin-bottom: 12px;">
+            <div style="font-size: 12.5px; color: var(--s30-text-secondary, #57534e);">
+              Requesting to Join: <strong style="color: #d97706;">{{ req.team_name }}</strong> (<code>{{ req.team_code }}</code>)
             </div>
-            <div style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">
+            <div style="font-size: 11.5px; color: var(--s30-text-secondary, #57534e); margin-top: 2px;">
               {{ req.applicant_school or 'Verified Candidate' }} • {{ req.applicant_coursework or 'Student' }}
             </div>
             
             {% if req.skills %}
             <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;">
               {% for sk in req.skills %}
-              <span class="neo-badge neo-badge-cyan" style="font-size: 9.5px; padding: 1px 5px;">{{ sk }}</span>
+              <span class="neo-badge" style="background: rgba(37, 99, 235, 0.08); color: #2563eb; font-size: 9.5px; padding: 1px 5px;">{{ sk }}</span>
               {% endfor %}
             </div>
             {% endif %}
           </div>
 
           {% if req.message %}
-          <p style="font-size: 12px; color: #94a3b8; font-style: italic; margin-bottom: 12px;">
+          <p style="font-size: 12.5px; color: var(--s30-text-secondary, #57534e); font-style: italic; margin-bottom: 12px;">
             "{{ req.message }}"
           </p>
           {% endif %}
         </div>
 
         <!-- Action Buttons -->
-        <div id="actions-box-{{ req.request_id }}" style="border-top: 1px solid #1e293b; padding-top: 12px; display: flex; gap: 8px;">
+        <div id="actions-box-{{ req.request_id }}" style="border-top: 1px solid var(--md-sys-color-outline, #ddd5c7); padding-top: 12px; display: flex; gap: 8px;">
           {% if req.status in ['PENDING', 'INVITED'] %}
           <button 
             type="button" 
             onclick="respondMailbox({{ req.request_id }}, 'accept')" 
-            class="neo-btn neo-btn-green" 
-            style="flex: 1; padding: 8px 12px !important; font-size: 12px !important; font-weight: 900 !important;"
+            class="neo-btn" 
+            style="flex: 1; padding: 8px 12px !important; font-size: 12px !important; font-weight: 800 !important; background: #16a34a !important; color: #ffffff !important;"
           >
             <span>✓ ACCEPT CANDIDATE</span>
           </button>
@@ -235,13 +235,13 @@
           <button 
             type="button" 
             onclick="respondMailbox({{ req.request_id }}, 'reject')" 
-            class="neo-btn neo-btn-pink" 
-            style="flex: 1; padding: 8px 12px !important; font-size: 12px !important; font-weight: 900 !important;"
+            class="neo-btn" 
+            style="flex: 1; padding: 8px 12px !important; font-size: 12px !important; font-weight: 800 !important; background: rgba(220, 38, 38, 0.1) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important;"
           >
             <span>✕ DECLINE</span>
           </button>
           {% else %}
-          <div style="font-size: 12px; color: #94a3b8; font-weight: 700;">
+          <div style="font-size: 12px; color: var(--s30-text-secondary, #57534e); font-weight: 700;">
             Status: {{ req.status }}
           </div>
           {% endif %}
@@ -251,10 +251,10 @@
       {% endfor %}
     </div>
     {% else %}
-    <div style="background: #090f1d; border: 2px dashed #334155; border-radius: 8px; padding: 36px 20px; text-align: center; color: #94a3b8;">
+    <div style="background: var(--md-sys-color-surface, #ffffff); border: 2px dashed var(--md-sys-color-outline, #ddd5c7); border-radius: 12px; padding: 36px 20px; text-align: center; color: var(--s30-text-secondary, #57534e);">
       <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
-      <strong style="color: #ffffff; font-size: 16px; display: block; margin-bottom: 4px;">No Pending Member Join Requests</strong>
-      <p style="font-size: 13px; max-width: 480px; margin: 0 auto; color: #cbd5e1;">
+      <strong style="color: var(--s30-text-primary, #1c1917); font-size: 16px; display: block; margin-bottom: 4px;">No Pending Member Join Requests</strong>
+      <p style="font-size: 13.5px; max-width: 480px; margin: 0 auto; color: var(--s30-text-secondary, #57534e);">
         When other candidates request to join squads that you lead, their applications will appear here for your review.
       </p>
     </div>
@@ -264,37 +264,37 @@
   <!-- ================= TAB 3: SENT HISTORY ================= -->
   <div id="tab-content-sent" style="display: none;">
     {% if sent_items %}
-    <div style="background: #090f1d; border: 2.5px solid #ffffff; box-shadow: 6px 6px 0px #ffffff; border-radius: 8px; overflow: hidden;">
-      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
+    <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid var(--md-sys-color-outline, #ddd5c7); border-radius: 14px; box-shadow: var(--md-elevation-1); overflow: hidden;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px;">
         <thead>
-          <tr style="background: #0c1322; border-bottom: 2px solid #1e293b; color: #cbd5e1; font-weight: 900; text-transform: uppercase; font-size: 11px;">
-            <th style="padding: 12px 16px;">Type</th>
-            <th style="padding: 12px 16px;">Target Squad / Candidate</th>
-            <th style="padding: 12px 16px;">Sent Date</th>
-            <th style="padding: 12px 16px; text-align: right;">Status</th>
+          <tr style="background: var(--md-sys-color-surface-container-low, #faf8f5); border-bottom: 1.5px solid var(--md-sys-color-outline, #ddd5c7); color: var(--s30-text-secondary, #57534e); font-weight: 800; text-transform: uppercase; font-size: 11px;">
+            <th style="padding: 14px 18px;">Type</th>
+            <th style="padding: 14px 18px;">Target Squad / Candidate</th>
+            <th style="padding: 14px 18px;">Sent Date</th>
+            <th style="padding: 14px 18px; text-align: right;">Status</th>
           </tr>
         </thead>
         <tbody>
           {% for item in sent_items %}
-          <tr style="border-bottom: 1px solid #1e293b;">
-            <td style="padding: 12px 16px;">
+          <tr style="border-bottom: 1px solid var(--md-sys-color-outline, #ddd5c7);">
+            <td style="padding: 14px 18px;">
               {% if item.invite_type == 'INVITATION' %}
-                <span class="neo-badge neo-badge-pink" style="font-size: 10px;">INVITE SENT</span>
+                <span class="neo-badge" style="background: rgba(217, 119, 6, 0.12); color: #d97706; font-size: 10px;">INVITE SENT</span>
               {% else %}
-                <span class="neo-badge neo-badge-cyan" style="font-size: 10px;">JOIN REQUEST</span>
+                <span class="neo-badge" style="background: rgba(37, 99, 235, 0.12); color: #2563eb; font-size: 10px;">JOIN REQUEST</span>
               {% endif %}
             </td>
-            <td style="padding: 12px 16px;">
-              <strong style="color: #ffffff;">{{ item.team_name }}</strong> (<code>{{ item.team_code }}</code>)
-              <div style="font-size: 11.5px; color: #94a3b8; margin-top: 2px;">
+            <td style="padding: 14px 18px;">
+              <strong style="color: var(--s30-text-primary, #1c1917);">{{ item.team_name }}</strong> (<code>{{ item.team_code }}</code>)
+              <div style="font-size: 12px; color: var(--s30-text-secondary, #57534e); margin-top: 2px;">
                 Recipient: {{ item.target_name }} (ID: {{ item.target_code }})
               </div>
             </td>
-            <td style="padding: 12px 16px; color: #94a3b8; font-size: 12px;">
+            <td style="padding: 14px 18px; color: var(--s30-text-secondary, #57534e); font-size: 12.5px;">
               {{ item.created_at }}
             </td>
-            <td style="padding: 12px 16px; text-align: right;">
-              <span class="neo-badge {% if item.status == 'ACCEPTED' %}neo-badge-green{% elif item.status == 'REJECTED' %}neo-badge-pink{% else %}neo-badge-yellow{% endif %}" style="font-size: 10px;">
+            <td style="padding: 14px 18px; text-align: right;">
+              <span class="neo-badge" style="background: {% if item.status == 'ACCEPTED' %}rgba(22, 163, 74, 0.12){% elif item.status == 'REJECTED' %}rgba(220, 38, 38, 0.12){% else %}rgba(217, 119, 6, 0.12){% endif %}; color: {% if item.status == 'ACCEPTED' %}#16a34a{% elif item.status == 'REJECTED' %}#dc2626{% else %}#d97706{% endif %}; font-size: 10px;">
                 {{ item.status }}
               </span>
             </td>
@@ -304,10 +304,10 @@
       </table>
     </div>
     {% else %}
-    <div style="background: #090f1d; border: 2px dashed #334155; border-radius: 8px; padding: 36px 20px; text-align: center; color: #94a3b8;">
+    <div style="background: var(--md-sys-color-surface, #ffffff); border: 2px dashed var(--md-sys-color-outline, #ddd5c7); border-radius: 12px; padding: 36px 20px; text-align: center; color: var(--s30-text-secondary, #57534e);">
       <div style="font-size: 32px; margin-bottom: 8px;">📤</div>
-      <strong style="color: #ffffff; font-size: 16px; display: block; margin-bottom: 4px;">No Outgoing Requests Sent</strong>
-      <p style="font-size: 13px; max-width: 480px; margin: 0 auto; color: #cbd5e1;">
+      <strong style="color: var(--s30-text-primary, #1c1917); font-size: 16px; display: block; margin-bottom: 4px;">No Outgoing Requests Sent</strong>
+      <p style="font-size: 13.5px; max-width: 480px; margin: 0 auto; color: var(--s30-text-secondary, #57534e);">
         When you invite candidates to your squad or send join requests, they will be logged here.
       </p>
     </div>
@@ -324,18 +324,18 @@
       const content = document.getElementById(`tab-content-${t}`);
       if (t === tabName) {
         if (btn) {
-          btn.className = 'neo-btn neo-btn-yellow';
-          btn.style.background = '#FFE600';
-          btn.style.color = '#000000';
-          btn.style.borderColor = '#000000';
+          btn.style.background = 'var(--md-sys-color-primary, #d97706)';
+          btn.style.color = '#ffffff';
+          btn.style.border = 'none';
+          btn.style.fontWeight = '800';
         }
         if (content) content.style.display = 'block';
       } else {
         if (btn) {
-          btn.className = 'neo-btn';
-          btn.style.background = '#0c1322';
-          btn.style.color = '#cbd5e1';
-          btn.style.borderColor = '#334155';
+          btn.style.background = '#ffffff';
+          btn.style.color = 'var(--s30-text-secondary, #57534e)';
+          btn.style.border = '1.5px solid var(--md-sys-color-outline, #ddd5c7)';
+          btn.style.fontWeight = '600';
         }
         if (content) content.style.display = 'none';
       }
@@ -344,12 +344,12 @@
 
   function showToast(msg, type = 'success') {
     const container = document.getElementById('toast-container');
-    const color = (type === 'success') ? '#22c55e' : '#ff2a85';
+    const color = (type === 'success') ? '#16a34a' : '#dc2626';
     container.style.display = 'block';
     container.innerHTML = `
-      <div style="background: rgba(15, 23, 42, 0.95); border: 2.5px solid ${color}; box-shadow: 4px 4px 0px ${color}; border-radius: 8px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <div style="background: var(--md-sys-color-surface, #ffffff); border: 1.5px solid ${color}; box-shadow: var(--md-elevation-2); border-radius: 10px; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
         <strong style="color: ${color}; font-size: 14px;">${msg}</strong>
-        <button onclick="document.getElementById('toast-container').style.display='none'" style="background: none; border: none; color: #ffffff; cursor: pointer; font-size: 16px;">✕</button>
+        <button onclick="document.getElementById('toast-container').style.display='none'" style="background: none; border: none; color: var(--s30-text-muted, #78716c); cursor: pointer; font-size: 16px;">✕</button>
       </div>
     `;
     setTimeout(() => { container.style.display = 'none'; }, 4000);
@@ -371,13 +371,14 @@
         const badge = document.getElementById(`badge-status-${itemId}`);
         if (badge) {
           badge.innerText = data.new_status;
-          badge.className = `neo-badge ${data.new_status === 'ACCEPTED' ? 'neo-badge-green' : 'neo-badge-pink'}`;
+          badge.style.background = data.new_status === 'ACCEPTED' ? 'rgba(22,163,74,0.12)' : 'rgba(220,38,38,0.12)';
+          badge.style.color = data.new_status === 'ACCEPTED' ? '#16a34a' : '#dc2626';
         }
 
         // Hide action buttons
         const actionsBox = document.getElementById(`actions-box-${itemId}`);
         if (actionsBox) {
-          actionsBox.innerHTML = `<span style="font-size: 12px; color: ${data.new_status === 'ACCEPTED' ? '#22c55e' : '#ff2a85'}; font-weight: 800;">✓ Successfully ${data.new_status}</span>`;
+          actionsBox.innerHTML = `<span style="font-size: 12px; color: ${data.new_status === 'ACCEPTED' ? '#16a34a' : '#dc2626'}; font-weight: 800;">✓ Successfully ${data.new_status}</span>`;
         }
 
         setTimeout(() => { window.location.reload(); }, 1200);
