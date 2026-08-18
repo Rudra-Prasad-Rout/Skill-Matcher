@@ -669,7 +669,7 @@
 
 </div>
 
-<!-- S30 Material Design 3 Typewriter Animation Engine -->
+<!-- S30 Material Design 3 Typewriter Animation Engine (Letter-by-Letter Stream) -->
 <script>
   (function initS30Typewriter() {
     const textEl = document.getElementById('s30-typewriter-text');
@@ -684,58 +684,44 @@
     ];
 
     let phraseIndex = 0;
-    let charIndex = phrases[0].length;
-    let isDeleting = true;
-    let isWaiting = false;
+    let charIndex = 0;
+    const TYPING_SPEED = 70;
+    const PAUSE_COMPLETE = 2500;
+    const PAUSE_RESET = 300;
 
-    const TYPING_SPEED = 75;
-    const DELETING_SPEED = 38;
-    const PAUSE_BEFORE_DELETE = 2200;
-    const PAUSE_BEFORE_TYPE = 350;
+    // Clear initial fallback text to start the one-by-one typing sequence
+    textEl.textContent = "";
 
-    function typeStep() {
+    function typeNextChar() {
       const currentPhrase = phrases[phraseIndex];
 
-      if (isWaiting) return;
-
-      if (isDeleting) {
-        charIndex--;
-        textEl.textContent = currentPhrase.substring(0, charIndex);
-
-        if (charIndex <= 0) {
-          isDeleting = false;
-          phraseIndex = (phraseIndex + 1) % phrases.length;
-          isWaiting = true;
-          setTimeout(function() {
-            isWaiting = false;
-            typeStep();
-          }, PAUSE_BEFORE_TYPE);
-          return;
-        }
-
-        setTimeout(typeStep, DELETING_SPEED);
-      } else {
+      if (charIndex < currentPhrase.length) {
+        textEl.textContent += currentPhrase.charAt(charIndex);
         charIndex++;
-        textEl.textContent = currentPhrase.substring(0, charIndex);
-
-        if (charIndex >= currentPhrase.length) {
-          isDeleting = true;
-          isWaiting = true;
+        
+        // Add subtle organic typing cadence
+        const jitter = Math.floor(Math.random() * 20);
+        setTimeout(typeNextChar, TYPING_SPEED + jitter);
+      } else {
+        // Full phrase has come in one by one - pause and move to next phrase
+        setTimeout(function() {
+          textEl.style.opacity = '0';
           setTimeout(function() {
-            isWaiting = false;
-            typeStep();
-          }, PAUSE_BEFORE_DELETE);
-          return;
-        }
-
-        // Add slight organic typing jitter
-        const jitter = Math.floor(Math.random() * 25);
-        setTimeout(typeStep, TYPING_SPEED + jitter);
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            charIndex = 0;
+            textEl.textContent = "";
+            textEl.style.opacity = '1';
+            setTimeout(typeNextChar, PAUSE_RESET);
+          }, 200);
+        }, PAUSE_COMPLETE);
       }
     }
 
-    // Start typewriter loop after initial viewing pause
-    setTimeout(typeStep, PAUSE_BEFORE_DELETE);
+    // Smooth transition style for phrase swaps
+    textEl.style.transition = 'opacity 0.2s ease';
+
+    // Start one-by-one typing on load
+    setTimeout(typeNextChar, 400);
   })();
 </script>
 {% endblock %}
