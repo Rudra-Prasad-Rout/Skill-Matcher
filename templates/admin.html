@@ -1583,8 +1583,8 @@
         if (cardId) knownCandidateIds.add(parseInt(cardId));
       });
       
-      // Start Real-Time Live Feed Polling every 4 seconds
-      setInterval(pollLiveCandidatesFeed, 4000);
+      // Start Real-Time Live Feed Polling every 3 seconds for instant zero-refresh candidate sync
+      setInterval(pollLiveCandidatesFeed, 3000);
     });
 
     async function pollLiveCandidatesFeed() {
