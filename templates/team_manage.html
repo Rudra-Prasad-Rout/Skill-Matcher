@@ -446,7 +446,7 @@
       if (data.success) {
         showToast(`✓ ${data.message}`, 'success');
         setTimeout(() => {
-          window.location.href = "{{ url_for('candidate_home') }}";
+          window.location.href = "{{ url_for('find_teams') }}";
         }, 1200);
       } else {
         showToast(data.message || 'Error leaving squad.', 'error');

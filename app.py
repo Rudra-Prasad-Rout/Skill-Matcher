@@ -1254,101 +1254,20 @@ def calculate_team_formation_matches(user, skills_list):
     team_matches.sort(key=lambda x: x["synergy_percentage"], reverse=True)
     return team_matches
 
-# ================= CANDIDATE HOME / DASHBOARD =================
+# ================= CANDIDATE HOME / DASHBOARD REDIRECT =================
 @app.route("/candidate/home")
 @app.route("/dashboard")
 def candidate_home():
     user = get_current_user()
     if not user:
         return redirect(url_for("login_page"))
-        
-    conn = database.get_db_connection()
-    user_row = conn.execute("SELECT * FROM users WHERE id = ?", (user["id"],)).fetchone()
-    skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
-    docs = conn.execute("SELECT * FROM user_documents WHERE user_id = ? ORDER BY id DESC", (user["id"],)).fetchall()
-
-    # 1. Check if user has ACCEPTED an invitation (joined someone else's squad via invitation)
-    joined_invite = conn.execute("""
-    SELECT ti.id, t.id as team_id, t.team_name, t.team_code, t.theme, t.team_size,
-           u.full_name as leader_name, u.user_code as leader_code
-    FROM team_invites ti
-    JOIN teams t ON ti.team_id = t.id
-    JOIN users u ON t.leader_id = u.id
-    WHERE ti.receiver_id = ? AND ti.invite_type = 'INVITATION' AND ti.status = 'ACCEPTED'
-    ORDER BY ti.id DESC LIMIT 1
-    """, (user["id"],)).fetchone()
-
-    # 2. Check if user's JOIN_REQUEST was accepted (they requested to join)
-    requested_join = conn.execute("""
-    SELECT ti.id, t.id as team_id, t.team_name, t.team_code, t.theme, t.team_size,
-           u.full_name as leader_name, u.user_code as leader_code
-    FROM team_invites ti
-    JOIN teams t ON ti.team_id = t.id
-    JOIN users u ON t.leader_id = u.id
-    WHERE ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST' AND ti.status = 'ACCEPTED'
-    ORDER BY ti.id DESC LIMIT 1
-    """, (user["id"],)).fetchone()
-
-    # 3. Check if user is a squad leader
-    led_team = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
-
-    my_team = None
-    my_team_role = None
-    if joined_invite:
-        my_team = dict(joined_invite)
-        my_team_role = "MEMBER"
-        my_team["joined_via"] = "INVITATION"
-        member_count = conn.execute(
-            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'",
-            (my_team["team_id"],)
-        ).fetchone()["c"]
-        my_team["member_count"] = 1 + member_count
-    elif requested_join:
-        my_team = dict(requested_join)
-        my_team_role = "MEMBER"
-        my_team["joined_via"] = "JOIN_REQUEST"
-        member_count = conn.execute(
-            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'",
-            (my_team["team_id"],)
-        ).fetchone()["c"]
-        my_team["member_count"] = 1 + member_count
-    elif led_team:
-        my_team = dict(led_team)
-        my_team_role = "LEADER"
-        my_team["joined_via"] = "CREATED"
-        member_count = conn.execute(
-            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'",
-            (my_team["id"],)
-        ).fetchone()["c"]
-        my_team["member_count"] = 1 + member_count
-
-    conn.close()
-    
-    user_dict = dict(user_row) if user_row else dict(user)
-    skills_list = [dict(s) for s in skills]
-    docs_list = [dict(d) for d in docs]
-    
-    matches = calculate_internship_matches(user_dict, skills_list)
-    team_matches = calculate_team_formation_matches(user_dict, skills_list)
-    
-    # Calculate overall candidate readiness
-    top_scores = [m["match_percentage"] for m in matches[:3]]
-    avg_score = int(sum(top_scores) / len(top_scores)) if top_scores else 75
-    
-    return render_template(
-        "candidate_home.html",
-        active_step=4,
-        user=user_dict,
-        skills=skills_list,
-        documents=docs_list,
-        matches=matches,
-        team_matches=team_matches,
-        career_intent=user_dict.get("career_intent", "both"),
-        overall_score=avg_score,
-        top_match=matches[0] if matches else None,
-        my_team=my_team,
-        my_team_role=my_team_role
-    )
+    if not user_has_compulsory_skills(user["id"]):
+        return redirect(url_for("signup_skills", required=1))
+    elif not user_has_compulsory_documents(user["id"]):
+        return redirect(url_for("signup_documents", required=1))
+    if not user_is_approved_by_admin(user["id"]):
+        return redirect(url_for("signup_verification", pending=1))
+    return redirect(url_for("signup_analysis"))
 
 
 # ================= EDIT PROFILE & REVIEW FILLED DETAILS =================
