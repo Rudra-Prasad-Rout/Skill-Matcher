@@ -15,26 +15,25 @@
   }
 
   .neo-hero-card {
-    background: var(--md-sys-color-surface-container);
-    border: 1px solid var(--md-sys-color-outline);
-    border-radius: var(--md-shape-xl);
-    box-shadow: var(--md-elevation-3);
-    padding: 56px 40px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 30px 0 20px 0;
     position: relative;
     z-index: 1;
-    transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
     width: 100%;
     box-sizing: border-box;
-    overflow: hidden;
+    overflow: visible;
   }
   .neo-hero-card:hover {
-    box-shadow: var(--md-elevation-4);
+    box-shadow: none;
   }
 
   .neo-hero-title {
-    font-size: clamp(22px, 5.5vw, 48px);
-    font-weight: 800;
-    line-height: 1.2;
+    font-size: clamp(24px, 5.5vw, 52px);
+    font-weight: 900;
+    line-height: 1.15;
     letter-spacing: -0.02em;
     margin-bottom: 22px;
     text-transform: uppercase;
@@ -44,20 +43,15 @@
   }
 
   .neo-hero-highlight {
-    background: var(--md-sys-color-primary-container);
+    background: transparent;
     color: var(--md-sys-color-primary);
-    padding: 4px 16px;
-    border-radius: var(--md-shape-md);
-    border: 1px solid rgba(251, 191, 36, 0.4);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 8px;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    display: inline;
+    margin-top: 0;
     max-width: 100%;
     box-sizing: border-box;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    min-height: 1.4em;
   }
 
   /* Material Design 3 Typewriter Animation */
@@ -310,15 +304,18 @@
       padding: 16px 12px 36px 12px;
     }
     .neo-hero-card {
-      padding: 24px 16px;
-      border-radius: var(--md-shape-lg);
-      box-shadow: var(--md-elevation-2);
+      padding: 16px 0;
+      border: none;
+      box-shadow: none;
+      background: transparent;
     }
     .neo-hero-title {
       margin-bottom: 16px;
     }
     .neo-hero-highlight {
-      padding: 3px 8px;
+      padding: 0;
+      border: none;
+      background: transparent;
     }
     .neo-hero-cta-wrap {
       flex-direction: column !important;

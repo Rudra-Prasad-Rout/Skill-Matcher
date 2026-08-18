@@ -6,18 +6,18 @@
 
 :root {
   /* Material 3 Color Roles & Surfaces */
-  --md-sys-color-background: #0b0f19;
-  --md-sys-color-surface: #111827;
-  --md-sys-color-surface-container-low: #161f30;
-  --md-sys-color-surface-container: #1e293b;
-  --md-sys-color-surface-container-high: #283548;
-  --md-sys-color-surface-container-highest: #334155;
+  --md-sys-color-background: #000000;
+  --md-sys-color-surface: #0a0e17;
+  --md-sys-color-surface-container-low: #0f1420;
+  --md-sys-color-surface-container: #161f30;
+  --md-sys-color-surface-container-high: #1e293b;
+  --md-sys-color-surface-container-highest: #283548;
   
-  --s30-bg: var(--md-sys-color-background);
+  --s30-bg: #000000;
   --s30-bg-surface: var(--md-sys-color-surface);
   --s30-bg-card: var(--md-sys-color-surface-container);
   --s30-bg-card-alt: var(--md-sys-color-surface-container-high);
-  --s30-bg-input: #0f172a;
+  --s30-bg-input: #0a0e17;
   
   /* Material 3 Key Accent Roles */
   --md-sys-color-primary: #fbbf24;
@@ -134,17 +134,12 @@ p, h1, h2, h3, h4, h5, h6, label, strong, em, li, td, th {
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--s30-bg);
-  background-image: 
-    radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.06) 0px, transparent 40%),
-    radial-gradient(circle at 85% 25%, rgba(251, 191, 36, 0.05) 0px, transparent 45%),
-    radial-gradient(circle at 50% 85%, rgba(168, 85, 247, 0.04) 0px, transparent 50%);
-  background-attachment: fixed;
+  background-color: #000000;
   color: var(--s30-text-primary);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* ==========================================================================
