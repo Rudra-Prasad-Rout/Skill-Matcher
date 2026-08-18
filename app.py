@@ -1646,11 +1646,11 @@ def team_manage(team_id=None):
     member_count = 1 + len(members)
     slots_remaining = max(0, team["team_size"] - member_count)
 
-    # Calculate recommended peer candidates (for leaders only)
+    # Calculate synergistic teammates and hackathon partners
     skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
     skills_list = [dict(s) for s in skills]
     all_peers = calculate_team_formation_matches(dict(user), skills_list)
-    recommended_peers = [p for p in all_peers if p.get("id") not in invited_user_ids]
+    team_matches = [p for p in all_peers if p.get("id") not in invited_user_ids]
 
     conn.close()
     
@@ -1665,7 +1665,8 @@ def team_manage(team_id=None):
         invited_ids=invited_user_ids,
         member_count=member_count,
         slots_remaining=slots_remaining,
-        recommended_peers=recommended_peers
+        team_matches=team_matches,
+        recommended_peers=team_matches
     )
 
 # ================= LEAVE SQUAD API (FOR TEAM MEMBERS) =================
