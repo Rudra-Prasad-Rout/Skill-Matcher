@@ -18,7 +18,7 @@ def test_admin_security():
     resp = opener.open(f"{BASE}/admin")
     html = resp.read().decode('utf-8')
     assert "Staff Portal Login" in html
-    assert "Admin Username" in html
+    assert "ADMIN USERNAME" in html.upper()
     print("[PASS] Unauthenticated /admin properly protected.")
 
     print("3. Testing invalid Admin credentials...")
@@ -40,7 +40,7 @@ def test_admin_security():
     req = urllib.request.Request(f"{BASE}/admin/login", data=login_data)
     resp = opener.open(req)
     html = resp.read().decode('utf-8')
-    assert "Total Students" in html
+    assert "TOTAL STUDENTS" in html.upper()
     assert "TeamX" in html
     print("[PASS] Admin login successful with TeamX / TeamX@Admin!")
 

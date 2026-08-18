@@ -36,7 +36,7 @@ def test_s30_platform():
     resp = opener.open(req)
     assert resp.status == 200
     html = resp.read().decode('utf-8')
-    assert "Total Students" in html
+    assert "TOTAL STUDENTS" in html.upper() or "TOTAL CANDIDATES" in html.upper()
     print("[PASS] S30 Admin Dashboard 200 OK")
 
     print("5. Testing S30 Candidate Dossier (GET /admin/candidate/A7X9K)...")

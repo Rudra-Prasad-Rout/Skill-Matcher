@@ -11,8 +11,13 @@ import string
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "matchpoint.db")
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=30.0, check_same_thread=False)
     conn.row_factory = sqlite3.Row
+    try:
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA busy_timeout=30000")
+    except Exception:
+        pass
     return conn
 
 def generate_user_code(existing_codes=None):
@@ -174,6 +179,82 @@ def init_db(force_reset=False):
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
     );
     """)
+
+    # Teams Table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS teams (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        team_code TEXT UNIQUE NOT NULL,
+        leader_id INTEGER NOT NULL,
+        team_name TEXT NOT NULL,
+        team_size INTEGER DEFAULT 4,
+        theme TEXT DEFAULT 'Hackathons & Startups',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (leader_id) REFERENCES users (id) ON DELETE CASCADE
+    );
+    """)
+
+    # Team Invitations Table (supports Invitations and Join Requests)
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS team_invites (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        team_id INTEGER NOT NULL,
+        sender_id INTEGER NOT NULL,
+        receiver_id INTEGER NOT NULL,
+        invite_type TEXT DEFAULT 'INVITATION',
+        message TEXT,
+        status TEXT DEFAULT 'PENDING',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (team_id) REFERENCES teams (id) ON DELETE CASCADE,
+        FOREIGN KEY (sender_id) REFERENCES users (id) ON DELETE CASCADE,
+        FOREIGN KEY (receiver_id) REFERENCES users (id) ON DELETE CASCADE
+    );
+    """)
+
+    # Auto-migration for team_invites columns
+    existing_invite_cols = [r[1] for r in cursor.execute("PRAGMA table_info(team_invites)").fetchall()]
+    if "invite_type" not in existing_invite_cols:
+        cursor.execute("ALTER TABLE team_invites ADD COLUMN invite_type TEXT DEFAULT 'INVITATION'")
+    if "message" not in existing_invite_cols:
+        cursor.execute("ALTER TABLE team_invites ADD COLUMN message TEXT")
+    # Backfill legacy 'INVITED' status records to 'PENDING' for consistency
+    cursor.execute("UPDATE team_invites SET status = 'PENDING' WHERE status = 'INVITED'")
+
+    # Clean up duplicate teams per leader (keep only 1 team per leader)
+    cursor.execute("""
+    DELETE FROM teams
+    WHERE id NOT IN (
+        SELECT id FROM teams WHERE team_name = 'NeuralCore AI'
+        UNION
+        SELECT id FROM teams WHERE team_name = 'CyberVikings'
+        UNION
+        SELECT MAX(id) FROM teams GROUP BY leader_id
+    )
+    """)
+
+    # Ensure 1 team per leader
+    cursor.execute("""
+    DELETE FROM teams
+    WHERE id NOT IN (
+        SELECT MIN(id) FROM teams GROUP BY leader_id
+    )
+    """)
+
+    # Clean up orphaned team_invites
+    cursor.execute("DELETE FROM team_invites WHERE team_id NOT IN (SELECT id FROM teams)")
+
+    # Clean up any duplicate accepted/pending team_invites rows for the same (team_id, member_user_id)
+    cursor.execute("""
+    DELETE FROM team_invites
+    WHERE id NOT IN (
+        SELECT MAX(id)
+        FROM team_invites
+        GROUP BY team_id, (CASE WHEN invite_type = 'JOIN_REQUEST' THEN sender_id ELSE receiver_id END)
+    )
+    """)
+
+    # Unique index on leader_id to enforce 1 squad per leader at the database engine level
+    cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_teams_leader_unique ON teams(leader_id)")
 
     conn.commit()
     

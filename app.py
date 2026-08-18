@@ -51,6 +51,113 @@ def is_valid_email(email_str):
         return False
     return bool(EMAIL_REGEX.match(email_str))
 
+def allowed_file(filename):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+
+def format_url(url_str):
+    if not url_str:
+        return ""
+    url_str = url_str.strip()
+    if not url_str.startswith("http://") and not url_str.startswith("https://"):
+        return "https://" + url_str
+    return url_str
+
+def get_current_user(create_default=False):
+    user_id = session.get("user_id")
+    if not user_id:
+        return None
+    
+    conn = database.get_db_connection()
+    user = conn.execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
+    conn.close()
+    return dict(user) if user else None
+
+def user_has_compulsory_skills(user_id):
+    """Check if the user has added at least 1 technical skill with project proof."""
+    if not user_id:
+        return False
+    try:
+        conn = database.get_db_connection()
+        count = conn.execute("SELECT COUNT(*) as cnt FROM user_skills WHERE user_id = ?", (user_id,)).fetchone()["cnt"]
+        conn.close()
+        return count >= 1
+    except Exception:
+        return False
+
+def user_has_compulsory_documents(user_id):
+    """Check if the user has uploaded both mandatory Front and Back College ID card documents."""
+    if not user_id:
+        return False
+    try:
+        conn = database.get_db_connection()
+        front = conn.execute("SELECT id FROM user_documents WHERE user_id = ? AND doc_category = 'id_front'", (user_id,)).fetchone()
+        back = conn.execute("SELECT id FROM user_documents WHERE user_id = ? AND doc_category = 'id_back'", (user_id,)).fetchone()
+        conn.close()
+        return bool(front and back)
+    except Exception:
+        return False
+
+def user_is_approved_by_admin(user_id):
+    """Check if the user has been fully approved by the Admin staff."""
+    if not user_id:
+        return False
+    try:
+        conn = database.get_db_connection()
+        user = conn.execute("SELECT id, is_banned, manual_status, pdf_status FROM users WHERE id = ?", (user_id,)).fetchone()
+        conn.close()
+        if not user:
+            return False
+        if user["is_banned"]:
+            return False
+        # Approved when manual_status is 'APPROVED' or 'DONE' and pdf_status is 'DONE'
+        return user["manual_status"] in ("APPROVED", "DONE") and user["pdf_status"] in ("APPROVED", "DONE")
+    except Exception:
+        return False
+
+@app.context_processor
+def inject_user():
+    curr_user = get_current_user(create_default=False)
+    unread_mailbox = 0
+    curr_squad = None
+    if curr_user:
+        try:
+            conn = database.get_db_connection()
+            invites_count = conn.execute("""
+            SELECT COUNT(*) as c FROM team_invites 
+            WHERE receiver_id = ? AND invite_type = 'INVITATION' AND status IN ('PENDING', 'INVITED')
+            """, (curr_user["id"],)).fetchone()["c"]
+            
+            requests_count = conn.execute("""
+            SELECT COUNT(*) as c FROM team_invites ti
+            JOIN teams t ON ti.team_id = t.id
+            WHERE t.leader_id = ? AND ti.invite_type = 'JOIN_REQUEST' AND ti.status = 'PENDING'
+            """, (curr_user["id"],)).fetchone()["c"]
+
+            # Check if user has an active squad (as leader or accepted member)
+            led = conn.execute("SELECT id, team_name, team_code FROM teams WHERE leader_id = ? LIMIT 1", (curr_user["id"],)).fetchone()
+            if led:
+                curr_squad = dict(led)
+                curr_squad["role"] = "LEADER"
+            else:
+                joined = conn.execute("""
+                SELECT t.id, t.team_name, t.team_code FROM team_invites ti
+                JOIN teams t ON ti.team_id = t.id
+                WHERE ti.status = 'ACCEPTED' AND (
+                    (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+                    (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+                )
+                LIMIT 1
+                """, (curr_user["id"], curr_user["id"])).fetchone()
+                if joined:
+                    curr_squad = dict(joined)
+                    curr_squad["role"] = "MEMBER"
+
+            conn.close()
+            unread_mailbox = invites_count + requests_count
+        except Exception:
+            pass
+    return dict(current_user=curr_user, unread_mailbox_count=unread_mailbox, current_squad=curr_squad)
+
 # Autonomous AI Gmail Verification Agent
 try:
     from ai_gmail_agent import ai_agent
@@ -210,6 +317,18 @@ def format_url(url_str):
         return "https://" + url_str
     return url_str
 
+def user_has_compulsory_skills(user_id):
+    """Check if the user has added at least 1 technical skill with project proof."""
+    if not user_id:
+        return False
+    try:
+        conn = database.get_db_connection()
+        count = conn.execute("SELECT COUNT(*) as cnt FROM user_skills WHERE user_id = ?", (user_id,)).fetchone()["cnt"]
+        conn.close()
+        return count >= 1
+    except Exception:
+        return False
+
 def get_current_user(create_default=False):
     user_id = session.get("user_id")
     if not user_id:
@@ -274,6 +393,7 @@ def inject_user():
     return dict(current_user=get_current_user(create_default=False))
 
 # ================= PUBLIC LANDING PAGE =================
+
 @app.route("/")
 def landing_page():
     return render_template("landing.html")
@@ -319,25 +439,13 @@ def login_page():
 
 @app.route("/signup/new")
 def signup_new():
-    if request.args.get("reset") == "1":
-        session.pop("user_id", None)
-        return redirect(url_for("signup_profile"))
-        
-    user = get_current_user(create_default=False)
-    if user:
-        step = user.get("step", 1)
-        if step == 2:
-            return redirect(url_for("signup_skills"))
-        elif step == 3:
-            return redirect(url_for("signup_documents"))
-        elif step >= 4:
-            return redirect(url_for("signup_verification"))
+    session.pop("user_id", None)
     return redirect(url_for("signup_profile"))
 
 # ================= STEP 1: Profile Signup =================
 @app.route("/signup/profile", methods=["GET", "POST"])
 def signup_profile():
-    if request.args.get("reset") == "1":
+    if request.args.get("new") == "1":
         session.pop("user_id", None)
         
     if request.method == "POST":
@@ -403,6 +511,16 @@ def signup_profile():
             """, (new_user_code, full_name, email, gender, age_int, password or "default_pass", school, coursework))
             user_id = cursor.lastrowid
             
+            cursor.execute("""
+            INSERT INTO user_skills (user_id, skill_name, project_name, project_url, status)
+            VALUES (?, ?, ?, ?, ?)
+            """, (user_id, "React", "Campus events app", "https://github.com/alexrivera/campus-events-app", "VERIFIED"))
+            
+            cursor.execute("""
+            INSERT INTO user_skills (user_id, skill_name, project_name, project_url, status)
+            VALUES (?, ?, ?, ?, ?)
+            """, (user_id, "Data analysis", "Attendance dashboard", "https://attendance-analytics.du.ac.in", "CHECKING"))
+            
         conn.commit()
         conn.close()
         
@@ -419,30 +537,18 @@ def signup_skills():
     if not user:
         return redirect(url_for("signup_profile"))
         
-    conn = database.get_db_connection()
-    skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
-    
-    error = None
-    if request.args.get("required") == "1":
-        error = "Technical skill verification is compulsory: Please add at least 1 technical skill with its project URL (GitHub repo or live demo) to proceed."
-        
     if request.method == "POST":
-        if not skills or len(skills) < 1:
-            conn.close()
-            return render_template(
-                "skills.html", 
-                active_step=2, 
-                user=user, 
-                skills=skills, 
-                error="Technical skill verification is compulsory: Please add at least 1 technical skill with its project URL (GitHub repo or live demo) before proceeding to documents."
-            )
+        conn = database.get_db_connection()
         conn.execute("UPDATE users SET step = MAX(step, 3) WHERE id = ?", (user["id"],))
         conn.commit()
         conn.close()
         return redirect(url_for("signup_documents"))
         
+    conn = database.get_db_connection()
+    skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
     conn.close()
-    return render_template("skills.html", active_step=2, user=user, skills=skills, error=error)
+    
+    return render_template("skills.html", active_step=2, user=user, skills=skills)
 
 # ================= STEP 3: Documents =================
 @app.route("/signup/documents", methods=["GET", "POST"])
@@ -450,9 +556,6 @@ def signup_documents():
     user = get_current_user(create_default=True)
     if not user:
         return redirect(url_for("signup_profile"))
-        
-    if not user_has_compulsory_skills(user["id"]):
-        return redirect(url_for("signup_skills", required=1))
         
     conn = database.get_db_connection()
     front_doc = conn.execute("SELECT * FROM user_documents WHERE user_id = ? AND doc_category = 'id_front' ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
@@ -1073,6 +1176,987 @@ def calculate_team_formation_matches(user, skills_list):
     team_matches.sort(key=lambda x: x["synergy_percentage"], reverse=True)
     return team_matches
 
+# ================= CANDIDATE HOME / DASHBOARD =================
+@app.route("/candidate/home")
+@app.route("/dashboard")
+def candidate_home():
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login_page"))
+        
+    conn = database.get_db_connection()
+    user_row = conn.execute("SELECT * FROM users WHERE id = ?", (user["id"],)).fetchone()
+    skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
+    docs = conn.execute("SELECT * FROM user_documents WHERE user_id = ? ORDER BY id DESC", (user["id"],)).fetchall()
+
+    # Check if user is a squad leader
+    led_team = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+
+    # Check if user has ACCEPTED an invitation (joined someone else's team)
+    joined_invite = conn.execute("""
+    SELECT ti.id, t.id as team_id, t.team_name, t.team_code, t.theme, t.team_size,
+           u.full_name as leader_name, u.user_code as leader_code
+    FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    JOIN users u ON t.leader_id = u.id
+    WHERE ti.receiver_id = ? AND ti.invite_type = 'INVITATION' AND ti.status = 'ACCEPTED'
+    ORDER BY ti.id DESC LIMIT 1
+    """, (user["id"],)).fetchone()
+
+    # Check if user's JOIN_REQUEST was accepted (they requested to join)
+    requested_join = conn.execute("""
+    SELECT ti.id, t.id as team_id, t.team_name, t.team_code, t.theme, t.team_size,
+           u.full_name as leader_name, u.user_code as leader_code
+    FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    JOIN users u ON t.leader_id = u.id
+    WHERE ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST' AND ti.status = 'ACCEPTED'
+    ORDER BY ti.id DESC LIMIT 1
+    """, (user["id"],)).fetchone()
+
+    my_team = None
+    my_team_role = None
+    if led_team:
+        my_team = dict(led_team)
+        my_team_role = "LEADER"
+        # Count members
+        member_count = conn.execute(
+            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED' AND invite_type = 'INVITATION'",
+            (my_team["id"],)
+        ).fetchone()["c"]
+        my_team["member_count"] = 1 + member_count
+    elif joined_invite:
+        my_team = dict(joined_invite)
+        my_team_role = "MEMBER"
+        member_count = conn.execute(
+            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED' AND invite_type = 'INVITATION'",
+            (my_team["team_id"],)
+        ).fetchone()["c"]
+        my_team["member_count"] = 1 + member_count
+    elif requested_join:
+        my_team = dict(requested_join)
+        my_team_role = "MEMBER"
+        member_count = conn.execute(
+            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'",
+            (my_team["team_id"],)
+        ).fetchone()["c"]
+        my_team["member_count"] = 1 + member_count
+
+    conn.close()
+    
+    user_dict = dict(user_row) if user_row else dict(user)
+    skills_list = [dict(s) for s in skills]
+    docs_list = [dict(d) for d in docs]
+    
+    matches = calculate_internship_matches(user_dict, skills_list)
+    team_matches = calculate_team_formation_matches(user_dict, skills_list)
+    
+    # Calculate overall candidate readiness
+    top_scores = [m["match_percentage"] for m in matches[:3]]
+    avg_score = int(sum(top_scores) / len(top_scores)) if top_scores else 75
+    
+    return render_template(
+        "candidate_home.html",
+        active_step=4,
+        user=user_dict,
+        skills=skills_list,
+        documents=docs_list,
+        matches=matches,
+        team_matches=team_matches,
+        career_intent=user_dict.get("career_intent", "both"),
+        overall_score=avg_score,
+        top_match=matches[0] if matches else None,
+        my_team=my_team,
+        my_team_role=my_team_role
+    )
+
+
+# ================= EDIT PROFILE & REVIEW FILLED DETAILS =================
+def format_project_url(url):
+    if not url:
+        return ""
+    url = url.strip()
+    if url and not url.startswith(("http://", "https://")):
+        return "https://" + url
+    return url
+
+@app.route("/profile/edit", methods=["GET", "POST"])
+@app.route("/candidate/profile", methods=["GET", "POST"])
+def edit_profile():
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login_page"))
+        
+    conn = database.get_db_connection()
+    success_msg = None
+    error_msg = None
+    
+    if request.method == "POST":
+        action = request.form.get("action", "update_details")
+        
+        if action == "delete_skill":
+            skill_id = request.form.get("skill_id")
+            if skill_id:
+                conn.execute("DELETE FROM user_skills WHERE id = ? AND user_id = ?", (skill_id, user["id"]))
+                conn.commit()
+                success_msg = "Skill proof removed successfully."
+        elif action == "add_skill":
+            skill_name = request.form.get("skill_name", "").strip()
+            project_name = request.form.get("project_name", "").strip()
+            project_url = format_project_url(request.form.get("project_url", ""))
+            
+            if skill_name and project_name:
+                conn.execute("""
+                INSERT INTO user_skills (user_id, skill_name, project_name, project_url, status)
+                VALUES (?, ?, ?, ?, 'VERIFIED')
+                """, (user["id"], skill_name, project_name, project_url))
+                conn.commit()
+                success_msg = f"Added '{skill_name}' skill proof successfully."
+            else:
+                error_msg = "Please provide both Skill Name and Project / Proof Name."
+        else:
+            # Update general details: name, age, school, coursework
+            full_name = request.form.get("full_name", "").strip()
+            age_val = request.form.get("age", "").strip()
+            school = request.form.get("school", "").strip()
+            coursework = request.form.get("coursework", "").strip()
+            
+            if not full_name:
+                error_msg = "Full Name cannot be empty."
+            else:
+                try:
+                    age_int = int(age_val) if age_val else user.get("age", 20)
+                except ValueError:
+                    age_int = user.get("age", 20)
+                    
+                conn.execute("""
+                UPDATE users 
+                SET full_name = ?, age = ?, 
+                    school = CASE WHEN ? != '' THEN ? ELSE school END,
+                    coursework = CASE WHEN ? != '' THEN ? ELSE coursework END
+                WHERE id = ?
+                """, (full_name, age_int, school, school, coursework, coursework, user["id"]))
+                
+                # Check if a new skill was filled in the quick add row
+                quick_skill = request.form.get("quick_skill_name", "").strip()
+                quick_proj = request.form.get("quick_project_name", "").strip()
+                quick_url = format_project_url(request.form.get("quick_project_url", ""))
+                if quick_skill and quick_proj:
+                    conn.execute("""
+                    INSERT INTO user_skills (user_id, skill_name, project_name, project_url, status)
+                    VALUES (?, ?, ?, ?, 'VERIFIED')
+                    """, (user["id"], quick_skill, quick_proj, quick_url))
+                
+                conn.commit()
+                success_msg = "Profile details and Skill Proofs updated successfully!"
+                
+    # Fetch updated user, skills, and documents
+    user_row = conn.execute("SELECT * FROM users WHERE id = ?", (user["id"],)).fetchone()
+    skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
+    docs = conn.execute("SELECT * FROM user_documents WHERE user_id = ? ORDER BY id DESC", (user["id"],)).fetchall()
+    conn.close()
+    
+    user_dict = dict(user_row) if user_row else dict(user)
+    skills_list = [dict(s) for s in skills]
+    docs_list = [dict(d) for d in docs]
+    
+    return render_template(
+        "edit_profile.html",
+        user=user_dict,
+        skills=skills_list,
+        documents=docs_list,
+        success=success_msg,
+        error=error_msg
+    )
+
+# ================= TEAM FORMATION: CREATE SQUAD & INVITE MEMBERS =================
+@app.route("/team/create", methods=["GET", "POST"])
+def team_create():
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login_page"))
+        
+    conn = database.get_db_connection()
+    error_msg = None
+    
+    # 1. Check if user already leads an active team
+    existing_team = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+    
+    # 2. Check if user is an accepted member of another team
+    joined_team = conn.execute("""
+    SELECT t.*, u.full_name as leader_name, u.user_code as leader_code FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    JOIN users u ON t.leader_id = u.id
+    WHERE ti.status = 'ACCEPTED' AND (
+        (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+        (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+    )
+    LIMIT 1
+    """, (user["id"], user["id"])).fetchone()
+
+    if request.method == "POST":
+        if existing_team:
+            error_msg = f"You already lead an active squad ('{existing_team['team_name']}'). You cannot create more than one squad at a time. Manage or disband your squad first."
+        elif joined_team:
+            error_msg = f"You are currently a member of squad '{joined_team['team_name']}'. Please leave your current squad before creating a new one."
+        else:
+            team_name = request.form.get("team_name", "").strip()
+            team_size_val = request.form.get("team_size", "4").strip()
+            theme = request.form.get("theme", "Smart India Hackathon 2026").strip()
+            
+            if not team_name:
+                error_msg = "Please provide a Team Name."
+            else:
+                try:
+                    team_size = int(team_size_val)
+                    if team_size < 2 or team_size > 10:
+                        team_size = 4
+                except ValueError:
+                    team_size = 4
+                    
+                import random, string
+                team_code = "SQD-" + "".join(random.choices(string.ascii_uppercase + string.digits, k=4))
+                
+                cursor = conn.cursor()
+                cursor.execute("""
+                INSERT INTO teams (team_code, leader_id, team_name, team_size, theme)
+                VALUES (?, ?, ?, ?, ?)
+                """, (team_code, user["id"], team_name, team_size, theme))
+                team_id = cursor.lastrowid
+                conn.commit()
+                conn.close()
+                return redirect(url_for("team_manage", team_id=team_id))
+                
+    conn.close()
+    return render_template(
+        "team_create.html",
+        user=dict(user),
+        existing_team=dict(existing_team) if existing_team else None,
+        joined_team=dict(joined_team) if joined_team else None,
+        error=error_msg
+    )
+
+# ================= DISBAND / DELETE SQUAD API (FOR LEADER) =================
+@app.route("/api/team/delete", methods=["POST"])
+def api_team_delete():
+    user = get_current_user()
+    if not user:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+
+    data = request.get_json(silent=True) or {}
+    team_id = data.get("team_id")
+    if not team_id:
+        return jsonify({"success": False, "message": "Missing team_id"}), 400
+
+    conn = database.get_db_connection()
+    team = conn.execute("SELECT * FROM teams WHERE id = ? AND leader_id = ?", (team_id, user["id"])).fetchone()
+    if not team:
+        conn.close()
+        return jsonify({"success": False, "message": "Only the squad leader can disband this squad."}), 403
+
+    # Delete all invites/requests and the team
+    conn.execute("DELETE FROM team_invites WHERE team_id = ?", (team_id,))
+    conn.execute("DELETE FROM teams WHERE id = ?", (team_id,))
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "message": f"Squad '{team['team_name']}' has been disbanded successfully."
+    })
+
+
+@app.route("/team/manage")
+@app.route("/team/<int:team_id>/invite")
+@app.route("/squad")
+@app.route("/team/view")
+def team_manage(team_id=None):
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login_page"))
+        
+    conn = database.get_db_connection()
+    is_leader = False
+    team_row = None
+    
+    # 1. First check if user is leader of a squad
+    if team_id:
+        team_row = conn.execute("SELECT * FROM teams WHERE id = ? AND leader_id = ?", (team_id, user["id"])).fetchone()
+    else:
+        team_row = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+        
+    if team_row:
+        is_leader = True
+        team = dict(team_row)
+        leader_user = dict(user)
+    else:
+        # 2. Check if user is an accepted member of any squad
+        if team_id:
+            joined = conn.execute("""
+            SELECT t.* FROM team_invites ti
+            JOIN teams t ON ti.team_id = t.id
+            WHERE ti.team_id = ? AND ti.status = 'ACCEPTED' AND (
+                (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+                (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+            )
+            LIMIT 1
+            """, (team_id, user["id"], user["id"])).fetchone()
+        else:
+            joined = conn.execute("""
+            SELECT t.* FROM team_invites ti
+            JOIN teams t ON ti.team_id = t.id
+            WHERE ti.status = 'ACCEPTED' AND (
+                (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+                (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+            )
+            ORDER BY ti.id DESC LIMIT 1
+            """, (user["id"], user["id"])).fetchone()
+            
+        if not joined:
+            conn.close()
+            return redirect(url_for("find_teams"))
+            
+        team = dict(joined)
+        is_leader = False
+        # Fetch the actual leader's user data
+        leader_row = conn.execute("SELECT * FROM users WHERE id = ?", (team["leader_id"],)).fetchone()
+        leader_user = dict(leader_row) if leader_row else {}
+
+    # Fetch Leader's verified skills
+    leader_skills_rows = conn.execute(
+        "SELECT skill_name FROM user_skills WHERE user_id = ? ORDER BY id ASC",
+        (team["leader_id"],)
+    ).fetchall()
+    leader_user["skills"] = [s["skill_name"] for s in leader_skills_rows]
+    
+    # Fetch all invitations and join requests for this team
+    all_invites = conn.execute("""
+    SELECT ti.id, ti.status, ti.created_at, ti.invite_type,
+           u.id as user_id, u.user_code, u.full_name, u.email, u.school, u.coursework, u.age
+    FROM team_invites ti
+    JOIN users u ON (CASE WHEN ti.invite_type = 'JOIN_REQUEST' THEN ti.sender_id ELSE ti.receiver_id END) = u.id
+    WHERE ti.team_id = ?
+    ORDER BY ti.status ASC, ti.id DESC
+    """, (team["id"],)).fetchall()
+
+    members = []          # ACCEPTED — distinct members in the squad
+    pending_invites = []  # PENDING INVITATIONS sent by leader
+    seen_member_ids = set()
+
+    for inv in all_invites:
+        inv_dict = dict(inv)
+        uid = inv_dict["user_id"]
+        
+        # Never add leader as a member
+        if uid == team["leader_id"]:
+            continue
+
+        if inv_dict["status"] == "ACCEPTED":
+            # DEDUPLICATION: add each candidate user_id only once to members roster
+            if uid not in seen_member_ids:
+                seen_member_ids.add(uid)
+                skills_rows = conn.execute(
+                    "SELECT skill_name FROM user_skills WHERE user_id = ? ORDER BY id ASC",
+                    (uid,)
+                ).fetchall()
+                inv_dict["skills"] = [s["skill_name"] for s in skills_rows]
+                inv_dict["is_current_user"] = (uid == user["id"])
+                members.append(inv_dict)
+        elif inv_dict["status"] == "PENDING" and inv_dict.get("invite_type") != "JOIN_REQUEST":
+            if uid not in seen_member_ids:
+                inv_dict["skills"] = []
+                pending_invites.append(inv_dict)
+
+    # All active candidate IDs in this squad (to disable re-invite)
+    invited_user_ids = list(seen_member_ids) + [i["user_id"] for i in pending_invites]
+
+    # Accurate member count: leader (1) + distinct accepted members
+    member_count = 1 + len(members)
+    slots_remaining = max(0, team["team_size"] - member_count)
+
+    # Calculate recommended peer candidates (for leaders only)
+    skills = conn.execute("SELECT * FROM user_skills WHERE user_id = ? ORDER BY id ASC", (user["id"],)).fetchall()
+    skills_list = [dict(s) for s in skills]
+    all_peers = calculate_team_formation_matches(dict(user), skills_list)
+    recommended_peers = [p for p in all_peers if p.get("id") not in invited_user_ids]
+
+    conn.close()
+    
+    return render_template(
+        "team_manage.html",
+        user=dict(user),
+        team=team,
+        is_leader=is_leader,
+        leader_user=leader_user,
+        members=members,
+        pending_invites=pending_invites,
+        invited_ids=invited_user_ids,
+        member_count=member_count,
+        slots_remaining=slots_remaining,
+        recommended_peers=recommended_peers
+    )
+
+# ================= LEAVE SQUAD API (FOR TEAM MEMBERS) =================
+@app.route("/api/team/leave", methods=["POST"])
+def api_team_leave():
+    user = get_current_user()
+    if not user:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+
+    data = request.get_json(silent=True) or {}
+    team_id = data.get("team_id")
+
+    conn = database.get_db_connection()
+
+    if team_id:
+        invite = conn.execute("""
+        SELECT ti.id, ti.team_id, t.team_name, t.leader_id
+        FROM team_invites ti
+        JOIN teams t ON ti.team_id = t.id
+        WHERE ti.team_id = ? AND ti.status = 'ACCEPTED' AND (
+            (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+            (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+        )
+        """, (team_id, user["id"], user["id"])).fetchone()
+    else:
+        invite = conn.execute("""
+        SELECT ti.id, ti.team_id, t.team_name, t.leader_id
+        FROM team_invites ti
+        JOIN teams t ON ti.team_id = t.id
+        WHERE ti.status = 'ACCEPTED' AND (
+            (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+            (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+        )
+        ORDER BY ti.id DESC LIMIT 1
+        """, (user["id"], user["id"])).fetchone()
+
+    if not invite:
+        is_leader = conn.execute("SELECT id FROM teams WHERE leader_id = ?", (user["id"],)).fetchone()
+        conn.close()
+        if is_leader:
+            return jsonify({"success": False, "message": "Squad leaders cannot leave their squad. You manage this squad."}), 400
+        return jsonify({"success": False, "message": "You are not an active member of any squad."}), 404
+
+    inv_dict = dict(invite)
+    # Remove all records for this member in this squad
+    conn.execute("""
+    DELETE FROM team_invites 
+    WHERE team_id = ? AND (
+        (receiver_id = ? AND invite_type = 'INVITATION') OR
+        (sender_id = ? AND invite_type = 'JOIN_REQUEST')
+    )
+    """, (inv_dict["team_id"], user["id"], user["id"]))
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        "success": True,
+        "message": f"You have successfully left squad '{inv_dict['team_name']}'."
+    })
+
+# ================= REMOVE MEMBER API (FOR SQUAD LEADER) =================
+@app.route("/api/team/remove-member", methods=["POST"])
+def api_team_remove_member():
+    user = get_current_user()
+    if not user:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+
+    data = request.get_json(silent=True) or {}
+    team_id = data.get("team_id")
+    target_user_id = data.get("user_id")
+
+    if not team_id or not target_user_id:
+        return jsonify({"success": False, "message": "Missing team_id or user_id"}), 400
+
+    conn = database.get_db_connection()
+    # Verify current user is the leader of this team
+    team = conn.execute("SELECT * FROM teams WHERE id = ? AND leader_id = ?", (team_id, user["id"])).fetchone()
+    if not team:
+        conn.close()
+        return jsonify({"success": False, "message": "Only the squad leader can remove members."}), 403
+
+    if int(target_user_id) == user["id"]:
+        conn.close()
+        return jsonify({"success": False, "message": "Leader cannot remove themselves."}), 400
+
+    # Get target user info for friendly message
+    target = conn.execute("SELECT id, full_name, user_code FROM users WHERE id = ?", (target_user_id,)).fetchone()
+    target_name = target["full_name"] if target else "Member"
+
+    # Delete all invite/join request rows for this user in this team
+    deleted = conn.execute("""
+    DELETE FROM team_invites 
+    WHERE team_id = ? AND (
+        (receiver_id = ? AND invite_type = 'INVITATION') OR
+        (sender_id = ? AND invite_type = 'JOIN_REQUEST')
+    )
+    """, (team_id, target_user_id, target_user_id)).rowcount
+
+    conn.commit()
+    conn.close()
+
+    if deleted == 0:
+        return jsonify({"success": False, "message": f"{target_name} is not an active member of this squad."}), 404
+
+    return jsonify({
+        "success": True,
+        "message": f"{target_name} has been removed from {team['team_name']}. The squad slot is now open."
+    })
+
+
+
+@app.route("/api/team/invite", methods=["POST"])
+def api_team_invite():
+    user = get_current_user()
+    if not user:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+        
+    data = request.get_json(silent=True) or {}
+    team_id_raw = data.get("team_id")
+    target_id = data.get("target_id") # can be user_id, user_code, email, or name
+    
+    if not target_id:
+        return jsonify({"success": False, "message": "Please specify a candidate to invite (enter their Candidate ID or name)."}), 400
+        
+    conn = database.get_db_connection()
+    
+    # Resolve team
+    team = None
+    if team_id_raw is not None:
+        try:
+            team_id = int(team_id_raw)
+            team = conn.execute("SELECT * FROM teams WHERE id = ? AND leader_id = ?", (team_id, user["id"])).fetchone()
+        except (ValueError, TypeError):
+            pass
+            
+    if not team:
+        team = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC LIMIT 1", (user["id"],)).fetchone()
+        
+    if not team:
+        conn.close()
+        return jsonify({"success": False, "message": "You must create a squad first before inviting members."}), 403
+        
+    target_str = str(target_id).strip()
+    target_user = None
+    
+    if target_str.isdigit():
+        target_user = conn.execute("SELECT * FROM users WHERE id = ?", (int(target_str),)).fetchone()
+    if not target_user:
+        target_user = conn.execute("SELECT * FROM users WHERE UPPER(user_code) = UPPER(?)", (target_str,)).fetchone()
+    if not target_user:
+        target_user = conn.execute("SELECT * FROM users WHERE LOWER(email) = LOWER(?) OR UPPER(full_name) = UPPER(?)", (target_str, target_str)).fetchone()
+        
+    if not target_user:
+        conn.close()
+        return jsonify({"success": False, "message": f"Candidate '{target_str}' not found. Please check their 5-character ID."}), 404
+        
+    target_dict = dict(target_user)
+    if target_dict["id"] == user["id"]:
+        conn.close()
+        return jsonify({"success": False, "message": "You cannot invite yourself to your own squad."}), 400
+        
+    # Check if target is already an accepted member of this squad
+    already_member = conn.execute("""
+    SELECT id FROM team_invites 
+    WHERE team_id = ? AND status = 'ACCEPTED' AND (
+        (receiver_id = ? AND invite_type = 'INVITATION') OR
+        (sender_id = ? AND invite_type = 'JOIN_REQUEST')
+    )
+    """, (team["id"], target_dict["id"], target_dict["id"])).fetchone()
+    if already_member:
+        conn.close()
+        return jsonify({"success": False, "message": f"{target_dict['full_name']} is already an active member of your squad."}), 400
+
+    # Reuse existing invite/request or insert a clean new one
+    existing = conn.execute("""
+    SELECT id FROM team_invites 
+    WHERE team_id = ? AND (
+        (receiver_id = ? AND invite_type = 'INVITATION') OR
+        (sender_id = ? AND invite_type = 'JOIN_REQUEST')
+    )
+    """, (team["id"], target_dict["id"], target_dict["id"])).fetchone()
+
+    if existing:
+        conn.execute("""
+        UPDATE team_invites 
+        SET status = 'PENDING', invite_type = 'INVITATION', sender_id = ?, receiver_id = ?, created_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+        """, (user["id"], target_dict["id"], existing["id"]))
+        conn.commit()
+    else:
+        conn.execute("""
+        INSERT INTO team_invites (team_id, sender_id, receiver_id, invite_type, status)
+        VALUES (?, ?, ?, 'INVITATION', 'PENDING')
+        """, (team["id"], user["id"], target_dict["id"]))
+        conn.commit()
+        
+    conn.close()
+    return jsonify({
+        "success": True, 
+        "message": f"Invitation successfully sent to {target_dict['full_name']} (ID: {target_dict['user_code']})!",
+        "candidate": {
+            "id": target_dict["id"],
+            "user_code": target_dict["user_code"],
+            "full_name": target_dict["full_name"],
+            "school": target_dict.get("school", ""),
+            "coursework": target_dict.get("coursework", "")
+        }
+    })
+
+@app.route("/api/team/search-candidate", methods=["GET"])
+def api_team_search_candidate():
+    query = request.args.get("query", "").strip().upper()
+    if not query:
+        return jsonify({"success": False, "candidates": []})
+        
+    conn = database.get_db_connection()
+    curr_user = get_current_user()
+    curr_user_id = curr_user["id"] if curr_user else 0
+    
+    results = conn.execute("""
+    SELECT id, user_code, full_name, email, school, coursework, age
+    FROM users 
+    WHERE id != ? AND (UPPER(user_code) = ? OR UPPER(full_name) LIKE ?)
+    LIMIT 6
+    """, (curr_user_id, query, f"%{query}%")).fetchall()
+    
+    candidates = []
+    for r in results:
+        cand_dict = dict(r)
+        skills = conn.execute("SELECT skill_name FROM user_skills WHERE user_id = ?", (cand_dict["id"],)).fetchall()
+        cand_dict["skills"] = [s["skill_name"] for s in skills]
+        candidates.append(cand_dict)
+        
+    conn.close()
+    return jsonify({"success": True, "candidates": candidates})
+
+@app.route("/api/team/cancel-invite", methods=["POST"])
+def api_team_cancel_invite():
+    user = get_current_user()
+    if not user:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+    data = request.get_json() or {}
+    invite_id = data.get("invite_id")
+    if not invite_id:
+        return jsonify({"success": False, "message": "Missing invite_id"}), 400
+        
+    conn = database.get_db_connection()
+    conn.execute("DELETE FROM team_invites WHERE id = ? AND sender_id = ?", (invite_id, user["id"]))
+    conn.commit()
+    conn.close()
+    return jsonify({"success": True, "message": "Invitation revoked successfully."})
+
+# ================= SQUAD MAILBOX & INVITATION/JOIN REQUEST SYSTEM =================
+@app.route("/mailbox")
+@app.route("/team/mailbox")
+def mailbox():
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login_page"))
+        
+    conn = database.get_db_connection()
+    
+    # 1. Invitations Received by Current User (from squad leaders)
+    invitations = conn.execute("""
+    SELECT ti.id as invite_id, ti.status, ti.created_at, ti.message,
+           t.id as team_id, t.team_name, t.team_code, t.team_size, t.theme,
+           u.id as leader_id, u.user_code as leader_code, u.full_name as leader_name, u.school as leader_school
+    FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    JOIN users u ON t.leader_id = u.id
+    WHERE ti.receiver_id = ? AND ti.invite_type = 'INVITATION'
+    ORDER BY ti.id DESC
+    """, (user["id"],)).fetchall()
+    invitations_list = [dict(i) for i in invitations]
+    
+    # 2. Member Join Requests Received by Squads Led by Current User
+    join_requests = conn.execute("""
+    SELECT ti.id as request_id, ti.status, ti.created_at, ti.message,
+           t.id as team_id, t.team_name, t.team_code,
+           u.id as applicant_id, u.user_code as applicant_code, u.full_name as applicant_name, u.school as applicant_school, u.coursework as applicant_coursework
+    FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    JOIN users u ON ti.sender_id = u.id
+    WHERE t.leader_id = ? AND ti.invite_type = 'JOIN_REQUEST'
+    ORDER BY ti.id DESC
+    """, (user["id"],)).fetchall()
+    
+    join_requests_list = []
+    for jr in join_requests:
+        jd = dict(jr)
+        skills = conn.execute("SELECT skill_name FROM user_skills WHERE user_id = ?", (jd["applicant_id"],)).fetchall()
+        jd["skills"] = [s["skill_name"] for s in skills]
+        join_requests_list.append(jd)
+        
+    # 3. Sent Invites / Requests by Current User
+    sent_items = conn.execute("""
+    SELECT ti.id as item_id, ti.invite_type, ti.status, ti.created_at,
+           t.team_name, t.team_code,
+           u.user_code as target_code, u.full_name as target_name
+    FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    JOIN users u ON (CASE WHEN ti.invite_type = 'INVITATION' THEN ti.receiver_id ELSE t.leader_id END) = u.id
+    WHERE ti.sender_id = ?
+    ORDER BY ti.id DESC
+    """, (user["id"],)).fetchall()
+    sent_list = [dict(s) for s in sent_items]
+    
+    # Count of active teams led by user
+    user_teams = conn.execute("SELECT * FROM teams WHERE leader_id = ? ORDER BY id DESC", (user["id"],)).fetchall()
+    user_teams_list = [dict(t) for t in user_teams]
+    
+    conn.close()
+    
+    return render_template(
+        "mailbox.html",
+        user=dict(user),
+        invitations=invitations_list,
+        join_requests=join_requests_list,
+        sent_items=sent_list,
+        user_teams=user_teams_list
+    )
+
+@app.route("/api/mailbox/respond", methods=["POST"])
+def api_mailbox_respond():
+    user = get_current_user()
+    if not user:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+        
+    data = request.get_json() or {}
+    item_id = data.get("item_id")
+    response_action = data.get("action", "").lower() # 'accept' or 'reject'
+    
+    if not item_id or response_action not in ("accept", "reject"):
+        return jsonify({"success": False, "message": "Invalid parameters"}), 400
+        
+    conn = database.get_db_connection()
+    invite = conn.execute("""
+    SELECT ti.*, t.leader_id, t.team_name, t.team_size
+    FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    WHERE ti.id = ?
+    """, (item_id,)).fetchone()
+    
+    if not invite:
+        conn.close()
+        return jsonify({"success": False, "message": "Mailbox item not found."}), 404
+        
+    inv_dict = dict(invite)
+    
+    is_invite_receiver = (inv_dict["invite_type"] == "INVITATION" and inv_dict["receiver_id"] == user["id"])
+    is_team_leader = (inv_dict["invite_type"] == "JOIN_REQUEST" and inv_dict["leader_id"] == user["id"])
+    
+    if not (is_invite_receiver or is_team_leader):
+        conn.close()
+        return jsonify({"success": False, "message": "Unauthorized to respond to this request."}), 403
+        
+    new_status = "ACCEPTED" if response_action == "accept" else "REJECTED"
+    
+    if response_action == "accept":
+        # Candidate user ID involved
+        cand_id = inv_dict["receiver_id"] if inv_dict["invite_type"] == "INVITATION" else inv_dict["sender_id"]
+        
+        # Check if already accepted in this team
+        already_accepted = conn.execute("""
+        SELECT id FROM team_invites 
+        WHERE team_id = ? AND status = 'ACCEPTED' AND id != ? AND (
+            (receiver_id = ? AND invite_type = 'INVITATION') OR
+            (sender_id = ? AND invite_type = 'JOIN_REQUEST')
+        )
+        """, (inv_dict["team_id"], item_id, cand_id, cand_id)).fetchone()
+        
+        if already_accepted:
+            # Delete this duplicate request to keep DB clean
+            conn.execute("DELETE FROM team_invites WHERE id = ?", (item_id,))
+            conn.commit()
+            conn.close()
+            return jsonify({"success": True, "message": "Candidate is already a confirmed member of this squad.", "new_status": "ACCEPTED"})
+            
+        # Count distinct members for capacity check
+        curr_members = conn.execute("""
+        SELECT COUNT(DISTINCT CASE WHEN invite_type = 'JOIN_REQUEST' THEN sender_id ELSE receiver_id END) as c
+        FROM team_invites 
+        WHERE team_id = ? AND status = 'ACCEPTED'
+        """, (inv_dict["team_id"],)).fetchone()["c"]
+        
+        if curr_members + 1 >= inv_dict["team_size"]:
+            conn.close()
+            return jsonify({"success": False, "message": "Squad is already at maximum capacity."}), 400
+            
+        # Set this row to ACCEPTED
+        conn.execute("UPDATE team_invites SET status = 'ACCEPTED' WHERE id = ?", (item_id,))
+        # Clean up any other redundant rows for this (team_id, candidate_id) pair
+        conn.execute("""
+        DELETE FROM team_invites 
+        WHERE team_id = ? AND id != ? AND (
+            (receiver_id = ? AND invite_type = 'INVITATION') OR
+            (sender_id = ? AND invite_type = 'JOIN_REQUEST')
+        )
+        """, (inv_dict["team_id"], item_id, cand_id, cand_id))
+        conn.commit()
+        conn.close()
+        return jsonify({"success": True, "message": "Squad request successfully accepted!", "new_status": "ACCEPTED"})
+        
+    conn.execute("UPDATE team_invites SET status = ? WHERE id = ?", (new_status, item_id))
+    conn.commit()
+    conn.close()
+    
+    msg = f"Squad request successfully {new_status.lower()}!"
+    return jsonify({"success": True, "message": msg, "new_status": new_status})
+
+@app.route("/api/team/request-join", methods=["POST"])
+def api_team_request_join():
+    user = get_current_user()
+    if not user:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+        
+    data = request.get_json() or {}
+    team_code = data.get("team_code", "").strip().upper()
+    message = data.get("message", "").strip()
+    
+    if not team_code:
+        return jsonify({"success": False, "message": "Please enter a valid Squad Code (e.g. SQD-XXXX)."}), 400
+        
+    conn = database.get_db_connection()
+    team = conn.execute("SELECT * FROM teams WHERE UPPER(team_code) = ?", (team_code,)).fetchone()
+    
+    if not team:
+        conn.close()
+        return jsonify({"success": False, "message": f"No squad found with code '{team_code}'."}), 404
+        
+    team_dict = dict(team)
+    if team_dict["leader_id"] == user["id"]:
+        conn.close()
+        return jsonify({"success": False, "message": "You are already the leader of this squad."}), 400
+
+    # Check if user is already an accepted member in this squad
+    already_member = conn.execute("""
+    SELECT id FROM team_invites 
+    WHERE team_id = ? AND status = 'ACCEPTED' AND (
+        (receiver_id = ? AND invite_type = 'INVITATION') OR
+        (sender_id = ? AND invite_type = 'JOIN_REQUEST')
+    )
+    """, (team_dict["id"], user["id"], user["id"])).fetchone()
+    if already_member:
+        conn.close()
+        return jsonify({"success": False, "message": "You are already a member of this squad."}), 400
+
+    # If leader already sent an invitation to this user, auto-accept it!
+    existing_inv = conn.execute("""
+    SELECT id FROM team_invites
+    WHERE team_id = ? AND receiver_id = ? AND invite_type = 'INVITATION' AND status = 'PENDING'
+    """, (team_dict["id"], user["id"])).fetchone()
+    if existing_inv:
+        conn.execute("UPDATE team_invites SET status = 'ACCEPTED' WHERE id = ?", (existing_inv["id"],))
+        conn.commit()
+        conn.close()
+        return jsonify({
+            "success": True, 
+            "message": f"You had a pending invitation! You have now joined '{team_dict['team_name']}'!"
+        })
+
+    # Otherwise reuse existing join_request row or insert new clean row
+    existing_req = conn.execute("""
+    SELECT id FROM team_invites 
+    WHERE team_id = ? AND sender_id = ? AND invite_type = 'JOIN_REQUEST'
+    """, (team_dict["id"], user["id"])).fetchone()
+    if existing_req:
+        conn.execute("""
+        UPDATE team_invites SET status = 'PENDING', message = ?, created_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+        """, (message, existing_req["id"]))
+        conn.commit()
+    else:
+        conn.execute("""
+        INSERT INTO team_invites (team_id, sender_id, receiver_id, invite_type, message, status)
+        VALUES (?, ?, ?, 'JOIN_REQUEST', ?, 'PENDING')
+        """, (team_dict["id"], user["id"], team_dict["leader_id"], message))
+        conn.commit()
+        
+    conn.close()
+    return jsonify({
+        "success": True, 
+        "message": f"Join request sent to leader of squad '{team_dict['team_name']}'!"
+    })
+
+
+# ================= FIND TEAMS =================
+@app.route("/find-teams")
+@app.route("/squads")
+def find_teams():
+    user = get_current_user()
+    if not user:
+        return redirect(url_for("login_page"))
+
+    conn = database.get_db_connection()
+
+    # All teams with available slots (not full yet)
+    all_teams = conn.execute("""
+    SELECT t.id, t.team_name, t.team_code, t.theme, t.team_size, t.created_at,
+           u.full_name as leader_name, u.user_code as leader_code, u.school as leader_school
+    FROM teams t
+    JOIN users u ON t.leader_id = u.id
+    WHERE t.leader_id != ?
+    ORDER BY t.id DESC
+    """, (user["id"],)).fetchall()
+
+    open_squads = []
+    for team in all_teams:
+        td = dict(team)
+        accepted_count = conn.execute(
+            "SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'",
+            (td["id"],)
+        ).fetchone()["c"]
+        td["member_count"] = 1 + accepted_count  # leader + members
+        td["slots_left"] = td["team_size"] - td["member_count"]
+        if td["slots_left"] > 0:
+            open_squads.append(td)
+
+    # Check if the user is already in a team (as leader or accepted member)
+    my_team = None
+    my_team_role = None
+    led_team = conn.execute("SELECT * FROM teams WHERE leader_id = ? LIMIT 1", (user["id"],)).fetchone()
+    if led_team:
+        my_team = dict(led_team)
+        my_team_role = "LEADER"
+    else:
+        joined = conn.execute("""
+        SELECT t.id, t.team_name, t.team_code, t.theme, t.team_size,
+               u.full_name as leader_name, u.user_code as leader_code
+        FROM team_invites ti
+        JOIN teams t ON ti.team_id = t.id
+        JOIN users u ON t.leader_id = u.id
+        WHERE ti.status = 'ACCEPTED' AND (
+            (ti.receiver_id = ? AND ti.invite_type = 'INVITATION') OR
+            (ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST')
+        )
+        ORDER BY ti.id DESC LIMIT 1
+        """, (user["id"], user["id"])).fetchone()
+        if joined:
+            my_team = dict(joined)
+            my_team_role = "MEMBER"
+
+    # Check pending join requests sent by this user (to show "Awaiting" status)
+    pending_requests = conn.execute("""
+    SELECT ti.id, ti.status, t.team_name, t.team_code
+    FROM team_invites ti
+    JOIN teams t ON ti.team_id = t.id
+    WHERE ti.sender_id = ? AND ti.invite_type = 'JOIN_REQUEST' AND ti.status = 'PENDING'
+    """, (user["id"],)).fetchall()
+    pending_list = [dict(p) for p in pending_requests]
+    pending_team_ids = [p["team_code"] for p in pending_list]
+
+    conn.close()
+
+    return render_template(
+        "find_teams.html",
+        user=dict(user),
+        open_squads=open_squads,
+        my_team=my_team,
+        my_team_role=my_team_role,
+        pending_team_codes=pending_team_ids
+    )
+
 # ================= STEP 4 (NEW): Real-time AI Profile Analysis & Matchmaking =================
 @app.route("/signup/analysis")
 @app.route("/analysis")
@@ -1080,7 +2164,9 @@ def signup_analysis():
     user = get_current_user(create_default=True)
     if not user:
         return redirect(url_for("signup_profile"))
-    if not user_has_compulsory_documents(user["id"]):
+    if not user_has_compulsory_skills(user["id"]):
+        return redirect(url_for("signup_skills", required=1))
+    elif not user_has_compulsory_documents(user["id"]):
         return redirect(url_for("signup_documents", required=1))
     if not user_is_approved_by_admin(user["id"]):
         return redirect(url_for("signup_verification", pending=1))
@@ -1137,7 +2223,9 @@ def api_profile_analysis():
     user = get_current_user(create_default=True)
     if not user:
         return jsonify({"error": "Unauthorized"}), 401
-    if not user_has_compulsory_documents(user["id"]):
+    if not user_has_compulsory_skills(user["id"]):
+        return jsonify({"error": "Compulsory skills required"}), 403
+    elif not user_has_compulsory_documents(user["id"]):
         return jsonify({"error": "Compulsory documents required"}), 403
     if not user_is_approved_by_admin(user["id"]):
         return jsonify({"error": "Admin approval required before profile analysis", "is_approved": False}), 403
@@ -1165,7 +2253,9 @@ def signup_verification():
     user = get_current_user(create_default=True)
     if not user:
         return redirect(url_for("signup_profile"))
-    if not user_has_compulsory_documents(user["id"]):
+    if not user_has_compulsory_skills(user["id"]):
+        return redirect(url_for("signup_skills", required=1))
+    elif not user_has_compulsory_documents(user["id"]):
         return redirect(url_for("signup_documents", required=1))
         
     conn = database.get_db_connection()
@@ -1278,7 +2368,8 @@ def api_skills():
         skill_name = data.get("skill_name", "").strip()
         project_name = data.get("project_name", "").strip()
         project_url = format_url(data.get("project_url", "").strip())
-        status = data.get("status", "CHECKING").upper()
+        status_raw = data.get("status", "CHECKING")
+        status = (status_raw or "CHECKING").upper()
         
         if not skill_name or not project_name or not project_url:
             conn.close()
@@ -1903,6 +2994,8 @@ def api_admin_curate_internship():
         conn.execute("UPDATE discovered_internships SET is_scam_flagged = 0, is_active = 1 WHERE id = ?", (item_id,))
     elif action == "delete":
         conn.execute("DELETE FROM discovered_internships WHERE id = ?", (item_id,))
+    conn.commit()
+    conn.close()
     return jsonify({"success": True, "id": item_id, "action": action})
 
 @app.route("/api/internships/inspect-url", methods=["POST"])
@@ -1925,11 +3018,13 @@ def api_inspect_internship_url():
     if item_id:
         try:
             conn = database.get_db_connection()
+            is_scam = 1 if audit_result.get("is_scam_flagged") else 0
             conn.execute("""
                 UPDATE discovered_internships 
-                SET link_status = ?, is_scam_flagged = CASE WHEN ? = 1 THEN 1 ELSE is_scam_flagged END
+                SET is_scam_flagged = CASE WHEN ? = 1 THEN 1 ELSE is_scam_flagged END,
+                    is_active = CASE WHEN ? = 1 THEN 0 ELSE is_active END
                 WHERE id = ?
-            """, (audit_result["verdict"], 1 if audit_result["is_scam_flagged"] else 0, item_id))
+            """, (is_scam, is_scam, item_id))
             conn.commit()
             conn.close()
         except Exception:

@@ -1,13 +1,38 @@
 import requests
 import database
 
+# Ensure Jay exists and has a squad
+conn = database.get_db_connection()
+jay = conn.execute("SELECT id FROM users WHERE email = 'njay0885@gmail.com'").fetchone()
+if not jay:
+    conn.execute("""
+    INSERT INTO users (user_code, full_name, email, password_hash, step, pdf_status, manual_status)
+    VALUES ('JAY01', 'Jay S30', 'njay0885@gmail.com', 'password123', 4, 'DONE', 'APPROVED')
+    """)
+    conn.commit()
+    jay = conn.execute("SELECT id FROM users WHERE email = 'njay0885@gmail.com'").fetchone()
+
+jay_id = jay['id']
+team = conn.execute("SELECT * FROM teams WHERE leader_id = ?", (jay_id,)).fetchone()
+if not team:
+    conn.execute("""
+    INSERT INTO teams (team_code, leader_id, team_name, team_size, theme)
+    VALUES ('SQD-KO9N', ?, 'CyberVikings', 4, 'Hackathons & Startups')
+    """, (jay_id,))
+    conn.commit()
+    team = conn.execute("SELECT * FROM teams WHERE leader_id = ?", (jay_id,)).fetchone()
+
+team_code = team['team_code']
+team_id = team['id']
+conn.close()
+
 # Priya Sharma (ID: 9B3KZ, user_id=3) logs in
 s_priya = requests.Session()
 r = s_priya.post('http://127.0.0.1:5000/login', data={'email': 'priya.s@iitd.ac.in', 'password': 'password123'})
 print('Priya login status:', r.status_code)
 
-# 1. Priya requests to join Jay's squad SQD-KO9N (CyberVikings, team_id=1, leader_id=8)
-r_join = s_priya.post('http://127.0.0.1:5000/api/team/request-join', json={'team_code': 'SQD-KO9N', 'message': 'Hey Jay, let me join CyberVikings!'})
+# 1. Priya requests to join Jay's squad
+r_join = s_priya.post('http://127.0.0.1:5000/api/team/request-join', json={'team_code': team_code, 'message': 'Hey Jay, let me join CyberVikings!'})
 print('Priya Join Request Response:', r_join.json())
 
 # 2. Jay (leader) logs in
@@ -17,7 +42,7 @@ print('Jay login status:', r.status_code)
 
 # Get the request id
 conn = database.get_db_connection()
-req = conn.execute("SELECT id FROM team_invites WHERE sender_id = 3 AND team_id = 1 AND invite_type = 'JOIN_REQUEST' ORDER BY id DESC LIMIT 1").fetchone()
+req = conn.execute("SELECT id FROM team_invites WHERE sender_id = (SELECT id FROM users WHERE email='priya.s@iitd.ac.in') AND team_id = ? AND invite_type = 'JOIN_REQUEST' ORDER BY id DESC LIMIT 1", (team_id,)).fetchone()
 req_id = req['id']
 conn.close()
 print('Found join request ID:', req_id)
