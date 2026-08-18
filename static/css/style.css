@@ -1199,14 +1199,16 @@ html, body {
 @media (max-width: 600px) {
   /* Navbar adjustments */
   .s30-navbar {
-    height: 60px;
-    padding: 0;
+    min-height: 60px;
+    height: auto;
+    padding: 8px 0;
   }
   .s30-nav-container {
-    width: 90%;
+    width: 92%;
     margin: 0 auto;
     padding: 0;
-    gap: 6px;
+    gap: 8px;
+    flex-wrap: wrap;
   }
   .s30-brand {
     gap: 6px;
