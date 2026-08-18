@@ -528,20 +528,19 @@
   <header class="s30-navbar">
     <div class="s30-nav-container">
       {% set logged_user = user if user else current_user %}
-      {% set is_dashboard_page = request.endpoint in ['candidate_home', 'signup_analysis', 'edit_profile', 'team_create', 'team_manage', 'mailbox', 'find_teams'] %}
       <div style="display: flex; align-items: center; gap: 14px;">
-        <!-- PROFILE Trigger Option (Strictly on Candidate Home / Dashboard) -->
-        {% if is_dashboard_page and logged_user and logged_user.user_code %}
-        <button id="s30-profile-menu-btn" class="s30-profile-trigger-btn" aria-label="Open Profile and Navigation Menu" title="Open Profile & Navigation Menu" style="position: relative;">
-          <span class="s30-profile-trigger-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="width: 17px; height: 17px;">
+        <!-- PROFILE Trigger Option (Visible on all student views with unread count notification) -->
+        {% if logged_user and logged_user.user_code %}
+        <button id="s30-profile-menu-btn" class="s30-profile-trigger-btn" aria-label="Open Profile and Navigation Menu" title="Open Profile & Navigation Menu" style="position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(8px); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; font-size: 12.5px; font-weight: 800; color: var(--s30-text-primary, #1c1917); cursor: pointer;">
+          <span class="s30-profile-trigger-icon" style="display: flex; align-items: center;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
           </span>
-          <span class="s30-profile-trigger-text">PROFILE</span>
+          <span class="s30-profile-trigger-text" style="letter-spacing: 0.04em;">PROFILE</span>
           {% if unread_mailbox_count and unread_mailbox_count > 0 %}
-            <span style="position: absolute; top: -6px; right: -6px; background: #ff2a85; color: #ffffff; font-size: 10px; font-weight: 900; min-width: 18px; height: 18px; border-radius: 9px; padding: 0 4px; display: flex; align-items: center; justify-content: center; border: 2px solid #000000; box-shadow: 0 0 10px #ff2a85; animation: pulseNotification 1.8s infinite;">
+            <span style="position: absolute; top: -6px; right: -6px; background: #dc2626; color: #ffffff; font-size: 10px; font-weight: 900; min-width: 18px; height: 18px; border-radius: 9px; padding: 0 4px; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ffffff; box-shadow: 0 2px 10px rgba(220, 38, 38, 0.5); animation: pulseNotification 1.8s infinite;">
               {{ unread_mailbox_count }}
             </span>
           {% endif %}
@@ -554,19 +553,19 @@
         </a>
       </div>
 
-      <!-- Encircled links (HOME, HOW IT WORKS, OPPORTUNITIES, ABOUT) removed as requested -->
-
       <div class="s30-nav-actions" style="display: flex; align-items: center; gap: 12px;">
         {% if logged_user and logged_user.user_code %}
           <div style="display: flex; align-items: center; gap: 10px;">
-            <button id="s30-id-badge-btn" class="s30-profile-trigger-btn" style="position: relative; padding: 6px 14px !important; gap: 6px !important; background: var(--md-sys-color-surface-container) !important; cursor: pointer !important; border: 1px solid var(--md-sys-color-outline) !important; border-radius: var(--md-shape-sm) !important; box-shadow: var(--md-elevation-1) !important;" title="Click to view candidate passport menu">
-              <span style="font-size: 11px; font-weight: 800; color: var(--md-sys-color-primary); text-transform: uppercase; letter-spacing: 0.05em;">ID:</span>
-              <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: var(--s30-text-primary); letter-spacing: 0.05em;">{{ logged_user.user_code }}</span>
+            <button id="s30-id-badge-btn" class="s30-profile-trigger-btn" style="position: relative; padding: 6px 14px !important; gap: 6px !important; background: rgba(255, 255, 255, 0.6) !important; backdrop-filter: blur(8px) !important; cursor: pointer !important; border: 1.5px solid rgba(221, 213, 199, 0.85) !important; border-radius: 8px !important; box-shadow: 0 2px 8px rgba(40, 30, 20, 0.04) !important;" title="Click to view candidate passport menu">
+              <span style="font-size: 11px; font-weight: 800; color: #d97706; text-transform: uppercase; letter-spacing: 0.05em;">ID:</span>
+              <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: var(--s30-text-primary, #1c1917); letter-spacing: 0.05em;">{{ logged_user.user_code }}</span>
               {% if unread_mailbox_count and unread_mailbox_count > 0 %}
-                <span style="position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; background: var(--md-sys-color-error); border-radius: 50%;"></span>
+                <span style="position: absolute; top: -5px; right: -5px; background: #dc2626; color: #ffffff; font-size: 9.5px; font-weight: 900; min-width: 17px; height: 17px; border-radius: 9px; padding: 0 3px; display: flex; align-items: center; justify-content: center; border: 1.5px solid #ffffff; box-shadow: 0 2px 8px rgba(220, 38, 38, 0.5);">
+                  {{ unread_mailbox_count }}
+                </span>
               {% endif %}
             </button>
-            <a href="{{ url_for('user_logout') }}" class="neo-btn neo-btn-pink" style="padding: 6px 14px !important; font-size: 11.5px !important;">
+            <a href="{{ url_for('user_logout') }}" class="neo-btn" style="padding: 7px 14px !important; font-size: 11.5px !important; font-weight: 800 !important; background: rgba(220, 38, 38, 0.12) !important; color: #dc2626 !important; border: 1px solid rgba(220, 38, 38, 0.25) !important; backdrop-filter: blur(8px);">
               LOGOUT
             </a>
           </div>
@@ -619,6 +618,11 @@
             {% if logged_user and logged_user.user_code %}
               <span class="neo-badge neo-badge-yellow">ID: {{ logged_user.user_code }}</span>
               <span class="neo-badge neo-badge-cyan">STEP {{ logged_user.step or 1 }}/5</span>
+              {% if unread_mailbox_count and unread_mailbox_count > 0 %}
+                <a href="{{ url_for('mailbox') }}" class="neo-badge" style="background: rgba(220, 38, 38, 0.14); color: #dc2626; border: 1px solid rgba(220, 38, 38, 0.3); text-decoration: none; font-weight: 800;">
+                  📬 {{ unread_mailbox_count }} UNREAD
+                </a>
+              {% endif %}
             {% else %}
               <span class="neo-badge neo-badge-pink">GUEST MODE</span>
             {% endif %}

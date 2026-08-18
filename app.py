@@ -430,10 +430,6 @@ def user_is_approved_by_admin(user_id):
     except Exception:
         return False
 
-@app.context_processor
-def inject_user():
-    return dict(current_user=get_current_user(create_default=False))
-
 # ================= PUBLIC LANDING PAGE =================
 
 @app.route("/")
