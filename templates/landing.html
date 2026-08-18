@@ -178,127 +178,6 @@
     box-shadow: var(--md-elevation-0) !important;
   }
 
-  /* 2-Column Responsive Hero Grid */
-  .neo-hero-grid {
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 40px;
-    align-items: center;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .neo-hero-left {
-    text-align: left;
-    min-width: 0;
-  }
-
-  .neo-hero-right {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: 100%;
-    min-width: 0;
-  }
-
-  /* Animated Live Opportunity Passport Card Deck */
-  .s30-live-passport-deck {
-    position: relative;
-    width: 100%;
-    max-width: 440px;
-    background: var(--md-sys-color-surface-container-high);
-    border: 1px solid var(--md-sys-color-outline);
-    border-radius: var(--md-shape-xl);
-    box-shadow: var(--md-elevation-3);
-    padding: 24px;
-    box-sizing: border-box;
-    animation: s30DeckFloat 6s ease-in-out infinite;
-    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
-  }
-  .s30-live-passport-deck:hover {
-    box-shadow: var(--md-elevation-4);
-    transform: translateY(-4px);
-  }
-
-  @keyframes s30DeckFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-10px); }
-  }
-
-  .s30-deck-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--md-sys-color-outline-variant);
-  }
-
-  .s30-pulse-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background-color: var(--md-sys-color-tertiary);
-    margin-right: 6px;
-    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7);
-    animation: s30PulseRing 1.8s infinite cubic-bezier(0.4, 0, 0.6, 1);
-  }
-
-  @keyframes s30PulseRing {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
-  }
-
-  .s30-mini-cards-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .s30-mini-card {
-    background: var(--md-sys-color-surface);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: var(--md-shape-md);
-    padding: 12px 14px;
-    box-shadow: var(--md-elevation-1);
-    transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
-    animation: s30CardSlide 0.6s cubic-bezier(0.2, 0, 0, 1) both;
-  }
-  .s30-mini-card:hover {
-    border-color: var(--md-sys-color-primary);
-    transform: translateX(4px);
-    box-shadow: var(--md-elevation-2);
-  }
-
-  .s30-mini-card:nth-child(1) { animation-delay: 0.1s; }
-  .s30-mini-card:nth-child(2) { animation-delay: 0.25s; }
-  .s30-mini-card:nth-child(3) { animation-delay: 0.4s; }
-
-  @keyframes s30CardSlide {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 960px) {
-    .neo-hero-grid {
-      grid-template-columns: 1fr;
-      gap: 32px;
-    }
-    .neo-hero-left {
-      text-align: center;
-    }
-    .neo-hero-cta-wrap {
-      justify-content: center !important;
-    }
-    .neo-hero-left div[style*="justify-content: flex-start"] {
-      justify-content: center !important;
-    }
-  }
-
   @media (max-width: 768px) {
     .neo-hero-wrapper {
       padding: 16px 12px 36px 12px;
@@ -356,170 +235,59 @@
   <!-- ================= MAIN HERO PANEL ================= -->
   <div class="neo-hero-card">
     
-    <div class="neo-hero-grid">
+    <div style="text-align: center; max-width: 900px; margin: 0 auto; width: 100%; box-sizing: border-box;">
       
-      <!-- Left Column: Hero Content & Typewriter -->
-      <div class="neo-hero-left">
-        
-        <!-- Top Badges Row -->
-        <div style="margin-bottom: 20px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-start;">
-          <span class="neo-badge neo-badge-yellow">
-            ⚡ STAGE 1 & 2 VERIFICATION ACTIVE
-          </span>
-          <span class="neo-badge neo-badge-cyan">
-            🛡️ 100% FREE • VERIFIED ACCESS
-          </span>
-          <span class="neo-badge neo-badge-green">
-            🌐 DIRECT LEGAL OPPORTUNITIES
-          </span>
-        </div>
-
-        <!-- Main Material Headline with Interactive Typewriter Effect -->
-        <h1 class="neo-hero-title">
-          Verify Your Skills. Claim Your <br>
-          <span class="neo-hero-highlight" aria-live="polite">
-            <span id="s30-typewriter-text" class="typewriter-text">OPPORTUNITY PASSPORT.</span><span class="typewriter-cursor" aria-hidden="true"></span>
-          </span>
-        </h1>
-
-        <p class="neo-hero-desc">
-          The premier student verification platform. Automated institutional ID card OCR, live GitHub codebase auditing, and direct candidate matchmaking with whitelisted government portals and corporate partners.
-        </p>
-
-        <!-- Material CTA Buttons -->
-        <div class="neo-hero-cta-wrap" style="display: flex; justify-content: flex-start; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; width: 100%; box-sizing: border-box;">
-          <a href="{{ url_for('signup_profile') }}" class="neo-action-btn-main" style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);">
-            <span style="font-size: 18px;">🚀</span>
-            <span>CREATE STUDENT PASSPORT</span>
-            <span style="font-size: 16px;">&rarr;</span>
-          </a>
-
-          <a href="{{ url_for('login_page') }}" class="neo-action-btn-main" style="background: var(--md-sys-color-surface-container-highest); color: #ffffff; border: 1px solid var(--md-sys-color-outline);">
-            <span style="font-size: 18px;">⚡</span>
-            <span>LOGIN TO ACCOUNT</span>
-            <span style="font-size: 16px;">&rarr;</span>
-          </a>
-        </div>
-
-        <!-- Trust Badges Row -->
-        <div style="display: flex; justify-content: flex-start; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--md-sys-color-outline-variant); padding-top: 20px; width: 100%; box-sizing: border-box;">
-          <span class="neo-badge neo-badge-green">
-            ✓ AUTOMATED ID CARD OCR
-          </span>
-          <span class="neo-badge neo-badge-cyan">
-            ✓ GITHUB CODE AUDITING
-          </span>
-          <span class="neo-badge neo-badge-yellow">
-            ✓ WHITELISTED PORTALS
-          </span>
-        </div>
-
+      <!-- Top Badges Row -->
+      <div style="margin-bottom: 24px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+        <span class="neo-badge neo-badge-yellow">
+          ⚡ STAGE 1 & 2 VERIFICATION ACTIVE
+        </span>
+        <span class="neo-badge neo-badge-cyan">
+          🛡️ 100% FREE • VERIFIED ACCESS
+        </span>
+        <span class="neo-badge neo-badge-green">
+          🌐 DIRECT LEGAL OPPORTUNITIES
+        </span>
       </div>
 
-      <!-- Right Column: Animated Live Opportunity Passport Card Deck -->
-      <div class="neo-hero-right">
-        
-        <div class="s30-live-passport-deck">
-          
-          <!-- Deck Top Header -->
-          <div class="s30-deck-header">
-            <div style="display: flex; align-items: center;">
-              <span class="s30-pulse-dot"></span>
-              <span style="font-size: 11px; font-weight: 800; color: var(--md-sys-color-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">
-                LIVE VERIFIED QUEUE
-              </span>
-            </div>
-            <span class="neo-badge neo-badge-cyan" style="font-size: 10px; padding: 2px 8px;">
-              PASSPORT #A7X9K
-            </span>
-          </div>
+      <!-- Main Material Headline with Interactive Typewriter Effect -->
+      <h1 class="neo-hero-title">
+        Verify Your Skills. Claim Your <br>
+        <span class="neo-hero-highlight" aria-live="polite">
+          <span id="s30-typewriter-text" class="typewriter-text">OPPORTUNITY PASSPORT.</span><span class="typewriter-cursor" aria-hidden="true"></span>
+        </span>
+      </h1>
 
-          <!-- Student Profile Capsule -->
-          <div style="background: var(--md-sys-color-surface); border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-shape-lg); padding: 12px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--md-elevation-1);">
-            <div style="display: flex; align-items: center; gap: 10px;">
-              <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; border: 1px solid rgba(251, 191, 36, 0.4);">
-                AR
-              </div>
-              <div>
-                <div style="font-size: 13px; font-weight: 800; color: var(--s30-text-primary);">Alex Rivera</div>
-                <div style="font-size: 11px; color: var(--s30-text-secondary); font-weight: 500;">B.Tech CS & AI • Verified</div>
-              </div>
-            </div>
-            <span class="neo-badge neo-badge-green" style="font-size: 10px; padding: 2px 7px;">
-              ✓ OCR APPROVED
-            </span>
-          </div>
+      <p class="neo-hero-desc" style="max-width: 780px; margin: 0 auto 38px auto;">
+        The premier student verification platform. Automated institutional ID card OCR, live GitHub codebase auditing, and direct candidate matchmaking with whitelisted government portals and corporate partners.
+      </p>
 
-          <!-- Animated Live Opportunities Stack -->
-          <div class="s30-mini-cards-stack">
-            
-            <!-- Opportunity Card 1 -->
-            <div class="s30-mini-card">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                <span class="neo-badge neo-badge-yellow" style="font-size: 9.5px; padding: 1px 6px;">
-                  🏛️ AICTE / GOVT PORTAL
-                </span>
-                <span style="font-size: 11px; font-weight: 800; color: var(--md-sys-color-tertiary); font-family: monospace;">
-                  98.4% MATCH
-                </span>
-              </div>
-              <div style="font-size: 13px; font-weight: 800; color: var(--s30-text-primary); line-height: 1.3;">
-                Autonomous AI Research Engineer
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 11px; color: var(--s30-text-secondary);">
-                <span>🏢 ISRO Space Lab</span>
-                <strong style="color: var(--md-sys-color-primary); font-weight: 800;">₹120,000/mo</strong>
-              </div>
-            </div>
+      <!-- Material CTA Buttons -->
+      <div class="neo-hero-cta-wrap" style="display: flex; justify-content: center; gap: 16px; margin-bottom: 40px; flex-wrap: wrap; width: 100%; box-sizing: border-box;">
+        <a href="{{ url_for('signup_profile') }}" class="neo-action-btn-main" style="background: var(--md-sys-color-primary); color: var(--md-sys-color-on-primary);">
+          <span style="font-size: 18px;">🚀</span>
+          <span>CREATE STUDENT PASSPORT</span>
+          <span style="font-size: 16px;">&rarr;</span>
+        </a>
 
-            <!-- Opportunity Card 2 -->
-            <div class="s30-mini-card">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                <span class="neo-badge neo-badge-cyan" style="font-size: 9.5px; padding: 1px 6px;">
-                  🔬 FRONTIER LAB
-                </span>
-                <span style="font-size: 11px; font-weight: 800; color: var(--md-sys-color-tertiary); font-family: monospace;">
-                  96.8% MATCH
-                </span>
-              </div>
-              <div style="font-size: 13px; font-weight: 800; color: var(--s30-text-primary); line-height: 1.3;">
-                Multimodal Agents Architecture
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 11px; color: var(--s30-text-secondary);">
-                <span>🏢 DeepMind Partner</span>
-                <strong style="color: var(--md-sys-color-primary); font-weight: 800;">₹140,000/mo</strong>
-              </div>
-            </div>
+        <a href="{{ url_for('login_page') }}" class="neo-action-btn-main" style="background: var(--md-sys-color-surface-container-highest); color: #ffffff; border: 1px solid var(--md-sys-color-outline);">
+          <span style="font-size: 18px;">⚡</span>
+          <span>LOGIN TO ACCOUNT</span>
+          <span style="font-size: 16px;">&rarr;</span>
+        </a>
+      </div>
 
-            <!-- Opportunity Card 3 -->
-            <div class="s30-mini-card">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                <span class="neo-badge neo-badge-purple" style="font-size: 9.5px; padding: 1px 6px;">
-                  👥 SQUAD SYNERGY
-                </span>
-                <span style="font-size: 11px; font-weight: 800; color: var(--md-sys-color-secondary); font-family: monospace;">
-                  95.2% SYNERGY
-                </span>
-              </div>
-              <div style="font-size: 13px; font-weight: 800; color: var(--s30-text-primary); line-height: 1.3;">
-                Global AI Hackathon Elite Squad
-              </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 11px; color: var(--s30-text-secondary);">
-                <span>⚡ Team NeuralX</span>
-                <span style="color: var(--md-sys-color-tertiary); font-weight: 700;">4/5 Members</span>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Bottom Status Pill -->
-          <div style="background: var(--md-sys-color-surface-container); border: 1px solid var(--md-sys-color-outline-variant); border-radius: var(--md-shape-sm); padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: var(--s30-text-secondary);">
-            <span>⚡ Automated Verification Engine</span>
-            <span style="color: var(--md-sys-color-tertiary); font-weight: 800;">0 Scam Demands</span>
-          </div>
-
-        </div>
-
+      <!-- Trust Badges Row -->
+      <div style="display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; border-top: 1px solid var(--md-sys-color-outline-variant); padding-top: 22px; width: 100%; box-sizing: border-box;">
+        <span class="neo-badge neo-badge-green">
+          ✓ AUTOMATED ID CARD OCR
+        </span>
+        <span class="neo-badge neo-badge-cyan">
+          ✓ GITHUB PROJECT CODE AUDITING
+        </span>
+        <span class="neo-badge neo-badge-yellow">
+          ✓ WHITELISTED SOURCES (ISRO, AICTE, MEA)
+        </span>
       </div>
 
     </div>
