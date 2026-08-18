@@ -32,16 +32,47 @@
       box-sizing: border-box !important;
     }
     @media (max-width: 600px) {
+      .s30-navbar {
+        height: 58px !important;
+        padding: 0 10px !important;
+      }
+      .s30-nav-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 !important;
+        gap: 6px !important;
+      }
+      .s30-brand {
+        gap: 5px !important;
+      }
+      .s30-logo-badge {
+        font-size: 14px !important;
+        padding: 2px 6px !important;
+      }
+      .s30-brand-sub {
+        font-size: 8.5px !important;
+        padding: 1px 4px !important;
+      }
+      .s30-nav-actions {
+        gap: 6px !important;
+      }
       .neo-btn {
         white-space: normal !important;
-        padding: 9px 12px !important;
-        font-size: 12px !important;
+        padding: 8px 10px !important;
+        font-size: 11.5px !important;
         max-width: 100% !important;
       }
-      .s30-btn-outline, a.s30-btn-outline,
-      .s30-btn-primary, a.s30-btn-primary {
-        padding: 5px 10px !important;
+      .s30-btn-outline, a.s30-btn-outline {
+        padding: 5px 8px !important;
         font-size: 11px !important;
+        border-width: 2px !important;
+        box-shadow: 2px 2px 0px #00f0ff !important;
+      }
+      .s30-btn-primary, a.s30-btn-primary {
+        padding: 5px 8px !important;
+        font-size: 11px !important;
+        border-width: 2px !important;
+        box-shadow: 2px 2px 0px #00f0ff !important;
       }
     }
     .neo-btn:hover {
@@ -157,21 +188,21 @@
         <li><a href="{{ url_for('landing_page') }}#about" class="s30-nav-link">About</a></li>
       </ul>
 
-      <div class="s30-nav-actions" style="display: flex; align-items: center; gap: 12px;">
+      <div class="s30-nav-actions">
         {% set logged_user = user if user else current_user %}
         {% if logged_user and logged_user.user_code %}
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="background: #090f1d; border: 2px solid #FFE600; box-shadow: 2.5px 2.5px 0px #FFE600; padding: 5px 12px; border-radius: 4px; display: flex; align-items: center; gap: 6px;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="background: #090f1d; border: 2px solid #FFE600; box-shadow: 2.5px 2.5px 0px #FFE600; padding: 5px 10px; border-radius: 4px; display: flex; align-items: center; gap: 4px;">
               <span style="font-size: 11px; font-weight: 900; color: #FFE600; text-transform: uppercase; letter-spacing: 0.05em;">ID:</span>
-              <span style="font-family: monospace; font-size: 13px; font-weight: 900; color: #ffffff; letter-spacing: 0.08em;">{{ logged_user.user_code }}</span>
+              <span style="font-family: monospace; font-size: 12.5px; font-weight: 900; color: #ffffff; letter-spacing: 0.08em;">{{ logged_user.user_code }}</span>
             </div>
-            <a href="{{ url_for('user_logout') }}" class="neo-btn neo-btn-pink" style="padding: 6px 14px !important; font-size: 11.5px !important;">
+            <a href="{{ url_for('user_logout') }}" class="neo-btn neo-btn-pink" style="padding: 6px 12px !important; font-size: 11px !important;">
               LOGOUT
             </a>
           </div>
         {% else %}
-          <a href="{{ url_for('login_page') }}" class="s30-btn-outline" style="border: 2.5px solid #ffffff !important; background: #0f172a !important; color: #ffffff !important; box-shadow: 4px 4px 0px #00f0ff !important; font-weight: 900 !important;">LOGIN</a>
-          <a href="{{ url_for('signup_new') }}" class="s30-btn-primary" style="background: #FFE600 !important; color: #000000 !important; border: 2.5px solid #000000 !important; box-shadow: 4px 4px 0px #00f0ff !important; font-weight: 900 !important;">GET STARTED</a>
+          <a href="{{ url_for('login_page') }}" class="s30-btn-outline" style="border: 2.5px solid #ffffff !important; background: #0f172a !important; color: #ffffff !important; box-shadow: 3px 3px 0px #00f0ff !important; font-weight: 900 !important;">LOGIN</a>
+          <a href="{{ url_for('signup_new') }}" class="s30-btn-primary" style="background: #FFE600 !important; color: #000000 !important; border: 2.5px solid #000000 !important; box-shadow: 3px 3px 0px #00f0ff !important; font-weight: 900 !important;">GET STARTED</a>
         {% endif %}
       </div>
     </div>
