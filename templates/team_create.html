@@ -119,16 +119,22 @@
         <label style="display: block; font-size: 12.5px; font-weight: 800; color: var(--s30-text-primary, #1c1917); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
           Team / Squad Name <span style="color: #dc2626;">*</span>
         </label>
-        <input 
-          type="text" 
-          name="team_name" 
-          placeholder="e.g. CyberVikings, NeuralNexus, Quantum Coders" 
-          required
-          autofocus
-          style="width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-weight: 600; color: var(--s30-text-primary, #1c1917); outline: none;"
-        >
+        <div style="position: relative;">
+          <input 
+            type="text" 
+            id="team_name_input"
+            name="team_name" 
+            placeholder="e.g. CyberVikings, NeuralNexus, Quantum Coders" 
+            required
+            autofocus
+            oninput="checkSquadNameAvailability(this.value)"
+            style="width: 100%; box-sizing: border-box; background: rgba(255, 255, 255, 0.7); border: 1.5px solid rgba(221, 213, 199, 0.85); border-radius: 8px; padding: 13px 16px; font-size: 14.5px; font-weight: 600; color: var(--s30-text-primary, #1c1917); outline: none;"
+          >
+          <span id="name-status-indicator" style="position: absolute; right: 14px; top: 14px; font-size: 13px; font-weight: 700; display: none;"></span>
+        </div>
+        <div id="name-feedback-msg" style="font-size: 12px; margin-top: 5px; font-weight: 600; display: none;"></div>
         <span style="font-size: 12px; color: var(--s30-text-secondary, #57534e); margin-top: 5px; display: block;">
-          Give your squad an inspiring name for hackathon registries and partner evaluations.
+          Squad names must be unique across the platform. Give your squad an inspiring name for hackathons.
         </span>
       </div>
 
@@ -248,6 +254,59 @@
     } catch (e) {
       showToast('Connection error. Please try again.', 'error');
     }
+  let nameCheckTimeout = null;
+  function checkSquadNameAvailability(val) {
+    clearTimeout(nameCheckTimeout);
+    const indicator = document.getElementById('name-status-indicator');
+    const msg = document.getElementById('name-feedback-msg');
+    const input = document.getElementById('team_name_input');
+
+    if (!val || val.trim().length < 3) {
+      if (indicator) indicator.style.display = 'none';
+      if (msg) msg.style.display = 'none';
+      if (input) input.style.borderColor = 'rgba(221, 213, 199, 0.85)';
+      return;
+    }
+
+    if (indicator) {
+      indicator.style.display = 'block';
+      indicator.style.color = '#d97706';
+      indicator.textContent = '...';
+    }
+
+    nameCheckTimeout = setTimeout(async () => {
+      try {
+        const res = await fetch(`/api/team/check-name?name=${encodeURIComponent(val.trim())}`);
+        const data = await res.json();
+        if (data.available) {
+          if (indicator) {
+            indicator.style.display = 'block';
+            indicator.style.color = '#16a34a';
+            indicator.textContent = '✓';
+          }
+          if (msg) {
+            msg.style.display = 'block';
+            msg.style.color = '#16a34a';
+            msg.textContent = data.message;
+          }
+          if (input) input.style.borderColor = '#16a34a';
+        } else {
+          if (indicator) {
+            indicator.style.display = 'block';
+            indicator.style.color = '#dc2626';
+            indicator.textContent = '✕';
+          }
+          if (msg) {
+            msg.style.display = 'block';
+            msg.style.color = '#dc2626';
+            msg.textContent = data.message;
+          }
+          if (input) input.style.borderColor = '#dc2626';
+        }
+      } catch (e) {
+        if (indicator) indicator.style.display = 'none';
+      }
+    }, 250);
   }
 </script>
 {% endblock %}

@@ -1405,26 +1405,33 @@ def team_create():
             
             if not team_name:
                 error_msg = "Please provide a Team Name."
+            elif len(team_name) < 3:
+                error_msg = "Squad Name must be at least 3 characters long."
             else:
-                try:
-                    team_size = int(team_size_val)
-                    if team_size < 2 or team_size > 10:
+                # Check unique squad name
+                existing_dup = conn.execute("SELECT id FROM teams WHERE LOWER(team_name) = LOWER(?)", (team_name,)).fetchone()
+                if existing_dup:
+                    error_msg = f"The squad name '{team_name}' is already taken by another squad. Please choose a unique name."
+                else:
+                    try:
+                        team_size = int(team_size_val)
+                        if team_size < 2 or team_size > 10:
+                            team_size = 4
+                    except ValueError:
                         team_size = 4
-                except ValueError:
-                    team_size = 4
+                        
+                    import random, string
+                    team_code = "SQD-" + "".join(random.choices(string.ascii_uppercase + string.digits, k=4))
                     
-                import random, string
-                team_code = "SQD-" + "".join(random.choices(string.ascii_uppercase + string.digits, k=4))
-                
-                cursor = conn.cursor()
-                cursor.execute("""
-                INSERT INTO teams (team_code, leader_id, team_name, team_size, theme)
-                VALUES (?, ?, ?, ?, ?)
-                """, (team_code, user["id"], team_name, team_size, theme))
-                team_id = cursor.lastrowid
-                conn.commit()
-                conn.close()
-                return redirect(url_for("team_manage", team_id=team_id))
+                    cursor = conn.cursor()
+                    cursor.execute("""
+                    INSERT INTO teams (team_code, leader_id, team_name, team_size, theme)
+                    VALUES (?, ?, ?, ?, ?)
+                    """, (team_code, user["id"], team_name, team_size, theme))
+                    team_id = cursor.lastrowid
+                    conn.commit()
+                    conn.close()
+                    return redirect(url_for("team_manage", team_id=team_id))
                 
     conn.close()
     return render_template(
@@ -1434,6 +1441,86 @@ def team_create():
         joined_team=dict(joined_team) if joined_team else None,
         error=error_msg
     )
+
+# ================= REAL-TIME SQUAD NAME AVAILABILITY CHECK API =================
+@app.route("/api/team/check-name")
+def api_team_check_name():
+    name = request.args.get("name", "").strip()
+    team_id = request.args.get("team_id", "").strip()
+    
+    if not name:
+        return jsonify({"available": False, "message": "Please enter a squad name."})
+    if len(name) < 3:
+        return jsonify({"available": False, "message": "Squad name must be at least 3 characters."})
+        
+    conn = database.get_db_connection()
+    if team_id and team_id.isdigit():
+        existing = conn.execute("SELECT id, team_name FROM teams WHERE LOWER(team_name) = LOWER(?) AND id != ?", (name, int(team_id))).fetchone()
+    else:
+        existing = conn.execute("SELECT id, team_name FROM teams WHERE LOWER(team_name) = LOWER(?)", (name,)).fetchone()
+    conn.close()
+    
+    if existing:
+        return jsonify({"available": False, "message": f"✕ '{name}' is already taken. Please choose another."})
+    return jsonify({"available": True, "message": f"✓ '{name}' is available!"})
+
+# ================= EDIT SQUAD DETAILS API (FOR SQUAD LEADER) =================
+@app.route("/api/team/edit", methods=["POST"])
+def api_team_edit():
+    user = get_current_user()
+    if not user:
+        return jsonify({"success": False, "message": "Unauthorized"}), 401
+        
+    data = request.get_json(silent=True) or request.form
+    team_id = data.get("team_id")
+    team_name = (data.get("team_name") or "").strip()
+    team_size_val = data.get("team_size")
+    theme = (data.get("theme") or "").strip()
+    
+    if not team_id or not team_name:
+        return jsonify({"success": False, "message": "Squad ID and Name are required."}), 400
+        
+    if len(team_name) < 3:
+        return jsonify({"success": False, "message": "Squad name must be at least 3 characters."}), 400
+        
+    conn = database.get_db_connection()
+    team = conn.execute("SELECT * FROM teams WHERE id = ? AND leader_id = ?", (team_id, user["id"])).fetchone()
+    if not team:
+        conn.close()
+        return jsonify({"success": False, "message": "Only the squad leader can edit squad details."}), 403
+        
+    # Check unique name across other squads
+    dup = conn.execute("SELECT id FROM teams WHERE LOWER(team_name) = LOWER(?) AND id != ?", (team_name, team_id)).fetchone()
+    if dup:
+        conn.close()
+        return jsonify({"success": False, "message": f"The squad name '{team_name}' is already taken. Please choose a unique name."}), 400
+        
+    # Current member count (leader + accepted members)
+    member_count = 1 + conn.execute("SELECT COUNT(*) as c FROM team_invites WHERE team_id = ? AND status = 'ACCEPTED'", (team_id,)).fetchone()["c"]
+    
+    try:
+        team_size = int(team_size_val)
+        if team_size < 2 or team_size > 10:
+            team_size = team["team_size"]
+    except (ValueError, TypeError):
+        team_size = team["team_size"]
+        
+    if team_size < member_count:
+        conn.close()
+        return jsonify({"success": False, "message": f"Cannot reduce squad capacity below current member count ({member_count} members)."}), 400
+        
+    final_theme = theme if theme else team["theme"]
+    conn.execute("UPDATE teams SET team_name = ?, team_size = ?, theme = ? WHERE id = ?", (team_name, team_size, final_theme, team_id))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({
+        "success": True, 
+        "message": f"Squad '{team_name}' updated successfully!",
+        "team_name": team_name,
+        "team_size": team_size,
+        "theme": final_theme
+    })
 
 # ================= DISBAND / DELETE SQUAD API (FOR LEADER) =================
 @app.route("/api/team/delete", methods=["POST"])
