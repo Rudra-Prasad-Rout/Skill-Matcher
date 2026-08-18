@@ -14,7 +14,12 @@
 
 <div class="s30-form-header">
   <h1 class="s30-form-title">Create your account</h1>
-  <p class="s30-form-subtitle">Join S30 and start your journey to verified career opportunities.</p>
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+    <p class="s30-form-subtitle" style="margin-bottom: 0;">Join S30 and start your journey to verified career opportunities.</p>
+    <span id="draft-status-badge" class="neo-badge neo-badge-cyan" style="font-size: 9.5px; padding: 2px 8px; display: none;">
+      💾 PROGRESS AUTO-SAVED
+    </span>
+  </div>
 </div>
 
 {% if error %}
@@ -548,7 +553,90 @@
     }
   });
 
+  const DRAFT_STORAGE_KEY = 's30_signup_profile_draft';
+
+  function saveProfileDraft() {
+    try {
+      const draft = {
+        full_name: document.getElementById('full_name')?.value || '',
+        email: document.getElementById('email')?.value || '',
+        gender: document.getElementById('gender')?.value || '',
+        age: document.getElementById('age')?.value || '',
+        school: document.getElementById('school')?.value || '',
+        coursework: document.getElementById('coursework')?.value || '',
+        email_verified: isEmailVerified,
+        timestamp: Date.now()
+      };
+      
+      const hasContent = Object.entries(draft).some(([k, v]) => k !== 'timestamp' && v !== '' && v !== false);
+      if (hasContent) {
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draft));
+        const badge = document.getElementById('draft-status-badge');
+        if (badge) badge.style.display = 'inline-flex';
+      }
+    } catch (e) {
+      console.warn('[Draft AutoSave]:', e);
+    }
+  }
+
+  function restoreProfileDraft() {
+    try {
+      const raw = localStorage.getItem(DRAFT_STORAGE_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      if (!draft) return;
+
+      const fillIfEmpty = (id, val) => {
+        const input = document.getElementById(id);
+        if (input && (!input.value || input.value.trim() === '') && val) {
+          input.value = val;
+        }
+      };
+
+      fillIfEmpty('full_name', draft.full_name);
+      fillIfEmpty('email', draft.email);
+      fillIfEmpty('age', draft.age);
+      fillIfEmpty('school', draft.school);
+      fillIfEmpty('coursework', draft.coursework);
+
+      const genderSelect = document.getElementById('gender');
+      if (genderSelect && (!genderSelect.value || genderSelect.value === '') && draft.gender) {
+        genderSelect.value = draft.gender;
+      }
+
+      if (draft.email) {
+        validateEmailLive();
+      }
+
+      if (draft.email_verified) {
+        isEmailVerified = true;
+        const badge = document.getElementById('email-verified-badge');
+        if (badge) {
+          badge.className = 'neo-badge neo-badge-green';
+          badge.innerText = '✓ EMAIL VERIFIED';
+        }
+      }
+
+      const badge = document.getElementById('draft-status-badge');
+      if (badge) badge.style.display = 'inline-flex';
+    } catch (e) {
+      console.warn('[Draft Restore]:', e);
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
+    // 1. Automatically restore any previously entered user draft
+    restoreProfileDraft();
+
+    // 2. Attach live input listeners for real-time draft saving
+    ['full_name', 'email', 'gender', 'age', 'school', 'coursework'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', saveProfileDraft);
+        el.addEventListener('change', saveProfileDraft);
+      }
+    });
+
     const urlParams = new URLSearchParams(window.location.search);
     const emailParam = urlParams.get('email');
     const autoSend = urlParams.get('autosend');

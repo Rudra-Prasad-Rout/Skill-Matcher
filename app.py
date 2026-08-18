@@ -303,13 +303,25 @@ def login_page():
 
 @app.route("/signup/new")
 def signup_new():
-    session.pop("user_id", None)
+    if request.args.get("reset") == "1":
+        session.pop("user_id", None)
+        return redirect(url_for("signup_profile"))
+        
+    user = get_current_user(create_default=False)
+    if user:
+        step = user.get("step", 1)
+        if step == 2:
+            return redirect(url_for("signup_skills"))
+        elif step == 3:
+            return redirect(url_for("signup_documents"))
+        elif step >= 4:
+            return redirect(url_for("signup_verification"))
     return redirect(url_for("signup_profile"))
 
 # ================= STEP 1: Profile Signup =================
 @app.route("/signup/profile", methods=["GET", "POST"])
 def signup_profile():
-    if request.args.get("new") == "1":
+    if request.args.get("reset") == "1":
         session.pop("user_id", None)
         
     if request.method == "POST":
