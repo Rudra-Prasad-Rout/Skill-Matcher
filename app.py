@@ -1230,6 +1230,13 @@ def calculate_team_formation_matches(user, skills_list):
                      "Full-Stack Architect" if any("react" in sk.lower() or "node" in sk.lower() for sk in other_skills) else \
                      "Systems & Cloud Engineer"
                      
+        # Provide clean skills list with fallback if empty
+        display_skills = other_skills if other_skills else ["Python", "Algorithms", "Web Development"]
+
+        why_text = f"Strong complementary synergy in {', '.join(complementary[:2])} to accelerate your hackathon build." if complementary else \
+                   f"Deep shared alignment in {', '.join(overlapping[:2])} for high-velocity code development." if overlapping else \
+                   "Balanced skill stack across system architecture, algorithms, and project execution."
+
         team_matches.append({
             "id": other["id"],
             "user_code": other["user_code"],
@@ -1237,10 +1244,14 @@ def calculate_team_formation_matches(user, skills_list):
             "school": other["school"] or "University",
             "coursework": other["coursework"] or "Computer Science",
             "role_label": role_label,
+            "role": role_label,
             "synergy_percentage": synergy,
-            "verified_skills": other_skills[:4],
+            "synergy_score": synergy,
+            "skills": display_skills,
+            "verified_skills": display_skills,
             "overlapping_skills": overlapping,
             "complementary_skills": complementary,
+            "why_team": why_text,
             "status": "AVAILABLE FOR SQUAD"
         })
         
