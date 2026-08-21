@@ -11,6 +11,19 @@ class TestCompulsoryDocumentsAndAdminApproval(unittest.TestCase):
         # Initialize fresh DB
         database.init_db(force_reset=True)
 
+    def tearDown(self):
+        # Always clean up test data so database is completely clear
+        conn = database.get_db_connection()
+        conn.execute("DELETE FROM users")
+        conn.execute("DELETE FROM user_skills")
+        conn.execute("DELETE FROM user_documents")
+        conn.execute("DELETE FROM email_otps")
+        conn.execute("DELETE FROM candidate_internship_approvals")
+        conn.execute("DELETE FROM teams")
+        conn.execute("DELETE FROM team_invites")
+        conn.commit()
+        conn.close()
+
     def test_navbar_unauthenticated(self):
         """1. Unauthenticated landing page should show LOGIN and GET STARTED."""
         resp = self.client.get("/")
