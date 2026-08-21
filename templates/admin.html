@@ -522,8 +522,11 @@
   <div class="dashboard-popup-backdrop" id="dashboard-popup-modal" onclick="handleBackdropClick(event)">
     <div class="dashboard-popup-card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid rgba(255,255,255,0.15);">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 32px; width: auto; object-fit: contain;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="display: inline-flex; flex-direction: column; align-items: flex-start; line-height: 1;">
+            <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 28px; width: auto; object-fit: contain;">
+            <span style="font-size: 6px; font-weight: 800; color: #0d9488; letter-spacing: 0.11em; text-transform: uppercase; margin-top: 2px; font-family: 'Inter', sans-serif; white-space: nowrap;">VERIFIED PATHWAYS TO OPPORTUNITY</span>
+          </div>
           <span class="neo-badge neo-badge-cyan" style="font-size: 11px; padding: 4px 8px;">ADMIN MENU</span>
         </div>
         <button type="button" onclick="closeNavPopup()" class="neo-btn neo-btn-pink" style="padding: 4px 10px; font-size: 12px;">✕</button>
@@ -603,8 +606,11 @@
           </button>
 
           <!-- VIREQO ADMIN brand badge -->
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 38px; width: auto; object-fit: contain;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="display: inline-flex; flex-direction: column; align-items: flex-start; line-height: 1;">
+              <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 32px; width: auto; object-fit: contain;">
+              <span style="font-size: 6.5px; font-weight: 800; color: #0d9488; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; font-family: 'Inter', sans-serif; white-space: nowrap;">VERIFIED PATHWAYS TO OPPORTUNITY</span>
+            </div>
             <span class="neo-badge neo-badge-cyan" style="font-size: 11px; padding: 4px 8px;">ADMIN</span>
           </div>
 
