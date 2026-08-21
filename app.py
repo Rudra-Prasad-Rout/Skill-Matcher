@@ -20,7 +20,7 @@ app.config["SESSION_REFRESH_EACH_REQUEST"] = True  # Automatically extends cooki
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
-UPLOAD_FOLDER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "uploads")
+UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER", os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "uploads"))
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg", "webp"}
 MAX_CONTENT_LENGTH = 15 * 1024 * 1024  # 15MB
 
