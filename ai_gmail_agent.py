@@ -48,60 +48,74 @@ class AIGmailAgent:
         return str(secrets.randbelow(900000) + 100000)
 
     def format_ai_email_template(self, recipient_email: str, otp_code: str) -> str:
-        """Constructs an AI-branded Neo-Brutalist HTML verification email."""
+        """Constructs a clean, professional HTML verification email matching the S30 website aesthetic."""
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")
         
         return f"""<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>S30 AI Verification Code</title>
+  <title>Your S30 AI Verification Code</title>
 </head>
-<body style="background-color: #060a14; color: #ffffff; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 24px 12px; margin: 0;">
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+<body style="background-color: #f5f2eb; color: #1c1917; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; padding: 32px 14px; margin: 0; -webkit-font-smoothing: antialiased;">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f5f2eb;">
     <tr>
       <td align="center">
-        <table width="560" border="0" cellspacing="0" cellpadding="0" style="background-color: #0c1322; border: 3px solid #38BDF8; border-radius: 10px; padding: 32px 28px; box-shadow: 8px 8px 0px #D9A726; max-width: 560px; width: 100%;">
+        <!-- Main Card Container -->
+        <table width="560" border="0" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border: 1px solid #ddd5c7; border-radius: 14px; padding: 36px 32px; box-shadow: 0px 4px 16px rgba(40, 30, 20, 0.07); max-width: 560px; width: 100%; box-sizing: border-box;">
           
-          <!-- Header Badges -->
+          <!-- Brand Logo & Badges Row -->
           <tr>
-            <td align="left" style="padding-bottom: 16px;">
-              <span style="background-color: #D9A726; color: #000000; font-weight: 900; font-size: 11px; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em; display: inline-block; border: 1.5px solid #000;">
-                🤖 TeamX AI Security Agent
-              </span>
-              <span style="background-color: #38BDF8; color: #000000; font-weight: 900; font-size: 11px; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.08em; display: inline-block; margin-left: 6px; border: 1.5px solid #000;">
-                ✓ Official Verification
-              </span>
+            <td align="left" style="padding-bottom: 20px;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="left">
+                    <!-- S30 Brand Badge -->
+                    <span style="background-color: #1c1917; color: #ffffff; font-weight: 900; font-size: 13px; padding: 5px 12px; border-radius: 6px; letter-spacing: 0.05em; display: inline-block; vertical-align: middle;">
+                      S30 <span style="color: #d97706;">PLATFORM</span>
+                    </span>
+                  </td>
+                  <td align="right">
+                    <!-- Status Badges -->
+                    <span style="background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; font-weight: 800; font-size: 10.5px; padding: 4px 9px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block;">
+                      🤖 AI SECURITY
+                    </span>
+                    <span style="background-color: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; font-weight: 800; font-size: 10.5px; padding: 4px 9px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-block; margin-left: 4px;">
+                      ✓ OFFICIAL
+                    </span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
 
-          <!-- Title -->
+          <!-- Title Header -->
           <tr>
-            <td align="left">
-              <h1 style="color: #ffffff; font-size: 24px; font-weight: 900; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: -0.02em;">
+            <td align="left" style="border-top: 1px solid #eae4d9; padding-top: 22px;">
+              <h1 style="color: #1c1917; font-size: 22px; font-weight: 900; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: -0.01em; line-height: 1.3;">
                 Student Account Authentication
               </h1>
-              <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin: 0 0 24px 0;">
-                Hello, <strong>{recipient_email}</strong>!<br>
+              <p style="color: #57534e; font-size: 14px; line-height: 1.6; margin: 0 0 24px 0;">
+                Hello, <strong style="color: #1c1917;">{recipient_email}</strong>!<br>
                 Our Autonomous AI Verification Agent has generated your single-use 6-digit access code for the <strong>TeamX S30 Platform</strong>.
               </p>
             </td>
           </tr>
 
-          <!-- OTP Box -->
+          <!-- OTP Code Box (Warm Amber Card) -->
           <tr>
-            <td align="center" style="padding: 10px 0 24px 0;">
-              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #000000; border: 2.5px dashed #D9A726; border-radius: 8px; padding: 22px 14px; text-align: center;">
+            <td align="center" style="padding: 0 0 24px 0;">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #fffbeb; border: 2px dashed #d97706; border-radius: 12px; padding: 24px 16px; text-align: center;">
                 <tr>
                   <td align="center">
-                    <div style="font-size: 11px; font-weight: 900; color: #38BDF8; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px;">
+                    <div style="font-size: 11px; font-weight: 800; color: #b45309; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 8px;">
                       ⚡ YOUR 6-DIGIT VERIFICATION CODE
                     </div>
-                    <div style="font-size: 40px; font-weight: 900; letter-spacing: 10px; color: #D9A726; font-family: 'Courier New', Courier, monospace; line-height: 1.2;">
+                    <div style="font-size: 40px; font-weight: 900; letter-spacing: 10px; color: #1c1917; font-family: 'Courier New', Courier, monospace; line-height: 1.2;">
                       {otp_code}
                     </div>
-                    <div style="font-size: 11.5px; color: #94a3b8; margin-top: 8px; font-weight: 600;">
+                    <div style="font-size: 12px; color: #78716c; margin-top: 8px; font-weight: 600;">
                       (Valid for 15 minutes • Do not share this code)
                     </div>
                   </td>
@@ -110,13 +124,13 @@ class AIGmailAgent:
             </td>
           </tr>
 
-          <!-- Security Highlights -->
+          <!-- Security Notice Card -->
           <tr>
-            <td align="left" style="background-color: #090f1d; border: 1.5px solid #334155; border-radius: 6px; padding: 14px 16px; margin-bottom: 20px;">
-              <div style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
-                🛡️ <strong>AI Anti-Fraud Clearance:</strong> Your email is being authenticated against the verified S30 Student Registry. Once verified, this credential will be locked to your unique Student Dossier.
+            <td align="left" style="background-color: #faf8f5; border: 1px solid #eae4d9; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;">
+              <div style="font-size: 12px; color: #57534e; line-height: 1.55;">
+                🛡️ <strong style="color: #1c1917;">AI Anti-Fraud Clearance:</strong> Your email is being authenticated against the verified S30 Student Registry. Once verified, this credential will be locked to your unique Student Dossier.
               </div>
-              <div style="font-size: 11px; color: #64748b; margin-top: 6px; font-family: monospace;">
+              <div style="font-size: 11px; color: #8c827a; margin-top: 6px; font-family: monospace;">
                 Timestamp: {current_time} • Service: TeamX-AICloudDispatcher/v3.0
               </div>
             </td>
@@ -124,10 +138,10 @@ class AIGmailAgent:
 
           <!-- Footer -->
           <tr>
-            <td align="center" style="padding-top: 24px; border-top: 1.5px dashed #334155;">
-              <p style="color: #64748b; font-size: 11.5px; margin: 0; line-height: 1.4;">
+            <td align="center" style="padding-top: 24px; border-top: 1px dashed #ddd5c7; margin-top: 20px;">
+              <p style="color: #78716c; font-size: 11.5px; margin: 0; line-height: 1.5;">
                 If you did not request this verification code, you can safely ignore this email.<br>
-                © 2026 TeamX S30 Verification Platform. All rights reserved.
+                © 2026 TeamX S30 Platform (<a href="https://skill-matcher-7873.onrender.com/" style="color: #d97706; text-decoration: none; font-weight: 600;">skill-matcher-7873.onrender.com</a>). All rights reserved.
               </p>
             </td>
           </tr>
