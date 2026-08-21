@@ -572,7 +572,7 @@ def signup_profile():
         if existing:
             user_id = existing["id"]
             cursor.execute("""
-            UPDATE users SET full_name = ?, gender = ?, age = ?, school = ?, coursework = ?, password_hash = ?, step = MAX(step, 2), email_verified = 1
+            UPDATE users SET full_name = ?, gender = ?, age = ?, school = ?, coursework = ?, password_hash = ?, step = CASE WHEN step < 2 THEN 2 ELSE step END, email_verified = 1
             WHERE id = ?
             """, (full_name, gender, age_int, school, coursework, password or "default_pass", user_id))
         else:
@@ -601,10 +601,9 @@ def signup_skills():
     user = get_current_user(create_default=True)
     if not user:
         return redirect(url_for("signup_profile"))
-        
     if request.method == "POST":
         conn = database.get_db_connection()
-        conn.execute("UPDATE users SET step = MAX(step, 3) WHERE id = ?", (user["id"],))
+        conn.execute("UPDATE users SET step = CASE WHEN step < 3 THEN 3 ELSE step END WHERE id = ?", (user["id"],))
         conn.commit()
         conn.close()
         return redirect(url_for("signup_documents"))
@@ -678,30 +677,28 @@ def signup_documents():
             )
             
         conn = database.get_db_connection()
+        
         if has_new_front:
-            conn.execute("DELETE FROM user_documents WHERE user_id = ? AND doc_category = 'id_front'", (user["id"],))
             orig = secure_filename(file_front.filename)
-            uname = f"front_{secrets.token_hex(6)}_{orig}"
+            uname = f"id_front_{secrets.token_hex(6)}_{orig}"
             fpath = os.path.join(app.config["UPLOAD_FOLDER"], uname)
             file_front.save(fpath)
             conn.execute("""
-            INSERT INTO user_documents (user_id, doc_category, filename, original_name, file_size, file_type)
-            VALUES (?, 'id_front', ?, ?, ?, ?)
+            INSERT INTO user_documents (user_id, doc_category, filename, original_name, file_size, file_type, review_status)
+            VALUES (?, 'id_front', ?, ?, ?, ?, 'APPROVED')
             """, (user["id"], uname, orig, os.path.getsize(fpath), file_front.content_type))
-            
+
         if has_new_back:
-            conn.execute("DELETE FROM user_documents WHERE user_id = ? AND doc_category = 'id_back'", (user["id"],))
             orig = secure_filename(file_back.filename)
-            uname = f"back_{secrets.token_hex(6)}_{orig}"
+            uname = f"id_back_{secrets.token_hex(6)}_{orig}"
             fpath = os.path.join(app.config["UPLOAD_FOLDER"], uname)
             file_back.save(fpath)
             conn.execute("""
-            INSERT INTO user_documents (user_id, doc_category, filename, original_name, file_size, file_type)
-            VALUES (?, 'id_back', ?, ?, ?, ?)
+            INSERT INTO user_documents (user_id, doc_category, filename, original_name, file_size, file_type, review_status)
+            VALUES (?, 'id_back', ?, ?, ?, ?, 'APPROVED')
             """, (user["id"], uname, orig, os.path.getsize(fpath), file_back.content_type))
-            
-        # Support multiple certificate files submitted via form
-        cert_files = request.files.getlist("doc_certificates") + request.files.getlist("doc_certificate")
+
+        cert_files = request.files.getlist("doc_certificates")
         for file_cert in cert_files:
             if file_cert and file_cert.filename and allowed_file(file_cert.filename):
                 orig = secure_filename(file_cert.filename)
@@ -714,7 +711,7 @@ def signup_documents():
                 VALUES (?, 'certificate', ?, ?, ?, ?, ?, ?, ?, 'PENDING')
                 """, (user["id"], uname, orig, os.path.getsize(fpath), file_cert.content_type, ai_analysis["ai_score"], ai_analysis["ai_recommendation"], ai_analysis["ai_notes"]))
 
-        conn.execute("UPDATE users SET step = MAX(step, 4), pdf_status = 'DONE', manual_status = 'IN PROGRESS' WHERE id = ?", (user["id"],))
+        conn.execute("UPDATE users SET step = CASE WHEN step < 4 THEN 4 ELSE step END, pdf_status = 'DONE', manual_status = 'IN PROGRESS' WHERE id = ?", (user["id"],))
         conn.commit()
         conn.close()
         return redirect(url_for("signup_verification"))
