@@ -26,9 +26,14 @@ class PgRow(dict):
 class PgCursorWrapper:
     def __init__(self, pg_cursor):
         self._cur = pg_cursor
+        self._lastrowid = None
 
     def execute(self, query, params=None):
         clean_q = query.replace('?', '%s')
+        is_insert = clean_q.strip().upper().startswith("INSERT INTO")
+        if is_insert and "RETURNING" not in clean_q.upper():
+            clean_q = clean_q.rstrip().rstrip(';') + " RETURNING id"
+
         if params is not None:
             if isinstance(params, (list, tuple)):
                 self._cur.execute(clean_q, params)
@@ -36,6 +41,16 @@ class PgCursorWrapper:
                 self._cur.execute(clean_q, (params,))
         else:
             self._cur.execute(clean_q)
+
+        if is_insert:
+            try:
+                row = self._cur.fetchone()
+                self._lastrowid = row[0] if row else None
+            except Exception:
+                self._lastrowid = None
+        else:
+            self._lastrowid = None
+
         return self
 
     def fetchone(self):
@@ -54,10 +69,7 @@ class PgCursorWrapper:
 
     @property
     def lastrowid(self):
-        try:
-            return self._cur.fetchone()[0]
-        except Exception:
-            return None
+        return self._lastrowid
 
     @property
     def rowcount(self):
