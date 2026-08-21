@@ -257,11 +257,10 @@ def api_verify_otp():
     conn = database.get_db_connection()
     cursor = conn.cursor()
     
-    # Check valid unused OTP within 15 minutes
+    # Check valid unused OTP
     otp_row = cursor.execute("""
     SELECT id, otp_code FROM email_otps
     WHERE email = ? AND otp_code = ? AND is_used = 0
-    AND datetime(created_at, '+15 minutes') >= datetime('now')
     ORDER BY id DESC LIMIT 1
     """, (email, otp_input)).fetchone()
     
@@ -311,7 +310,6 @@ def api_check_email_verification():
         row = conn.execute("""
         SELECT id, created_at FROM email_otps
         WHERE email = ? AND is_used = 1
-        AND datetime(created_at, '+30 minutes') >= datetime('now')
         ORDER BY id DESC LIMIT 1
         """, (email,)).fetchone()
         conn.close()
@@ -320,12 +318,12 @@ def api_check_email_verification():
             session["verified_signup_email"] = email
             session["verified_signup_time"] = time.time()
             return jsonify({
-                "verified": True,
-                "remaining_seconds": 1800,
-                "source": "db"
+                "verified": True, 
+                "remaining_seconds": 1800, 
+                "source": "database"
             })
     except Exception as e:
-        print(f"[Check Verification DB Error]: {e}")
+        pass
         
     return jsonify({"verified": False})
 
@@ -342,11 +340,10 @@ def api_login_otp():
     conn = database.get_db_connection()
     cursor = conn.cursor()
     
-    # Check valid unused OTP within 15 minutes
+    # Check valid unused OTP
     otp_row = cursor.execute("""
     SELECT id, otp_code FROM email_otps
     WHERE email = ? AND otp_code = ? AND is_used = 0
-    AND datetime(created_at, '+15 minutes') >= datetime('now')
     ORDER BY id DESC LIMIT 1
     """, (email, otp_input)).fetchone()
     
@@ -553,7 +550,6 @@ def signup_profile():
         otp_row = conn_check.execute("""
         SELECT id FROM email_otps
         WHERE email = ? AND is_used = 1
-        AND datetime(created_at, '+30 minutes') >= datetime('now')
         ORDER BY id DESC LIMIT 1
         """, (email,)).fetchone()
         
