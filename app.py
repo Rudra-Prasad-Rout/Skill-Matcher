@@ -1046,9 +1046,8 @@ def calculate_team_formation_matches(user, skills_list):
     
     conn = database.get_db_connection()
     other_users = conn.execute("""
-        SELECT u.*, GROUP_CONCAT(s.skill_name, '||') as all_skills, GROUP_CONCAT(s.project_name, '||') as all_projects
+        SELECT u.id, u.user_code, u.full_name, u.school, u.coursework
         FROM users u
-        LEFT JOIN user_skills s ON u.id = s.user_id
         WHERE u.id != ? 
           AND u.is_banned = 0
           AND u.id NOT IN (SELECT leader_id FROM teams)
@@ -1057,15 +1056,23 @@ def calculate_team_formation_matches(user, skills_list):
               UNION
               SELECT sender_id FROM team_invites WHERE status = 'ACCEPTED' AND invite_type = 'JOIN_REQUEST'
           )
-        GROUP BY u.id
         ORDER BY u.id ASC
     """, (user_id,)).fetchall()
+
+    user_skills_map = {}
+    if other_users:
+        all_skills = conn.execute("SELECT user_id, skill_name, project_name FROM user_skills ORDER BY id ASC").fetchall()
+        for sk in all_skills:
+            uid = sk["user_id"]
+            if uid not in user_skills_map:
+                user_skills_map[uid] = []
+            user_skills_map[uid].append(sk["skill_name"])
+
     conn.close()
     
     team_matches = []
     for other in other_users:
-        raw_skills = other["all_skills"].split("||") if other["all_skills"] else []
-        other_skills = [sk.strip() for sk in raw_skills if sk.strip()]
+        other_skills = user_skills_map.get(other["id"], [])
         
         # Overlapping and complementary skills
         overlapping = [sk for sk in other_skills if sk.lower() in user_skill_names]
