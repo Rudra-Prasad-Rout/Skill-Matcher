@@ -1367,16 +1367,20 @@
   <script>
     let adminFilter = 'all';
     const knownCandidateIds = new Set();
+    const candidateCardHashes = new Map();
 
     // Initialize Known Candidate IDs & Start Zero-Refresh Real-Time Sync
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('#admin-candidates-list .candidate-card-row').forEach(card => {
-        const cardId = card.id.replace('card-', '');
-        if (cardId) knownCandidateIds.add(parseInt(cardId));
+        const cardId = parseInt(card.id.replace('card-', ''));
+        if (cardId) {
+          knownCandidateIds.add(cardId);
+          candidateCardHashes.set(cardId, card.innerHTML);
+        }
       });
       
-      // Start Real-Time Live Feed Polling every 3 seconds for instant zero-refresh candidate sync
-      setInterval(pollLiveCandidatesFeed, 3000);
+      // Start Real-Time Live Feed Polling every 2.5 seconds for instant zero-refresh candidate sync
+      setInterval(pollLiveCandidatesFeed, 2500);
     });
 
     async function pollLiveCandidatesFeed() {
@@ -1415,12 +1419,30 @@
         const container = document.getElementById('admin-candidates-list');
         if (!container) return;
 
+        const activeSet = new Set(data.active_user_ids || []);
+
+        // 2. Remove deleted candidates in real-time
+        document.querySelectorAll('#admin-candidates-list .candidate-card-row').forEach(card => {
+          const cardId = parseInt(card.id.replace('card-', ''));
+          if (cardId && !activeSet.has(cardId)) {
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95)';
+            setTimeout(() => card.remove(), 250);
+            knownCandidateIds.delete(cardId);
+            candidateCardHashes.delete(cardId);
+          }
+        });
+
         let hasNew = false;
-        // Check new candidates in reverse order (oldest to newest among new arrivals)
-        // so prepending puts the newest at the very top
+        let hasUpdated = false;
+
+        // 3. Process each candidate (new arrivals or updated documents/skills)
         for (let i = data.candidates.length - 1; i >= 0; i--) {
           const cand = data.candidates[i];
-          if (!knownCandidateIds.has(cand.id)) {
+          const existingCard = document.getElementById('card-' + cand.id);
+
+          if (!existingCard) {
+            // Brand new candidate
             knownCandidateIds.add(cand.id);
             hasNew = true;
 
@@ -1431,18 +1453,45 @@
               if (newCard) {
                 newCard.classList.add('new-candidate-slidein');
                 container.insertBefore(newCard, container.firstChild);
+                candidateCardHashes.set(cand.id, newCard.innerHTML);
               }
             }
 
-            // Show Toast Alert
+            // Show Toast Alert for new candidate
             showAdminLiveToast(cand.full_name, cand.user_code, cand.email);
+          } else {
+            // Existing candidate — check if documents, skills, or status updated
+            if (cand.card_html) {
+              const temp = document.createElement('div');
+              temp.innerHTML = cand.card_html.trim();
+              const freshCard = temp.firstElementChild;
+              if (freshCard && freshCard.innerHTML !== candidateCardHashes.get(cand.id)) {
+                existingCard.innerHTML = freshCard.innerHTML;
+                existingCard.className = freshCard.className;
+                existingCard.setAttribute('data-status', freshCard.getAttribute('data-status'));
+                candidateCardHashes.set(cand.id, freshCard.innerHTML);
+                hasUpdated = true;
+              }
+            }
           }
         }
 
-        if (hasNew) {
+        if (hasNew || hasUpdated) {
           const emptyState = document.getElementById('no-candidates-empty-state');
-          if (emptyState) emptyState.remove();
+          if (emptyState && data.candidates.length > 0) emptyState.remove();
           filterAdminCards();
+        } else if (data.candidates.length === 0 && !document.getElementById('no-candidates-empty-state')) {
+          container.innerHTML = `
+            <div id="no-candidates-empty-state" style="text-align: center; padding: 50px 24px; background: #ffffff; border: 1.5px dashed #ddd5c7; border-radius: 18px; margin-top: 10px;">
+              <div style="font-size: 42px; margin-bottom: 12px;">🛡️</div>
+              <h3 style="font-size: 18px; font-weight: 800; color: #1c1917; text-transform: uppercase; margin: 0 0 6px 0; letter-spacing: -0.01em;">
+                No Candidates in Verification Queue
+              </h3>
+              <p style="font-size: 13.5px; color: #57534e; margin: 0 auto; max-width: 480px; line-height: 1.5; font-weight: 400;">
+                All demo accounts have been cleared. When new students register and submit their ID credentials, their profiles will appear here instantly.
+              </p>
+            </div>
+          `;
         }
       } catch (err) {
         console.warn('[Real-Time Admin Sync]:', err);
