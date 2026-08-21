@@ -23,7 +23,11 @@ class TestCompulsoryDocumentsAndAdminApproval(unittest.TestCase):
 
     def test_signup_flow_admin_approval_and_analysis_gating(self):
         """2. Complete flow testing compulsory documents, admin approval requirement, and analysis unlocking."""
-        # Step 1: Create profile
+        # Step 1: Set verified email in session and Create profile
+        with self.client.session_transaction() as sess:
+            sess["verified_signup_email"] = "test.student@univ.edu"
+            sess["verified_signup_time"] = 9999999999
+            
         resp = self.client.post("/signup/profile", data={
             "full_name": "Test Student",
             "email": "test.student@univ.edu",
