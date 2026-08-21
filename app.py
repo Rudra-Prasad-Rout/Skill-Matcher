@@ -34,7 +34,10 @@ ADMIN_USERNAME = "TeamX"
 ADMIN_PASSWORD = "TeamX@Admin"
 
 # Ensure database is initialized
-database.init_db()
+try:
+    database.init_db()
+except Exception as db_err:
+    print(f"[BOOT WARN] Startup database initialization notice: {db_err}")
 
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
 
