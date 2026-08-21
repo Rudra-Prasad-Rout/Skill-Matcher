@@ -8,7 +8,8 @@ import sqlite3
 import random
 import string
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "matchpoint.db")
+DB_PATH = os.environ.get("SQLITE_DB_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "matchpoint.db"))
+os.makedirs(os.path.dirname(os.path.abspath(DB_PATH)), exist_ok=True)
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH, timeout=30.0, check_same_thread=False)
@@ -36,16 +37,15 @@ def init_db(force_reset=False):
     conn = get_db_connection()
     cursor = conn.cursor()
     
-    # Check if table schema needs migration (i.e. missing user_code)
-    try:
-        cursor.execute("SELECT user_code FROM users LIMIT 1")
-    except sqlite3.OperationalError:
-        force_reset = True
-        
     if force_reset:
         cursor.execute("DROP TABLE IF EXISTS user_documents")
         cursor.execute("DROP TABLE IF EXISTS user_skills")
         cursor.execute("DROP TABLE IF EXISTS users")
+        cursor.execute("DROP TABLE IF EXISTS email_otps")
+        cursor.execute("DROP TABLE IF EXISTS teams")
+        cursor.execute("DROP TABLE IF EXISTS team_invites")
+        cursor.execute("DROP TABLE IF EXISTS candidate_internship_approvals")
+        cursor.execute("DROP TABLE IF EXISTS discovered_internships")
     
     # Users table
     cursor.execute("""
