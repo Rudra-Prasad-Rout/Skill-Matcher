@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{% block title %}S30 — Verified Students. Limitless Opportunities.{% endblock %}</title>
+  <title>{% block title %}VIREQO — Verified Students. Limitless Opportunities.{% endblock %}</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -547,9 +547,9 @@
         </button>
         {% endif %}
 
-        <a href="{{ url_for('landing_page') }}" class="s30-brand">
-          <span class="s30-logo-badge">S30</span>
-          <span class="s30-brand-sub">VERIFIED</span>
+        <a href="{{ url_for('landing_page') }}" class="s30-brand" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none;">
+          <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 32px; width: auto; object-fit: contain; display: block;" onerror="this.onerror=null; this.src='/static/images/logo.png';">
+          <span class="s30-brand-sub" style="margin-left: 2px;">VERIFIED</span>
         </a>
       </div>
 
@@ -578,9 +578,9 @@
   <aside id="s30-nav-drawer" class="s30-nav-drawer" aria-hidden="true" role="dialog" aria-label="Profile and Navigation Menu">
     <!-- Drawer Header -->
     <div class="s30-drawer-header">
-      <div class="s30-drawer-brand">
-        <span class="s30-logo-badge" style="font-size: 16px; padding: 2px 7px;">S30</span>
-        <span style="font-size: 12.5px; font-weight: 800; color: var(--md-sys-color-primary); letter-spacing: 0.05em; text-transform: uppercase;">PROFILE &amp; MENU</span>
+      <div class="s30-drawer-brand" style="display: inline-flex; align-items: center; gap: 8px;">
+        <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 24px; width: auto; object-fit: contain; display: block;" onerror="this.onerror=null; this.src='/static/images/logo.png';">
+        <span style="font-size: 11.5px; font-weight: 800; color: var(--md-sys-color-primary); letter-spacing: 0.05em; text-transform: uppercase;">PROFILE &amp; MENU</span>
       </div>
       <button id="s30-drawer-close" class="s30-drawer-close-btn" aria-label="Close navigation menu" title="Close Menu (Esc)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 18px; height: 18px;">

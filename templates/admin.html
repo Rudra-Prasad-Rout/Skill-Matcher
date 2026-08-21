@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>S30 Admin Portal — Verification & Approvals Management</title>
+  <title>VIREQO Admin Portal - Verification & Approvals Management</title>
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -523,8 +523,8 @@
     <div class="dashboard-popup-card">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 2px solid rgba(255,255,255,0.15);">
         <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="neo-badge neo-badge-yellow" style="font-size: 14px; padding: 4px 8px;">S30</span>
-          <span class="neo-badge neo-badge-cyan" style="font-size: 11px; padding: 4px 8px;">DASHBOARD MENU</span>
+          <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 24px; width: auto; object-fit: contain;">
+          <span class="neo-badge neo-badge-cyan" style="font-size: 11px; padding: 4px 8px;">ADMIN MENU</span>
         </div>
         <button type="button" onclick="closeNavPopup()" class="neo-btn neo-btn-pink" style="padding: 4px 10px; font-size: 12px;">✕</button>
       </div>
@@ -591,7 +591,7 @@
     <!-- Main Content Full-Width -->
     <main class="s30-admin-main">
       
-      <!-- Top Action Bar: 3 Horizontal Lines next to S30 ADMIN in left corner -->
+      <!-- Top Action Bar: 3 Horizontal Lines next to VIREQO ADMIN in left corner -->
       <div class="s30-top-bar">
         <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
           
@@ -602,9 +602,9 @@
             <span></span>
           </button>
 
-          <!-- S30 ADMIN brand badge -->
+          <!-- VIREQO ADMIN brand badge -->
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="neo-badge neo-badge-yellow" style="font-size: 18px; padding: 4px 10px;">S30</span>
+            <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 28px; width: auto; object-fit: contain;">
             <span class="neo-badge neo-badge-cyan" style="font-size: 11px; padding: 4px 8px;">ADMIN</span>
           </div>
 
@@ -717,7 +717,7 @@
         <div class="neo-card-yellow" style="padding: 24px; margin-bottom: 26px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
           <div>
             <div style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-              <span class="neo-badge neo-badge-yellow">⭐ S30 CANDIDATE VERIFICATION DESK</span>
+              <span class="neo-badge neo-badge-yellow">⭐ VIREQO CANDIDATE VERIFICATION DESK</span>
               <div id="admin-live-indicator" class="neo-badge neo-badge-green" style="font-size: 11.5px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px;">
                 <span class="live-pulse-dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--md-sys-color-tertiary); display: inline-block;"></span>
                 <span id="live-indicator-text">LIVE AUTO-SYNC ACTIVE</span>
@@ -781,7 +781,7 @@
         <div class="neo-card-yellow" style="padding: 24px; margin-bottom: 26px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; background: var(--md-sys-color-surface-container);">
           <div>
             <div style="margin-bottom: 8px;">
-              <span class="neo-badge neo-badge-yellow">📊 S30 EXECUTIVE COMMAND CENTER</span>
+              <span class="neo-badge neo-badge-yellow">📊 VIREQO EXECUTIVE COMMAND CENTER</span>
             </div>
             <h2 style="font-size: 26px; font-weight: 800; color: var(--s30-text-primary); text-transform: uppercase; letter-spacing: -0.02em;">
               Unified Platform Score Boards

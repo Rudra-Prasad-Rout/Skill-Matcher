@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Verification Status — S30{% endblock %}
+{% block title %}Verification Status — VIREQO{% endblock %}
 
 {% block content %}
 <!-- S30 Stepper (Step 4 Active) -->
@@ -28,7 +28,7 @@
 
 {% if user and user.is_banned %}
 <div class="s30-status-banner banner-banned">
-  <strong class="banner-title">⚠️ Candidate ID Suspended by S30 Staff</strong>
+  <strong class="banner-title">⚠️ Candidate ID Suspended by VIREQO Staff</strong>
   <span class="banner-desc">Reason: {{ user.ban_reason or 'Credential verification failure.' }}</span>
 </div>
 {% elif is_approved %}

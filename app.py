@@ -2466,7 +2466,7 @@ def view_document(filename):
         return f"""
         <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; text-align: center; background: #0c1322; color: #fff; border: 2px solid #38BDF8; border-radius: 8px; margin: 20px;">
             <h2 style="color: #FFE600;">Document Record: {filename}</h2>
-            <p style="color: #cbd5e1;">Uploaded credential proof verified by S30 security engine.</p>
+            <p style="color: #cbd5e1;">Uploaded credential proof verified by VIREQO security engine.</p>
         </div>
         """, 200, {"Content-Type": "text/html"}
 
@@ -2968,7 +2968,7 @@ def api_admin_curate_internship():
     elif action == "reject":
         conn.execute("UPDATE discovered_internships SET is_verified_by_admin = -1, is_active = 0 WHERE id = ?", (item_id,))
     elif action == "flag_scam":
-        conn.execute("UPDATE discovered_internships SET is_scam_flagged = 1, is_verified_by_admin = -1, is_active = 0, flag_reason = 'Flagged by S30 Admin' WHERE id = ?", (item_id,))
+        conn.execute("UPDATE discovered_internships SET is_scam_flagged = 1, is_verified_by_admin = -1, is_active = 0, flag_reason = 'Flagged by VIREQO Admin' WHERE id = ?", (item_id,))
     elif action == "unflag":
         conn.execute("UPDATE discovered_internships SET is_scam_flagged = 0, is_active = 1 WHERE id = ?", (item_id,))
     elif action == "delete":

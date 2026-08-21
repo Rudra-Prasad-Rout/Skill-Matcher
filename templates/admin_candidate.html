@@ -370,12 +370,12 @@
 </head>
 <body>
 
-  <!-- S30 Admin Navbar -->
+  <!-- VIREQO Admin Navbar -->
   <header class="s30-navbar">
     <div class="s30-nav-container">
-      <a href="{{ url_for('admin_dashboard') }}" class="s30-brand">
-        <span class="s30-logo-badge">S30</span>
-        <span class="s30-brand-sub">STUDENT DOSSIER</span>
+      <a href="{{ url_for('admin_dashboard') }}" class="s30-brand" style="display: flex; align-items: center; gap: 8px; text-decoration: none;">
+        <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 28px; width: auto; object-fit: contain;">
+        <span class="s30-brand-sub" style="margin-left: 2px;">STUDENT DOSSIER</span>
       </a>
 
       <div class="dossier-nav-actions">
@@ -433,7 +433,7 @@
       
       <div class="detail-grid">
         <div class="detail-item">
-          <div class="detail-label">5-Digit S30 ID</div>
+          <div class="detail-label">5-Digit VIREQO ID</div>
           <div class="detail-val" style="color: #38bdf8; font-family: monospace; font-size: 15px; font-weight: 700;">{{ user.user_code }}</div>
         </div>
         <div class="detail-item">

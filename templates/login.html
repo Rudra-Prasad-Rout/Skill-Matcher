@@ -1,13 +1,16 @@
 {% extends "base.html" %}
 
-{% block title %}Log in to your account — S30{% endblock %}
+{% block title %}Log in to your account — VIREQO{% endblock %}
 
 {% block content %}
-<div class="s30-form-header">
+<div class="s30-form-header" style="text-align: center;">
+  <div style="margin-bottom: 12px; display: flex; justify-content: center;">
+    <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" style="height: 38px; width: auto; object-fit: contain;" onerror="this.onerror=null; this.src='/static/images/logo.png';">
+  </div>
   <div style="margin-bottom: 8px;">
     <span class="neo-badge neo-badge-cyan">🔐 STUDENT AUTHENTICATION</span>
   </div>
-  <h1 class="s30-form-title">Log in to S30</h1>
+  <h1 class="s30-form-title">Log in to VIREQO</h1>
   <p class="s30-form-subtitle">Choose your preferred login method to access your verified student dashboard.</p>
 </div>
 
