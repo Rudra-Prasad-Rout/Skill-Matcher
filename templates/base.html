@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.5">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.6">
   <style>
     /* Material Design 3 Global Styles & 80% Screen Width Container */
     .s30-auth-wrapper {
@@ -30,6 +30,21 @@
       border-radius: 0 !important;
       box-shadow: none !important;
       box-sizing: border-box !important;
+    }
+
+    /* Universal Autofill Fix (Eliminates Browser Dark Autofill Boxes) */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active,
+    textarea:-webkit-autofill,
+    select:-webkit-autofill {
+      -webkit-text-fill-color: #1c1917 !important;
+      -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+      box-shadow: 0 0 0px 1000px #ffffff inset !important;
+      transition: background-color 5000s ease-in-out 0s !important;
+      caret-color: #d97706 !important;
+      color: #1c1917 !important;
     }
 
     .neo-btn {
