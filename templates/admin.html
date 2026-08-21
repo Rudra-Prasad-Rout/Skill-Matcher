@@ -769,9 +769,21 @@
 
         <!-- Candidate Cards (Material Design 3 Zero-Refresh Live Queue) -->
         <div id="admin-candidates-list" style="display: flex; flex-direction: column; gap: 20px;">
-          {% for u in users %}
-            {% include "_candidate_card.html" %}
-          {% endfor %}
+          {% if users %}
+            {% for u in users %}
+              {% include "_candidate_card.html" %}
+            {% endfor %}
+          {% else %}
+            <div id="no-candidates-empty-state" style="text-align: center; padding: 50px 24px; background: var(--md-sys-color-surface); border: 1.5px dashed var(--md-sys-color-outline-variant); border-radius: var(--md-shape-lg); margin-top: 10px;">
+              <div style="font-size: 42px; margin-bottom: 12px;">🛡️</div>
+              <h3 style="font-size: 18px; font-weight: 800; color: var(--s30-text-primary); text-transform: uppercase; margin: 0 0 6px 0; letter-spacing: -0.01em;">
+                No Candidates in Verification Queue
+              </h3>
+              <p style="font-size: 13.5px; color: var(--s30-text-secondary); margin: 0 auto; max-width: 480px; line-height: 1.5; font-weight: 400;">
+                All demo accounts have been cleared. When new students register and submit their ID credentials, their profiles will appear here instantly.
+              </p>
+            </div>
+          {% endif %}
         </div>
       </div>
 
@@ -1423,6 +1435,8 @@
         }
 
         if (hasNew) {
+          const emptyState = document.getElementById('no-candidates-empty-state');
+          if (emptyState) emptyState.remove();
           filterAdminCards();
         }
       } catch (err) {

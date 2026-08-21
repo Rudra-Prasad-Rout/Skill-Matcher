@@ -211,17 +211,17 @@
           </div>
 
           <h1>
-            {{ user.full_name if user and user.full_name else 'Alex Rivera' }}
+            {{ user.full_name if user and user.full_name else 'Candidate' }}
           </h1>
 
           <div class="candidate-meta-line">
-            <span>🏛️ {{ user.school if user and user.school else 'Delhi University' }}</span>
+            <span>🏛️ {{ user.school if user and user.school else 'University / Institution' }}</span>
             <span>•</span>
-            <span>📚 {{ user.coursework if user and user.coursework else 'B.Tech Computer Science' }}</span>
+            <span>📚 {{ user.coursework if user and user.coursework else 'Academic Program' }}</span>
             <span>•</span>
-            <span>🎂 Age: {{ user.age or 21 }} ({{ user.gender or 'Male' }})</span>
+            <span>🎂 Age: {{ user.age or 20 }} ({{ user.gender or 'Candidate' }})</span>
             <span>•</span>
-            <span>✉️ {{ user.email }}</span>
+            <span>✉️ {{ user.email or '' }}</span>
           </div>
         </div>
       </div>
