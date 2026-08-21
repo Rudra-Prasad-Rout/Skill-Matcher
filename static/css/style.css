@@ -701,19 +701,21 @@ body {
   font-weight: 400;
 }
 
-/* Browser Autofill override */
+/* Browser Autofill override (Matches Warm Beige / Clean Surface Palette) */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus, 
 input:-webkit-autofill:active,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  -webkit-text-fill-color: #f8fafc !important;
-  -webkit-box-shadow: 0 0 0px 1000px #111827 inset !important;
-  box-shadow: 0 0 0px 1000px #111827 inset !important;
+  -webkit-text-fill-color: #1c1917 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #ffffff inset !important;
+  box-shadow: 0 0 0px 1000px #ffffff inset !important;
   transition: background-color 5000s ease-in-out 0s !important;
-  caret-color: #f8fafc !important;
-  color: #f8fafc !important;
+  caret-color: #d97706 !important;
+  color: #1c1917 !important;
+  font-family: inherit !important;
+  font-size: 14px !important;
 }
 
 .s30-select {
@@ -731,8 +733,8 @@ select:-webkit-autofill {
 }
 
 .s30-select option {
-  background: #111827;
-  color: #f8fafc;
+  background: #ffffff;
+  color: #1c1917;
   font-weight: 500;
 }
 

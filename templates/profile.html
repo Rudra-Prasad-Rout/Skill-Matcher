@@ -89,20 +89,20 @@
       ⚠️ Please enter a complete email with '@' and domain (e.g. name@gmail.com).
     </div>
 
-    <!-- Active 30-Minute Verified Status Banner -->
-    <div id="email-verified-helper" style="display: none; margin-top: 10px; background: rgba(52, 168, 83, 0.15); border: 2px solid #34A853; border-radius: 6px; padding: 10px 14px; font-size: 12px; color: #cbd5e1; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; box-shadow: 3px 3px 0px #34A853;">
+    <!-- Active 30-Minute Verified Status Banner (Material Design 3 Theme Match) -->
+    <div id="email-verified-helper" style="display: none; margin-top: 10px; background: rgba(22, 163, 74, 0.08); border: 1px solid rgba(22, 163, 74, 0.28); border-radius: var(--md-shape-md); padding: 10px 14px; font-size: 12px; color: var(--s30-text-primary); justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; box-shadow: var(--md-elevation-0);">
       <div style="display: flex; align-items: center; gap: 8px;">
-        <span style="color: #34A853; font-size: 16px;">✓</span>
-        <div>
-          <strong style="color: #34A853; text-transform: uppercase; font-size: 11.5px; letter-spacing: 0.04em;">Gmail Verified</strong>
-          <span id="email-verified-timer-text" style="color: #cbd5e1; font-size: 11.5px; margin-left: 4px;">(Valid for 30 minutes • No re-verification required)</span>
+        <span style="color: #15803d; font-size: 15px; font-weight: 800;">✓</span>
+        <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+          <strong style="color: #15803d; text-transform: uppercase; font-size: 11.5px; letter-spacing: 0.04em;">Gmail Verified</strong>
+          <span id="email-verified-timer-text" style="color: var(--s30-text-secondary); font-size: 11.5px; font-weight: 500;">(Valid for 30 minutes • No re-verification required)</span>
         </div>
       </div>
       <button 
         type="button" 
         onclick="unlockEmailChange()" 
-        class="neo-btn neo-btn-white" 
-        style="font-size: 10.5px !important; padding: 4px 10px !important; text-transform: uppercase;"
+        class="s30-btn-outline" 
+        style="font-size: 10.5px !important; padding: 4px 10px !important; text-transform: uppercase; font-weight: 700; background: #ffffff !important; border: 1px solid var(--md-sys-color-outline) !important; color: var(--s30-text-primary) !important; border-radius: var(--md-shape-sm) !important; box-shadow: var(--md-elevation-1) !important;"
       >
         ✏️ Change Email
       </button>
@@ -367,11 +367,20 @@
     const helper = document.getElementById('email-verified-helper');
     const timerText = document.getElementById('email-verified-timer-text');
 
+    const emailContainer = document.getElementById('email-container');
+
     if (emailInput) {
       emailInput.value = emailVal;
       emailInput.readOnly = true;
-      emailInput.style.borderColor = '#34A853';
-      emailInput.style.background = '#0f1a30';
+      emailInput.style.borderColor = 'transparent';
+      emailInput.style.background = 'transparent';
+      emailInput.style.color = 'var(--s30-text-primary)';
+    }
+
+    if (emailContainer) {
+      emailContainer.style.borderColor = 'rgba(22, 163, 74, 0.4)';
+      emailContainer.style.background = 'rgba(22, 163, 74, 0.04)';
+      emailContainer.style.boxShadow = 'none';
     }
 
     if (sendBtnRow) sendBtnRow.style.display = 'none';
@@ -399,6 +408,7 @@
     localStorage.removeItem(VERIFY_CACHE_KEY);
 
     const emailInput = document.getElementById('email');
+    const emailContainer = document.getElementById('email-container');
     const sendBtnRow = document.getElementById('send-otp-row');
     const sendBtn = document.getElementById('btn-send-otp');
     const otpBox = document.getElementById('otp-verification-box');
@@ -410,6 +420,12 @@
       emailInput.style.borderColor = '';
       emailInput.style.background = '';
       emailInput.focus();
+    }
+
+    if (emailContainer) {
+      emailContainer.style.borderColor = '';
+      emailContainer.style.background = '';
+      emailContainer.style.boxShadow = '';
     }
 
     if (sendBtnRow) sendBtnRow.style.display = 'flex';
@@ -547,7 +563,7 @@
         
         if (feedback) {
           feedback.style.display = 'block';
-          feedback.style.color = '#34A853';
+          feedback.style.color = '#15803d';
           feedback.textContent = '✓ 6-Digit verification code dispatched to your Google Gmail inbox! Please check your email.';
         }
 
@@ -575,7 +591,7 @@
     if (!otpVal || otpVal.length < 4) {
       if (feedback) {
         feedback.style.display = 'block';
-        feedback.style.color = '#E0536C';
+        feedback.style.color = '#dc2626';
         feedback.textContent = '⚠️ Please enter the 6-digit code sent to your email.';
       }
       otpInput.focus();
@@ -607,7 +623,7 @@
 
         if (feedback) {
           feedback.style.display = 'block';
-          feedback.style.color = '#34A853';
+          feedback.style.color = '#15803d';
           feedback.textContent = '✓ ' + data.message;
         }
 
@@ -620,7 +636,7 @@
         }
         if (feedback) {
           feedback.style.display = 'block';
-          feedback.style.color = '#E0536C';
+          feedback.style.color = '#dc2626';
           feedback.textContent = '✕ ' + (data.error || 'Invalid code.');
         }
       }
