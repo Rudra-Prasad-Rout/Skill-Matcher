@@ -68,13 +68,26 @@ class TestCompulsoryDocumentsAndAdminApproval(unittest.TestCase):
 
         resp = self.client.post("/signup/skills", follow_redirects=True)
         self.assertEqual(resp.status_code, 200)
-        self.assertIn("Official College ID Verification (Compulsory)", resp.get_data(as_text=True))
-        print("[PASS] Step 3 Documents shows Compulsory status.")
+        self.assertIn("Passport Size Photo", resp.get_data(as_text=True))
+        print("[PASS] Step 3 Documents shows Passport Size Photo compulsory upload box.")
 
-        # Test submitting with BOTH Front and Back ID
+        # Test submitting without Passport Photo (should fail compulsory check)
         fake_front = (io.BytesIO(b"fake image data front"), "college_id_front.png")
         fake_back = (io.BytesIO(b"fake image data back"), "college_id_back.png")
         resp = self.client.post("/signup/documents", data={
+            "doc_id_front": fake_front,
+            "doc_id_back": fake_back
+        }, content_type="multipart/form-data", follow_redirects=True)
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn("Passport Size Photo", resp.get_data(as_text=True))
+        print("[PASS] Missing Passport Photo correctly rejected with compulsory error.")
+
+        # Test submitting with ALL Passport Photo, Front, and Back ID
+        fake_photo = (io.BytesIO(b"fake image data photo"), "passport_photo.png")
+        fake_front = (io.BytesIO(b"fake image data front"), "college_id_front.png")
+        fake_back = (io.BytesIO(b"fake image data back"), "college_id_back.png")
+        resp = self.client.post("/signup/documents", data={
+            "doc_passport_photo": fake_photo,
             "doc_id_front": fake_front,
             "doc_id_back": fake_back
         }, content_type="multipart/form-data", follow_redirects=True)

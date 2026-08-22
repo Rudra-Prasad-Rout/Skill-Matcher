@@ -71,11 +71,16 @@
         {% if user.pdf_status == 'DONE' %}✓{% elif user.pdf_status == 'REJECTED' %}✕{% else %}⏳{% endif %}
       </div>
       <div class="s30-checklist-text">
-        <div class="s30-checklist-title">College ID Card (Front & Back) & Documents</div>
+        <div class="s30-checklist-title">Passport Photo & College ID Card (Front & Back)</div>
         <div class="s30-checklist-sub">Automated OCR and credential structure check</div>
         <div style="display: flex; gap: 6px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+          {% if photo_doc %}
+          <button type="button" class="neo-btn" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: var(--md-shape-sm);" onclick="openMediaPreview('Passport Size Photo', '/documents/view/{{ photo_doc.filename }}', 'passport_photo', '{{ photo_doc.original_name }}')">
+            <span>👁️ Passport Photo</span>
+          </button>
+          {% endif %}
           {% if front_doc %}
-          <button type="button" class="neo-btn" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: var(--md-shape-sm);" onclick="openMediaPreview('College ID Card (Front Side)', '/documents/view/{{ front_doc.filename }}', 'id_front', '{{ front_doc.original_name }}')">
+          <button type="button" class="neo-btn neo-btn-white" style="padding: 4px 10px; font-size: 11px; font-weight: 700; border: 1px solid var(--md-sys-color-outline); color: var(--s30-text-primary); border-radius: var(--md-shape-sm);" onclick="openMediaPreview('College ID Card (Front Side)', '/documents/view/{{ front_doc.filename }}', 'id_front', '{{ front_doc.original_name }}')">
             <span>👁️ Front ID Photo</span>
           </button>
           {% endif %}

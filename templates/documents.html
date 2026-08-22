@@ -33,16 +33,51 @@
   <div class="banner-icon icon-pending" style="font-size: 15px;">!</div>
   <div class="banner-content">
     <strong class="banner-title" style="color: #D9A726;">Compulsory Verification</strong>
-    <span class="banner-desc" style="color: #ffffff;">College ID Card (Front & Back) is mandatory for all registered students.</span>
+    <span class="banner-desc" style="color: #ffffff;">Passport Size Photo & College ID Card (Front & Back) are mandatory for all registered students.</span>
   </div>
 </div>
 
 <form action="{{ url_for('signup_documents') }}" method="POST" enctype="multipart/form-data" id="document-form" onsubmit="sessionStorage.removeItem('s30_ai_analyzed_done')">
   
-  <!-- ================= PART 1: COLLEGE ID CARDS ================= -->
+  <!-- ================= PART 1: PASSPORT PHOTO & COLLEGE ID CARDS ================= -->
   <div style="margin-bottom: 24px;">
     <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--s30-accent-cyan); letter-spacing: 0.08em; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-      <span>🪪</span> Official College ID Verification (Compulsory)
+      <span>📸</span> Passport Photo & Official College ID Verification (Compulsory)
+    </div>
+
+    <!-- Upload Box 0: Passport Size Photo -->
+    <div class="s30-form-group">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; flex-wrap: wrap; gap: 6px;">
+        <label class="s30-form-label" style="margin-bottom: 0;">Passport Size Photo</label>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          {% if photo_doc %}
+          <button type="button" class="neo-btn" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: var(--md-shape-sm);" onclick="event.stopPropagation(); openMediaPreview('Passport Size Photo', '/documents/view/{{ photo_doc.filename }}', 'passport_photo', '{{ photo_doc.original_name }}')">
+            <span>👁️ VIEW PHOTO</span>
+          </button>
+          <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
+          {% else %}
+          <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="s30-upload-box" id="box-photo" onclick="document.getElementById('file-photo').click()">
+        <div class="s30-upload-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </div>
+        <div class="s30-upload-title" id="title-photo">
+          {% if photo_doc %}
+            <span style="color: var(--md-sys-color-tertiary); font-weight: 800;">✓ {{ photo_doc.original_name }}</span> <span style="font-size: 11.5px; color: var(--s30-text-secondary);">(Click to replace)</span>
+          {% else %}
+            Click to upload Passport Size Photo
+          {% endif %}
+        </div>
+        <div class="s30-upload-subtitle">JPG, PNG, WEBP up to 15MB</div>
+        <input type="file" name="doc_passport_photo" id="file-photo" accept=".jpg,.jpeg,.png,.webp" style="display: none;" onchange="updateUploadLabel(this, 'title-photo', 'box-photo')">
+      </div>
     </div>
 
     <!-- Upload Box 1: College ID Card Front -->
@@ -269,21 +304,32 @@
   }
 
   document.getElementById('document-form').addEventListener('submit', function(e) {
+    const hasPhotoUploaded = {{ 'true' if photo_doc else 'false' }};
     const hasFrontUploaded = {{ 'true' if front_doc else 'false' }};
     const hasBackUploaded = {{ 'true' if back_doc else 'false' }};
     
+    const filePhotoInput = document.getElementById('file-photo');
     const fileFrontInput = document.getElementById('file-front');
     const fileBackInput = document.getElementById('file-back');
     
+    const photoSelected = filePhotoInput && filePhotoInput.files && filePhotoInput.files.length > 0;
     const frontSelected = fileFrontInput && fileFrontInput.files && fileFrontInput.files.length > 0;
     const backSelected = fileBackInput && fileBackInput.files && fileBackInput.files.length > 0;
     
+    const photoOk = hasPhotoUploaded || photoSelected;
     const frontOk = hasFrontUploaded || frontSelected;
     const backOk = hasBackUploaded || backSelected;
     
-    if (!frontOk || !backOk) {
+    if (!photoOk || !frontOk || !backOk) {
       e.preventDefault();
       
+      if (!photoOk) {
+        const boxPhoto = document.getElementById('box-photo');
+        if (boxPhoto) {
+          boxPhoto.style.borderColor = '#E0536C';
+          boxPhoto.style.boxShadow = '4px 4px 0px #E0536C';
+        }
+      }
       if (!frontOk) {
         const boxFront = document.getElementById('box-front');
         if (boxFront) {
@@ -299,14 +345,12 @@
         }
       }
       
-      let msg = "⚠️ Document insertion is COMPULSORY:\n\n";
-      if (!frontOk && !backOk) {
-        msg += "• Please upload BOTH Front and Back sides of your College ID Card.";
-      } else if (!frontOk) {
-        msg += "• Please upload the Front side of your College ID Card.";
-      } else {
-        msg += "• Please upload the Back side of your College ID Card.";
-      }
+      let missingList = [];
+      if (!photoOk) missingList.push("Passport Size Photo");
+      if (!frontOk) missingList.push("College ID Card (Front Side)");
+      if (!backOk) missingList.push("College ID Card (Back Side)");
+
+      let msg = "⚠️ Document upload is COMPULSORY:\n\n• Please upload: " + missingList.join(", ");
       alert(msg);
       return false;
     }

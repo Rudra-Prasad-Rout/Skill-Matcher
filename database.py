@@ -167,6 +167,7 @@ def init_db(force_reset=False):
                 pdf_status TEXT DEFAULT 'DONE',
                 manual_status TEXT DEFAULT 'IN PROGRESS',
                 career_intent TEXT DEFAULT 'both',
+                spoken_languages TEXT DEFAULT '',
                 is_banned INTEGER DEFAULT 0,
                 ban_reason TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -183,6 +184,16 @@ def init_db(force_reset=False):
             conn.rollback()
             try:
                 cursor.execute("ALTER TABLE users ADD COLUMN career_intent TEXT DEFAULT 'both'")
+            except Exception:
+                conn.rollback()
+
+        # Ensure spoken_languages column exists
+        try:
+            cursor.execute("SELECT spoken_languages FROM users LIMIT 1")
+        except Exception:
+            conn.rollback()
+            try:
+                cursor.execute("ALTER TABLE users ADD COLUMN spoken_languages TEXT DEFAULT ''")
             except Exception:
                 conn.rollback()
 

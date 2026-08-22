@@ -705,6 +705,16 @@
           </div>
           <span class="s30-nav-item-arrow" style="color: var(--md-sys-color-tertiary);">→</span>
         </a>
+
+        <!-- My Passport Option Under Find a Squad / Team -->
+        <a href="{{ url_for('my_passport') }}" id="drawer-link-passport" class="s30-drawer-nav-item">
+          <span class="s30-nav-item-icon" style="color: #0284c7;">🛂</span>
+          <div class="s30-nav-item-text">
+            <strong style="color: #0284c7;">My Passport</strong>
+            <span>Official student ID passport holding all verified credentials</span>
+          </div>
+          <span class="s30-nav-item-arrow" style="color: #0284c7;">→</span>
+        </a>
       </nav>
     </div>
 
@@ -1080,7 +1090,10 @@
       const ext = (fileUrl.split('?')[0].split('.').pop() || '').toLowerCase();
       const isImage = ['jpg', 'jpeg', 'png', 'webp', 'svg', 'gif'].includes(ext);
 
-      if (category === 'id_front') {
+      if (category === 'passport_photo') {
+        badgeEl.className = 'neo-badge neo-badge-purple';
+        badgeEl.textContent = '📸 PASSPORT SIZE PHOTO';
+      } else if (category === 'id_front') {
         badgeEl.className = 'neo-badge neo-badge-cyan';
         badgeEl.textContent = '🪪 ID CARD (FRONT PHOTO)';
       } else if (category === 'id_back') {

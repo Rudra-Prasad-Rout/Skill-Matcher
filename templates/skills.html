@@ -103,8 +103,60 @@
   </button>
 </div>
 
+<!-- ================= SPOKEN & COMMUNICATION LANGUAGES ================= -->
+<div style="background: var(--md-sys-color-surface); border: 1.5px solid var(--md-sys-color-outline); border-radius: var(--md-shape-md); padding: 22px; margin-bottom: 24px; box-shadow: var(--md-elevation-1);">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+    <div style="font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: var(--s30-accent-cyan); display: flex; align-items: center; gap: 6px;">
+      <span>🗣️</span> Spoken & Communication Languages
+    </div>
+    <span class="neo-badge neo-badge-yellow" style="font-size: 10px; padding: 2px 8px;">PROFILE ENHANCER</span>
+  </div>
+  
+  <p style="font-size: 12.5px; color: var(--s30-text-secondary); margin-bottom: 14px; line-height: 1.4;">
+    Specify the spoken languages you can fluently communicate in (e.g., for team collaborations, interviews, and multilingual projects).
+  </p>
+
+  <div class="s30-form-group" style="margin-bottom: 14px;">
+    <label class="s30-form-label" style="margin-bottom: 6px;">Languages You Speak</label>
+    <div class="s30-input-wrap">
+      <input 
+        type="text" 
+        id="input-spoken-languages" 
+        name="spoken_languages" 
+        form="skills-form"
+        class="s30-input" 
+        placeholder="e.g. English, Hindi, Spanish, French..." 
+        value="{{ user.spoken_languages or '' }}"
+        oninput="syncLanguageChips(); autoSaveSpokenLanguages();"
+      >
+    </div>
+  </div>
+
+  <!-- Quick Selection Language Pills -->
+  <div>
+    <div style="font-size: 11px; font-weight: 700; color: var(--s30-text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em;">
+      ⚡ Quick Select Languages:
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px;" id="quick-lang-pills">
+      {% set quick_langs = ['English', 'Hindi', 'Bengali', 'Telugu', 'Marathi', 'Tamil', 'Urdu', 'Gujarati', 'Kannada', 'Odia', 'Malayalam', 'Punjabi', 'Spanish', 'French', 'German', 'Mandarin', 'Japanese', 'Arabic'] %}
+      {% for ql in quick_langs %}
+      <button 
+        type="button" 
+        class="lang-pill-btn" 
+        data-lang="{{ ql }}" 
+        onclick="toggleLanguagePill('{{ ql }}')"
+        style="background: var(--md-sys-color-surface-container-low); border: 1px solid var(--md-sys-color-outline); color: var(--s30-text-primary); padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 600; cursor: pointer; transition: all 0.15s ease;"
+      >
+        + {{ ql }}
+      </button>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
 <!-- Navigation Buttons (Back & Forward) -->
 <form action="{{ url_for('signup_skills') }}" method="POST" id="skills-form" onsubmit="return validateSkillsExist();">
+  <input type="hidden" name="spoken_languages" id="hidden-spoken-languages" value="{{ user.spoken_languages or '' }}">
   <div class="s30-nav-step-row">
     <a href="{{ url_for('signup_profile') }}" class="s30-btn-back">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
@@ -238,6 +290,74 @@
       if (document.visibilityState === 'hidden') saveSkillDraft();
     });
     window.addEventListener('beforeunload', saveSkillDraft);
+    syncLanguageChips();
   });
+
+  // Spoken Languages Helpers
+  function getSelectedLanguages() {
+    const input = document.getElementById('input-spoken-languages');
+    if (!input || !input.value) return [];
+    return input.value.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  function setSelectedLanguages(langs) {
+    const input = document.getElementById('input-spoken-languages');
+    const hidden = document.getElementById('hidden-spoken-languages');
+    if (input) {
+      input.value = langs.join(', ');
+      if (hidden) hidden.value = input.value;
+      syncLanguageChips();
+      autoSaveSpokenLanguages();
+    }
+  }
+
+  function toggleLanguagePill(lang) {
+    const current = getSelectedLanguages();
+    const idx = current.findIndex(l => l.toLowerCase() === lang.toLowerCase());
+    if (idx >= 0) {
+      current.splice(idx, 1);
+    } else {
+      current.push(lang);
+    }
+    setSelectedLanguages(current);
+  }
+
+  function syncLanguageChips() {
+    const current = getSelectedLanguages().map(l => l.toLowerCase());
+    const hidden = document.getElementById('hidden-spoken-languages');
+    const input = document.getElementById('input-spoken-languages');
+    if (hidden && input) hidden.value = input.value;
+
+    document.querySelectorAll('.lang-pill-btn').forEach(btn => {
+      const l = btn.getAttribute('data-lang');
+      if (l && current.includes(l.toLowerCase())) {
+        btn.style.background = 'var(--md-sys-color-primary)';
+        btn.style.color = 'var(--md-sys-color-on-primary)';
+        btn.style.borderColor = 'var(--md-sys-color-primary)';
+        btn.textContent = '✓ ' + l;
+      } else {
+        btn.style.background = 'var(--md-sys-color-surface-container-low)';
+        btn.style.color = 'var(--s30-text-primary)';
+        btn.style.borderColor = 'var(--md-sys-color-outline)';
+        btn.textContent = '+ ' + l;
+      }
+    });
+  }
+
+  let saveLangTimeout = null;
+  function autoSaveSpokenLanguages() {
+    clearTimeout(saveLangTimeout);
+    saveLangTimeout = setTimeout(async () => {
+      const input = document.getElementById('input-spoken-languages');
+      if (!input) return;
+      try {
+        await fetch('/api/user/spoken-languages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ spoken_languages: input.value.trim() })
+        });
+      } catch (e) {}
+    }, 500);
+  }
 </script>
 {% endblock %}

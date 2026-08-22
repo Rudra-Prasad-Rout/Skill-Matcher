@@ -1,0 +1,767 @@
+{% extends "base.html" %}
+
+{% block title %}My User Passport — VIREQO{% endblock %}
+
+{% block content_wrapper %}
+<style>
+  /* Passport Container Styling matching Official User Passport Design */
+  .passport-page-container {
+    max-width: 1060px;
+    margin: 24px auto 60px auto;
+    padding: 0 16px;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  .passport-card-shell {
+    background: #f4f8fa;
+    border: 1.5px solid #d2e1e6;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 12px 36px rgba(15, 118, 110, 0.08);
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  /* Header Section */
+  .passport-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e2edf0;
+    padding-bottom: 18px;
+  }
+
+  .passport-logo-img {
+    height: 52px;
+    width: auto;
+    max-width: 220px;
+    object-fit: contain;
+    display: block;
+  }
+
+  .passport-header-titles h1 {
+    font-size: 26px;
+    font-weight: 900;
+    color: #111827;
+    margin: 0;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .passport-badge-sub {
+    font-size: 14.5px;
+    font-weight: 900;
+    color: #0f766e;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .passport-header-subline {
+    font-size: 13.5px;
+    color: #4b5563;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  /* Top Main Details Dossier */
+  .passport-dossier-box {
+    background: #ffffff;
+    border: 1.5px solid #dce7eb;
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr) 100px;
+    gap: 24px;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (max-width: 860px) {
+    .passport-dossier-box {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+  }
+
+  /* Photo Box */
+  .passport-photo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .passport-photo-frame {
+    width: 165px;
+    height: 195px;
+    border-radius: 14px;
+    border: 2px solid #cbd5e1;
+    overflow: hidden;
+    background: #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .passport-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .passport-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+    color: #ffffff;
+  }
+
+  /* Details Grid - 2 Wide Columns with word-break and ample gutter */
+  .passport-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 32px;
+    row-gap: 16px;
+    min-width: 0;
+  }
+
+  @media (max-width: 600px) {
+    .passport-details-grid {
+      grid-template-columns: 1fr;
+      text-align: left;
+    }
+  }
+
+  .passport-detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .passport-icon-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #e6f4f2;
+    border: 1px solid #c2e2dd;
+    color: #0f766e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .passport-detail-content {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .passport-label {
+    font-size: 10px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 2px;
+  }
+
+  .passport-value {
+    font-size: 13px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.35;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .passport-value-highlight {
+    color: #0f766e;
+    font-family: monospace;
+    font-size: 13.5px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Watermark & Signature Area */
+  .passport-side-watermark {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 8px 0;
+    box-sizing: border-box;
+  }
+
+  .passport-shield-icon {
+    width: 80px;
+    height: 90px;
+    opacity: 0.28;
+    color: #0f766e;
+  }
+
+  /* Bottom Grid: 2 Columns (Skill Summary Table + Passport QR Code) */
+  .passport-cards-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 210px;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 860px) {
+    .passport-cards-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .passport-subcard {
+    background: #ffffff;
+    border: 1.5px solid #dce7eb;
+    border-radius: 14px;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    min-width: 0;
+  }
+
+  .passport-subcard-title {
+    font-size: 12.5px;
+    font-weight: 900;
+    color: #0f766e;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* Skills Table Styling with Fixed Proportions and No Overlaps */
+  .passport-skills-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 12.5px;
+    margin-top: 4px;
+  }
+
+  .passport-skills-table th {
+    background: #eaf3f5;
+    color: #0f766e;
+    font-size: 10.5px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1.5px solid #d5e5e8;
+  }
+
+  .passport-skills-table th:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  .passport-skills-table th:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  .passport-skills-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+  }
+
+  .passport-skills-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .passport-skills-table tr:hover td {
+    background: #f8fafc;
+  }
+
+  .passport-proj-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: #0284c7;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 11.5px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+  }
+
+  .passport-proj-link:hover {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #0284c7;
+  }
+
+  /* QR Code Box */
+  .passport-qr-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6px 0;
+  }
+
+  .passport-qr-img {
+    width: 135px;
+    height: 135px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 4px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .passport-qr-caption {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 10px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  /* Security Footer Notice */
+  .passport-footer-notice {
+    background: #ffffff;
+    border: 1px solid #dce7eb;
+    border-radius: 12px;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 12px;
+    color: #475569;
+    font-weight: 600;
+    flex-wrap: wrap;
+  }
+
+  .passport-footer-notice-part {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Top Toolbar */
+  .passport-toolbar {
+    background: #ffffff !important;
+    border: 2px solid #d2e1e6 !important;
+    border-radius: 14px !important;
+    padding: 14px 20px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 24px !important;
+    margin-top: 8px !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    box-shadow: 0 4px 18px rgba(15, 118, 110, 0.08) !important;
+    position: relative !important;
+    z-index: 20 !important;
+  }
+
+  @media print {
+    body {
+      background: #ffffff !important;
+    }
+    .s30-navbar, .s30-drawer-backdrop, .s30-profile-drawer, .passport-toolbar, .s30-footer {
+      display: none !important;
+    }
+    .passport-page-container {
+      margin: 0;
+      padding: 0;
+      max-width: 100%;
+    }
+    .passport-card-shell {
+      border: 1px solid #ccc !important;
+      box-shadow: none !important;
+    }
+  }
+</style>
+
+<div class="passport-page-container">
+  
+  <!-- Action Toolbar (Red Circled Area) -->
+  <div class="passport-toolbar">
+    <a href="{{ url_for('candidate_home') }}" class="neo-btn" style="background: #f1f5f9 !important; color: #0f172a !important; border: 1.5px solid #cbd5e1 !important; font-size: 12.5px !important; padding: 9px 16px !important; text-decoration: none !important; border-radius: 8px !important; font-weight: 800 !important; display: inline-flex; align-items: center; gap: 6px;">
+      &larr; Back to Dashboard
+    </a>
+
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+      <button type="button" id="btn-download-pdf" onclick="downloadPassportPDF()" class="neo-btn" style="font-size: 13px !important; padding: 9px 18px !important; background: #0f766e !important; color: #ffffff !important; border: 1.5px solid #042f2e !important; border-radius: 8px !important; font-weight: 900 !important; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 2px 2px 0px #042f2e;">
+        <span style="font-size: 15px;">📥</span>
+        <span>Download Passport (PDF)</span>
+      </button>
+      <button type="button" onclick="window.print()" class="neo-btn" style="font-size: 12.5px !important; padding: 9px 14px !important; background: #ffffff !important; color: #0f766e !important; border: 1.5px solid #0f766e !important; border-radius: 8px !important; font-weight: 800 !important; cursor: pointer;">
+        <span>🖨️ Print</span>
+      </button>
+      <button type="button" onclick="copyPassportLink()" class="neo-btn" style="font-size: 12.5px !important; padding: 9px 14px !important; background: #eff6ff !important; color: #1d4ed8 !important; border: 1.5px solid #bfdbfe !important; border-radius: 8px !important; font-weight: 800 !important; cursor: pointer;">
+        <span>🔗 Copy Link</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Passport Card -->
+  <div class="passport-card-shell" id="printable-passport">
+    
+    <!-- Top Header -->
+    <div class="passport-header">
+      {% if logo_b64 %}
+        <img src="data:image/png;base64,{{ logo_b64 }}" alt="VIREQO" class="passport-logo-img">
+      {% else %}
+        <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" class="passport-logo-img">
+      {% endif %}
+      <div class="passport-header-titles">
+        <h1>
+          <span>VIREQO</span>
+        </h1>
+        <div class="passport-badge-sub">USER PASSPORT</div>
+        <div class="passport-header-subline">Student Opportunity &amp; Internship Discovery Platform</div>
+      </div>
+    </div>
+
+    <!-- Upper Dossier Box (Photo, Personal Credentials & Signature) -->
+    <div class="passport-dossier-box">
+      
+      <!-- Candidate Portrait Photo -->
+      <div class="passport-photo-wrapper">
+        <div class="passport-photo-frame">
+          {% if photo_b64 %}
+            <img src="data:image/jpeg;base64,{{ photo_b64 }}" alt="{{ user.full_name }}" class="passport-photo-img">
+          {% elif photo_doc %}
+            <img src="/documents/view/{{ photo_doc.filename }}" alt="{{ user.full_name }}" class="passport-photo-img">
+          {% else %}
+            <div class="passport-photo-placeholder">
+              <span style="font-size: 38px; font-weight: 900;">{{ user.full_name[:2].upper() if user.full_name else 'ST' }}</span>
+              <span style="font-size: 11px; font-weight: 700; margin-top: 4px; opacity: 0.9;">STUDENT PHOTO</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Credentials Detail Grid (2 columns) -->
+      <div class="passport-details-grid">
+        
+        <!-- Full Name -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">👤</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">FULL NAME</div>
+            <div class="passport-value">{{ user.full_name or 'Registered Candidate' }}</div>
+          </div>
+        </div>
+
+        <!-- Gender -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">⚥</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">GENDER</div>
+            <div class="passport-value">{{ user.gender or 'Not specified' }}</div>
+          </div>
+        </div>
+
+        <!-- Unique ID -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">🆔</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">UNIQUE ID (5-DIGIT)</div>
+            <div class="passport-value passport-value-highlight">SM-{{ user.user_code }}</div>
+          </div>
+        </div>
+
+        <!-- Spoken Languages -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">🗣️</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">SPOKEN LANGUAGES</div>
+            <div class="passport-value" style="color: #0f766e;">{{ user.spoken_languages or 'English, Hindi' }}</div>
+          </div>
+        </div>
+
+        <!-- Date of Birth / Age -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">📅</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">CANDIDATE AGE / DOB</div>
+            <div class="passport-value">{{ user.age or 20 }} Years Old</div>
+          </div>
+        </div>
+
+        <!-- Course / Branch -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">🎓</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">COURSE / BRANCH</div>
+            <div class="passport-value">{{ user.coursework or 'B.Tech - Computer Science' }}</div>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">✉️</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">EMAIL</div>
+            <div class="passport-value" style="font-size: 12.5px;">{{ user.email }}</div>
+          </div>
+        </div>
+
+        <!-- Year of Study -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">📖</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">YEAR OF STUDY</div>
+            <div class="passport-value">{{ year_of_study }}</div>
+          </div>
+        </div>
+
+        <!-- Institution -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">🏛️</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">INSTITUTION</div>
+            <div class="passport-value">{{ user.school or 'Institute of Technology & Science' }}</div>
+          </div>
+        </div>
+
+        <!-- Passport Issue Date -->
+        <div class="passport-detail-row">
+          <div class="passport-icon-circle">📆</div>
+          <div class="passport-detail-content">
+            <div class="passport-label">PASSPORT ISSUE DATE</div>
+            <div class="passport-value" style="font-size: 13px;">
+              {{ issue_date }}
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Watermark Shield -->
+      <div class="passport-side-watermark">
+        <svg class="passport-shield-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- Bottom 2-Column Grid (Skill Summary Table + Passport QR Code) -->
+    <div class="passport-cards-row">
+      
+      <!-- Card: Skill & Project Proof Summary Table -->
+      <div class="passport-subcard">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+            <div class="passport-subcard-title" style="margin-bottom: 0;">
+              <span>⚡</span>
+              <span>SKILL &amp; PROJECT PROOF SUMMARY</span>
+            </div>
+            <span style="font-size: 11px; font-weight: 700; color: #0f766e; background: #e6f4f2; border: 1px solid #c2e2dd; padding: 2px 8px; border-radius: 6px;">
+              {{ skills|length }} TECHNICAL PROOFS RECORDED
+            </span>
+          </div>
+
+          <div style="overflow-x: auto; width: 100%;">
+            <table class="passport-skills-table">
+              <thead>
+                <tr>
+                  <th style="width: 35%;">CODING LANGUAGE / SKILL</th>
+                  <th style="width: 37%;">PROJECT NAME</th>
+                  <th style="width: 28%; text-align: right; padding-right: 14px;">PROJECT LINK</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for sk in skills %}
+                <tr>
+                  <td style="width: 35%; padding: 12px 14px; vertical-align: middle;">
+                    <div style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center;">
+                      {% if sk.skill_name %}
+                        {% for item in sk.skill_name.split(',') %}
+                          {% if item.strip() %}
+                            <span style="display: inline-flex; align-items: center; gap: 5px; background: #e6f4f2; color: #0f766e; border: 1px solid #c2e2dd; padding: 3.5px 9px; border-radius: 6px; font-weight: 800; font-size: 11.5px; white-space: nowrap;">
+                              <span style="width: 5px; height: 5px; background: #0f766e; border-radius: 50%; display: inline-block;"></span>
+                              {{ item.strip() }}
+                            </span>
+                          {% endif %}
+                        {% endfor %}
+                      {% else %}
+                        <span style="font-weight: 800; color: #0f172a;">General Development</span>
+                      {% endif %}
+                    </div>
+                  </td>
+                  <td style="width: 37%; padding: 12px 14px; vertical-align: middle;">
+                    <div style="font-weight: 600; color: #334155; line-height: 1.45; font-size: 13px;">
+                      {{ sk.project_name or 'Independent Capstone Proof' }}
+                    </div>
+                  </td>
+                  <td style="width: 28%; text-align: right; padding: 12px 14px 12px 6px; vertical-align: middle;">
+                    {% if sk.project_url %}
+                      <a href="{{ sk.project_url }}" target="_blank" rel="noopener" class="passport-proj-link">
+                        <span>🔗 Open Project</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 11px; height: 11px; flex-shrink: 0;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                      </a>
+                    {% else %}
+                      <span style="color: #94a3b8; font-size: 11.5px; font-style: italic;">No URL provided</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #e2edf0;">
+          <div style="font-size: 11.5px; color: #64748b; font-weight: 600;">
+            ✓ Technical repositories &amp; project proofs recorded on Vireqo platform.
+          </div>
+        </div>
+      </div>
+
+      <!-- Card: Passport QR Code -->
+      <div class="passport-subcard" style="align-items: center; justify-content: center; text-align: center;">
+        <div class="passport-subcard-title" style="width: 100%; justify-content: center; text-align: center;">
+          <span>🪪</span>
+          <span>PASSPORT QR CODE</span>
+        </div>
+
+        <div class="passport-qr-wrapper">
+          <img src="data:image/png;base64,{{ qr_code_b64 }}" alt="Passport QR Code" class="passport-qr-img">
+          <div class="passport-qr-caption">
+            Scan to verify this passport on Vireqo Platform
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Security & Issuance Footer Notice -->
+    <div class="passport-footer-notice">
+      <div class="passport-footer-notice-part">
+        <div style="width: 28px; height: 28px; border-radius: 50%; background: #e6f4f2; color: #0f766e; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+          🔒
+        </div>
+        <span>This User Passport is digitally issued and securely stored on Vireqo Platform.</span>
+      </div>
+
+      <div class="passport-footer-notice-part">
+        <span>Shareable with trusted organizations for internship and opportunity verification.</span>
+        <div style="font-size: 16px;">👥</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Prominent Actions Bar -->
+  <div style="margin-top: 24px; background: #ffffff; border: 1.5px solid #dce7eb; border-radius: 14px; padding: 18px 24px; display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; box-shadow: 0 4px 16px rgba(0,0,0,0.04);">
+    <div>
+      <div style="font-size: 14px; font-weight: 800; color: #0f172a;">Official Student User Passport (VIREQO-{{ user.user_code }})</div>
+      <div style="font-size: 12px; color: #64748b; margin-top: 2px;">Export a high-resolution PDF copy for job and internship applications.</div>
+    </div>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+      <button type="button" onclick="downloadPassportPDF()" class="neo-btn neo-btn-green" style="background: #0f766e !important; color: #ffffff !important; font-size: 13px !important; padding: 11px 22px !important; font-weight: 900 !important; border-radius: 8px !important; display: inline-flex; align-items: center; gap: 8px;">
+        <span style="font-size: 16px;">📥</span>
+        <span>DOWNLOAD PASSPORT (PDF)</span>
+      </button>
+      <button type="button" onclick="window.print()" class="neo-btn neo-btn-white" style="font-size: 13px !important; padding: 11px 18px !important; font-weight: 800 !important; border-radius: 8px !important;">
+        <span>🖨️ Print</span>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- html2pdf.js for client-side direct PDF generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+  function copyPassportLink() {
+    const url = "{{ verify_url }}";
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert("✓ Public verification link copied to clipboard:\n" + url);
+      }).catch(() => {
+        prompt("Copy this passport verification link:", url);
+      });
+    } else {
+      prompt("Copy this passport verification link:", url);
+    }
+  }
+
+  async function downloadPassportPDF() {
+    const buttons = document.querySelectorAll('button[onclick="downloadPassportPDF()"], #btn-download-pdf');
+    buttons.forEach(b => {
+      b.dataset.origText = b.innerHTML;
+      b.disabled = true;
+      b.innerHTML = '<span>⏳ Generating PDF...</span>';
+    });
+
+    const element = document.getElementById('printable-passport');
+    const userCode = "{{ user.user_code or 'ID' }}";
+    const rawName = "{{ user.full_name or 'Candidate' }}";
+    const cleanName = rawName.replace(/[^a-zA-Z0-9]/g, '_');
+    
+    // Save original styles and set optimal landscape capture width
+    const origWidth = element.style.width;
+    const origMaxWidth = element.style.maxWidth;
+    element.style.width = '1020px';
+    element.style.maxWidth = '1020px';
+
+    const opt = {
+      margin:       [6, 6, 6, 6],
+      filename:     `VIREQO_Passport_${cleanName}_${userCode}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    };
+
+    try {
+      if (typeof html2pdf !== 'undefined') {
+        await html2pdf().set(opt).from(element).save();
+      } else {
+        window.print();
+      }
+    } catch (e) {
+      console.error('Error generating PDF:', e);
+      window.print();
+    } finally {
+      element.style.width = origWidth;
+      element.style.maxWidth = origMaxWidth;
+      buttons.forEach(b => {
+        b.disabled = false;
+        if (b.dataset.origText) b.innerHTML = b.dataset.origText;
+      });
+    }
+  }
+</script>
+{% endblock %}
