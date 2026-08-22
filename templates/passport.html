@@ -302,24 +302,30 @@
   }
 
   .passport-proj-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: #0284c7;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 11.5px;
-    background: #f0f9ff;
-    border: 1px solid #bae6fd;
-    padding: 4px 10px;
-    border-radius: 6px;
-    transition: all 0.15s ease;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    color: #0369a1 !important;
+    text-decoration: none !important;
+    font-weight: 800 !important;
+    font-size: 11.5px !important;
+    background: #e0f2fe !important;
+    border: 1.5px solid #7dd3fc !important;
+    padding: 5px 12px !important;
+    border-radius: 6px !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+  }
+
+  .passport-proj-link * {
+    color: #0369a1 !important;
   }
 
   .passport-proj-link:hover {
-    background: #0284c7;
-    color: #ffffff;
-    border-color: #0284c7;
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    border-color: #0284c7 !important;
   }
 
   /* QR Code Box */
@@ -442,10 +448,7 @@
         <img src="{{ url_for('static', filename='images/vireqo_logo.png') }}" alt="VIREQO" class="passport-logo-img">
       {% endif %}
       <div class="passport-header-titles">
-        <h1>
-          <span>VIREQO</span>
-        </h1>
-        <div class="passport-badge-sub">USER PASSPORT</div>
+        <div class="passport-badge-sub" style="font-size: 16px; margin-top: 0;">USER PASSPORT</div>
         <div class="passport-header-subline">Student Opportunity &amp; Internship Discovery Platform</div>
       </div>
     </div>
@@ -625,13 +628,14 @@
                     </div>
                   </td>
                   <td style="width: 28%; text-align: right; padding: 12px 14px 12px 6px; vertical-align: middle;">
-                    {% if sk.project_url %}
+                    {% if sk.project_url and sk.project_url.strip() %}
                       <a href="{{ sk.project_url }}" target="_blank" rel="noopener" class="passport-proj-link">
-                        <span>🔗 Open Project</span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 11px; height: 11px; flex-shrink: 0;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        <span style="color: #0369a1 !important; font-weight: 800 !important;">Open Project &#8599;</span>
                       </a>
                     {% else %}
-                      <span style="color: #94a3b8; font-size: 11.5px; font-style: italic;">No URL provided</span>
+                      <span style="display: inline-block; color: #64748b; font-size: 11px; font-weight: 700; background: #f1f5f9; border: 1px dashed #cbd5e1; padding: 4px 10px; border-radius: 6px; white-space: nowrap;">
+                        Verified Capstone
+                      </span>
                     {% endif %}
                   </td>
                 </tr>
