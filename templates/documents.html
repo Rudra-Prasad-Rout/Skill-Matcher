@@ -218,7 +218,7 @@
                 {{ cert.original_name }}
               </div>
               <div class="cert-item-meta">
-                Uploaded {{ cert.uploaded_at[:10] if cert.uploaded_at else 'Just now' }}
+                Uploaded {{ (cert.uploaded_at|string)[:10] if cert.uploaded_at else 'Just now' }}
               </div>
             </div>
           </div>
@@ -229,7 +229,7 @@
               type="button" 
               class="neo-btn" 
               style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: var(--md-shape-sm);"
-              onclick="openMediaPreview('{{ cert.original_name }}', '/documents/view/{{ cert.filename }}', 'certificate', 'Uploaded {{ cert.uploaded_at[:10] if cert.uploaded_at else 'Just now' }}')"
+              onclick="openMediaPreview('{{ cert.original_name }}', '/documents/view/{{ cert.filename }}', 'certificate', 'Uploaded {{ (cert.uploaded_at|string)[:10] if cert.uploaded_at else 'Just now' }}')"
             >
               <span>👁️ VIEW</span>
             </button>

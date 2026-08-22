@@ -14,8 +14,14 @@ os.makedirs(os.path.dirname(os.path.abspath(DB_PATH)), exist_ok=True)
 class PgRow(dict):
     """Row wrapper that supports dict conversion, column name lookup, and numeric tuple indexing."""
     def __init__(self, cols, values):
-        super().__init__(zip(cols, values))
-        self._values = list(values)
+        norm_values = []
+        for v in values:
+            if hasattr(v, "strftime"):
+                norm_values.append(v.strftime("%Y-%m-%d %H:%M:%S"))
+            else:
+                norm_values.append(v)
+        super().__init__(zip(cols, norm_values))
+        self._values = list(norm_values)
         self._cols = list(cols)
 
     def __getitem__(self, item):

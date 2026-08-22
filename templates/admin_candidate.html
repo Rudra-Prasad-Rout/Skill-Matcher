@@ -600,7 +600,7 @@
                   {{ cert.original_name }}
                 </div>
                 <div style="font-size: 11.5px; color: var(--s30-text-muted);">
-                  {{ (cert.file_size / 1024)|round(1) }} KB • Uploaded {{ cert.uploaded_at[:10] if cert.uploaded_at else 'Recently' }}
+                  {{ (cert.file_size / 1024)|round(1) }} KB • Uploaded {{ (cert.uploaded_at|string)[:10] if cert.uploaded_at else 'Recently' }}
                 </div>
               </div>
             </div>
