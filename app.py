@@ -11,7 +11,10 @@ import io
 import base64
 from datetime import datetime, timedelta
 from functools import wraps
-import qrcode
+try:
+    import qrcode
+except ImportError:
+    qrcode = None
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 import database
@@ -1237,14 +1240,19 @@ def my_passport():
             pass
             
     # QR Code generation for live verification
-    verify_url = request.host_url.rstrip('/') + url_for('verify_passport_public', user_code=user_dict.get("user_code", "VIREQO"))
-    qr = qrcode.QRCode(version=1, box_size=6, border=2)
-    qr.add_data(verify_url)
-    qr.make(fit=True)
-    img = qr.make_image(fill_color='#0f172a', back_color='#ffffff')
-    buf = io.BytesIO()
-    img.save(buf, format='PNG')
-    qr_code_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    qr_code_b64 = ""
+    if qrcode:
+        try:
+            verify_url = request.host_url.rstrip('/') + url_for('verify_passport_public', user_code=user_dict.get("user_code", "VIREQO"))
+            qr = qrcode.QRCode(version=1, box_size=6, border=2)
+            qr.add_data(verify_url)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color='#0f172a', back_color='#ffffff')
+            buf = io.BytesIO()
+            img.save(buf, format='PNG')
+            qr_code_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        except Exception:
+            qr_code_b64 = ""
     
     is_approved = user_is_approved_by_admin(user_dict["id"])
     
@@ -1342,14 +1350,19 @@ def verify_passport_public(user_code):
         except Exception:
             pass
             
-    verify_url = request.url
-    qr = qrcode.QRCode(version=1, box_size=6, border=2)
-    qr.add_data(verify_url)
-    qr.make(fit=True)
-    img = qr.make_image(fill_color='#0f172a', back_color='#ffffff')
-    buf = io.BytesIO()
-    img.save(buf, format='PNG')
-    qr_code_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    qr_code_b64 = ""
+    if qrcode:
+        try:
+            verify_url = request.url
+            qr = qrcode.QRCode(version=1, box_size=6, border=2)
+            qr.add_data(verify_url)
+            qr.make(fit=True)
+            img = qr.make_image(fill_color='#0f172a', back_color='#ffffff')
+            buf = io.BytesIO()
+            img.save(buf, format='PNG')
+            qr_code_b64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+        except Exception:
+            qr_code_b64 = ""
     
     is_approved = user_is_approved_by_admin(user_dict["id"])
     
