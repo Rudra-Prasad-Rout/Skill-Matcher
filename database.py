@@ -314,6 +314,32 @@ def init_db(force_reset=False):
                     json.dumps(["Python", "Machine Learning", "C++", "Signal Processing", "Data Analysis", "Satellite Systems", "Remote Sensing", "Algorithms"]),
                     "Official Student Internship and Project Work Scheme at ISRO. Work alongside space scientists on satellite payload computing, geospatial analytics, AI telemetry, autonomous systems, and planetary exploration data processing."
                 ))
+
+            # Seed AICTE UID Internship if missing
+            aicte_uid_exists = cursor.execute("SELECT id FROM discovered_internships WHERE application_link LIKE '%SU5URVJOU0hJUF8xNzIwNjA0MDI1NjY4ZTU1Nzk3NGZlZQ%'").fetchone()
+            if not aicte_uid_exists:
+                import json
+                cursor.execute("""
+                INSERT INTO discovered_internships (
+                    title, company, location, stipend, start_date, end_date, duration,
+                    posted_date, application_link, source_site, skills_required, description,
+                    is_scam_flagged, flag_reason, risk_level, is_verified_by_admin, is_active
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NULL, 'CLEAN', 1, 1)
+                """, (
+                    "AICTE & Ministry of Education Technical Innovation Intern",
+                    "AICTE - All India Council for Technical Education (Ministry of Education)",
+                    "Pan-India / Remote / Hybrid",
+                    "₹15K - ₹25K / month + AICTE Credits",
+                    "01 Oct 2026",
+                    "31 Dec 2026",
+                    "2 - 3 Months",
+                    "Verified Live",
+                    "https://internship.aicte-india.org/internship-details.php?uid=SU5URVJOU0hJUF8xNzIwNjA0MDI1NjY4ZTU1Nzk3NGZlZQ==",
+                    "internship.aicte-india.org",
+                    json.dumps(["Python", "Web Development", "Cloud Computing", "AI & ML", "Data Structures", "Problem Solving"]),
+                    "Official AICTE Technical Internship Program under the Ministry of Education. Work on public digital platforms, software engineering systems, and cloud data pipelines with official AICTE national certification."
+                ))
         except Exception as e:
             print(f"[DB] discovered_internships init: {e}")
             conn.rollback()

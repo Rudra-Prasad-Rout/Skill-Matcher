@@ -42,6 +42,21 @@ ALLOWED_PORTALS = [
 # Expanded 25+ Seed Bank of Verified Legal Portal Listings across Government & Tech Innovation Platforms
 CURATED_LEGAL_LISTINGS = [
     {
+        "title": "AICTE & Ministry of Education Technical Innovation Intern",
+        "company": "AICTE - All India Council for Technical Education (Ministry of Education)",
+        "location": "Pan-India / Remote / Hybrid",
+        "stipend": "₹15K - ₹25K / month + AICTE Credits",
+        "start_date": "01 Oct 2026",
+        "end_date": "31 Dec 2026",
+        "duration": "2 - 3 Months",
+        "posted_date": "Verified Live",
+        "application_link": "https://internship.aicte-india.org/internship-details.php?uid=SU5URVJOU0hJUF8xNzIwNjA0MDI1NjY4ZTU1Nzk3NGZlZQ==",
+        "source_site": "internship.aicte-india.org",
+        "skills_required": ["Python", "Web Development", "Cloud Computing", "AI & ML", "Data Structures", "Problem Solving"],
+        "description": "Official AICTE Technical Internship Program under the Ministry of Education. Work on public digital platforms, software engineering systems, and cloud data pipelines with official AICTE national certification.",
+        "employer_email": "internship-support@aicte-india.org"
+    },
+    {
         "title": "Space Technology, AI & Satellite Systems Research Intern",
         "company": "ISRO - Indian Space Research Organisation (Dept. of Space, Govt. of India)",
         "location": "Bangalore / SAC Ahmedabad / VSSC / Hybrid",
