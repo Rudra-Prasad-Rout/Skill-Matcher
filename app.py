@@ -28,7 +28,7 @@ app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 
 UPLOAD_FOLDER = os.environ.get("UPLOAD_FOLDER", os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "uploads"))
 ALLOWED_EXTENSIONS = {"pdf", "png", "jpg", "jpeg", "webp"}
-MAX_CONTENT_LENGTH = 15 * 1024 * 1024  # 15MB
+MAX_CONTENT_LENGTH = 60 * 1024 * 1024  # 60MB for multiple document uploads combined
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.config["MAX_CONTENT_LENGTH"] = MAX_CONTENT_LENGTH

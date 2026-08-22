@@ -54,9 +54,9 @@
           <button type="button" class="neo-btn" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: var(--md-shape-sm);" onclick="event.stopPropagation(); openMediaPreview('Passport Size Photo', '/documents/view/{{ photo_doc.filename }}', 'passport_photo', '{{ photo_doc.original_name }}')">
             <span>👁️ VIEW PHOTO</span>
           </button>
-          <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
+          <span class="neo-badge neo-badge-green" id="badge-photo">✓ UPLOADED</span>
           {% else %}
-          <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
+          <span class="neo-badge neo-badge-pink" id="badge-photo">COMPULSORY *</span>
           {% endif %}
         </div>
       </div>
@@ -76,7 +76,7 @@
           {% endif %}
         </div>
         <div class="s30-upload-subtitle">JPG, PNG, WEBP up to 15MB</div>
-        <input type="file" name="doc_passport_photo" id="file-photo" accept=".jpg,.jpeg,.png,.webp" style="display: none;" onchange="updateUploadLabel(this, 'title-photo', 'box-photo')">
+        <input type="file" name="doc_passport_photo" id="file-photo" accept=".jpg,.jpeg,.png,.webp" style="display: none;" onchange="updateUploadLabel(this, 'title-photo', 'box-photo', 'badge-photo')">
       </div>
     </div>
 
@@ -89,9 +89,9 @@
           <button type="button" class="neo-btn" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: var(--md-shape-sm);" onclick="event.stopPropagation(); openMediaPreview('College ID Card (Front Side)', '/documents/view/{{ front_doc.filename }}', 'id_front', '{{ front_doc.original_name }}')">
             <span>👁️ VIEW PHOTO</span>
           </button>
-          <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
+          <span class="neo-badge neo-badge-green" id="badge-front">✓ UPLOADED</span>
           {% else %}
-          <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
+          <span class="neo-badge neo-badge-pink" id="badge-front">COMPULSORY *</span>
           {% endif %}
         </div>
       </div>
@@ -113,7 +113,7 @@
           {% endif %}
         </div>
         <div class="s30-upload-subtitle">JPG, PNG, PDF up to 15MB</div>
-        <input type="file" name="doc_id_front" id="file-front" accept=".jpg,.jpeg,.png,.pdf,.webp" style="display: none;" onchange="updateUploadLabel(this, 'title-front', 'box-front')">
+        <input type="file" name="doc_id_front" id="file-front" accept=".jpg,.jpeg,.png,.pdf,.webp" style="display: none;" onchange="updateUploadLabel(this, 'title-front', 'box-front', 'badge-front')">
       </div>
     </div>
 
@@ -126,9 +126,9 @@
           <button type="button" class="neo-btn" style="background: var(--md-sys-color-primary) !important; color: var(--md-sys-color-on-primary) !important; padding: 3px 8px; font-size: 10px; font-weight: 700; border-radius: var(--md-shape-sm);" onclick="event.stopPropagation(); openMediaPreview('College ID Card (Back Side)', '/documents/view/{{ back_doc.filename }}', 'id_back', '{{ back_doc.original_name }}')">
             <span>👁️ VIEW PHOTO</span>
           </button>
-          <span class="neo-badge neo-badge-green">✓ UPLOADED</span>
+          <span class="neo-badge neo-badge-green" id="badge-back">✓ UPLOADED</span>
           {% else %}
-          <span class="neo-badge neo-badge-pink">COMPULSORY *</span>
+          <span class="neo-badge neo-badge-pink" id="badge-back">COMPULSORY *</span>
           {% endif %}
         </div>
       </div>
@@ -149,7 +149,7 @@
           {% endif %}
         </div>
         <div class="s30-upload-subtitle">JPG, PNG, PDF up to 15MB</div>
-        <input type="file" name="doc_id_back" id="file-back" accept=".jpg,.jpeg,.png,.pdf,.webp" style="display: none;" onchange="updateUploadLabel(this, 'title-back', 'box-back')">
+        <input type="file" name="doc_id_back" id="file-back" accept=".jpg,.jpeg,.png,.pdf,.webp" style="display: none;" onchange="updateUploadLabel(this, 'title-back', 'box-back', 'badge-back')">
       </div>
     </div>
   </div>
@@ -288,7 +288,7 @@
 </form>
 
 <script>
-  function updateUploadLabel(input, labelId, boxId) {
+  function updateUploadLabel(input, labelId, boxId, badgeId) {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       const el = document.getElementById(labelId);
@@ -298,6 +298,13 @@
         if (box) {
           box.style.borderColor = 'var(--md-sys-color-tertiary)';
           box.style.boxShadow = 'var(--md-elevation-1)';
+        }
+      }
+      if (badgeId) {
+        const badge = document.getElementById(badgeId);
+        if (badge) {
+          badge.className = 'neo-badge neo-badge-green';
+          badge.innerText = '✓ READY';
         }
       }
     }
