@@ -288,6 +288,32 @@ def init_db(force_reset=False):
                 discovered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
             """)
+
+            # Seed ISRO Internship into discovered_internships if missing
+            isro_exists = cursor.execute("SELECT id FROM discovered_internships WHERE application_link LIKE '%isro.gov.in%'").fetchone()
+            if not isro_exists:
+                import json
+                cursor.execute("""
+                INSERT INTO discovered_internships (
+                    title, company, location, stipend, start_date, end_date, duration,
+                    posted_date, application_link, source_site, skills_required, description,
+                    is_scam_flagged, flag_reason, risk_level, is_verified_by_admin, is_active
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, NULL, 'CLEAN', 1, 1)
+                """, (
+                    "Space Technology, AI & Satellite Systems Research Intern",
+                    "ISRO - Indian Space Research Organisation (Dept. of Space, Govt. of India)",
+                    "Bangalore / SAC Ahmedabad / VSSC / Hybrid",
+                    "Govt Merit Research Grant & Official Certification",
+                    "01 Oct 2026",
+                    "31 Mar 2027",
+                    "3 - 6 Months",
+                    "Verified Live",
+                    "https://www.isro.gov.in/InternshipAndProjects.html",
+                    "isro.gov.in",
+                    json.dumps(["Python", "Machine Learning", "C++", "Signal Processing", "Data Analysis", "Satellite Systems", "Remote Sensing", "Algorithms"]),
+                    "Official Student Internship and Project Work Scheme at ISRO. Work alongside space scientists on satellite payload computing, geospatial analytics, AI telemetry, autonomous systems, and planetary exploration data processing."
+                ))
         except Exception as e:
             print(f"[DB] discovered_internships init: {e}")
             conn.rollback()

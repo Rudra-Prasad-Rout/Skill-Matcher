@@ -30,6 +30,7 @@ ALLOWED_PORTALS = [
     "pminternshipscheme.mca.gov.in",
     "niti.gov.in",
     "internship.mea.gov.in",
+    "isro.gov.in",
     "mygov.in",
     "ncs.gov.in",
     "unstop.com",
@@ -40,6 +41,21 @@ ALLOWED_PORTALS = [
 
 # Expanded 25+ Seed Bank of Verified Legal Portal Listings across Government & Tech Innovation Platforms
 CURATED_LEGAL_LISTINGS = [
+    {
+        "title": "Space Technology, AI & Satellite Systems Research Intern",
+        "company": "ISRO - Indian Space Research Organisation (Dept. of Space, Govt. of India)",
+        "location": "Bangalore / SAC Ahmedabad / VSSC / Hybrid",
+        "stipend": "Govt Merit Research Grant & Official Certification",
+        "start_date": "01 Oct 2026",
+        "end_date": "31 Mar 2027",
+        "duration": "3 - 6 Months",
+        "posted_date": "Verified Live",
+        "application_link": "https://www.isro.gov.in/InternshipAndProjects.html",
+        "source_site": "isro.gov.in",
+        "skills_required": ["Python", "Machine Learning", "C++", "Signal Processing", "Data Analysis", "Satellite Systems", "Remote Sensing", "Algorithms"],
+        "description": "Official Student Internship and Project Work Scheme at ISRO. Work alongside space scientists on satellite payload computing, geospatial analytics, AI telemetry, autonomous systems, and planetary exploration data processing.",
+        "employer_email": "internship@isro.gov.in"
+    },
     {
         "title": "AI & Emerging Tech Research Intern",
         "company": "NITI Aayog (Govt of India)",
